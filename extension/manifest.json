@@ -4,7 +4,14 @@
     "description": "My extension",
     "version": "0.0.1",
     "action": {
-        "default_title": "NextJS App",
-        "default_popup": "index.html"
-    }
+        "default_title": "NextJS App"
+    },
+    "content_scripts": [
+        {
+          "matches": ["<all_urls>"],
+          "js": [
+            "content.js"
+          ]
+        }
+      ]
 }
