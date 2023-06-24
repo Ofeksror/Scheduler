@@ -1,0 +1,10 @@
+{
+    "manifest_version": 3,
+    "name": "NextJS Chrome Ext",
+    "description": "My extension",
+    "version": "0.0.1",
+    "action": {
+        "default_title": "NextJS App",
+        "default_popup": "index.html"
+    }
+}
