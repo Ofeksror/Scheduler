@@ -1,10 +1,4 @@
-import {
-    Dispatch,
-    SetStateAction,
-    createContext,
-    useContext,
-    useState,
-} from "react";
+import { createContext, useContext, useState } from "react";
 
 export type workspaceType = {
     id: number;
@@ -30,7 +24,6 @@ export const SelectedWorkspaceContext = createContext<ContextType>({
 });
 */
 
-
 type ProviderProps = {
     children: React.ReactNode;
 };
@@ -49,7 +42,6 @@ export const SelectedWorkspaceProvider: React.FC<ProviderProps> = ({
         </SelectedWorkspaceContext.Provider>
     );
 };
-
 
 export const useSelectedWorkspace = () => useContext(SelectedWorkspaceContext);
 

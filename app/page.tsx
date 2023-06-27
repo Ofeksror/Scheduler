@@ -1,10 +1,11 @@
 "use client";
-import Image from "next/image";
 import Sidebar from "./components/Sidebar";
 import Workspace from "./components/Workspace";
-import { useState } from "react";
-import { SelectedWorkspaceProvider, workspaceType } from "./utilities/WorkspaceContext";
-import Temp from "./components/Temp";
+import {
+    SelectedWorkspaceProvider,
+    workspaceType,
+} from "./utilities/WorkspaceContext";
+import { DatabaseProvider } from "./utilities/databaseContext";
 
 const styles = {
     rootContainer: "flex-1 h-screen w-screen",
@@ -12,20 +13,16 @@ const styles = {
 };
 
 export default function Home() {
-    const [savedWorkspaces, setSavedWorkspaces] = useState<workspaceType[]>([]);
-    const [unsavedWorkspaces, setUnsavedWorkspaces] = useState<workspaceType[]>(
-        []
-    );
-    // Fetch workspaces from database
-
     return (
         <div className={styles.rootContainer}>
-            <SelectedWorkspaceProvider>
-                <Sidebar />
-                <div className={styles.mainContent}>
-                    <Workspace />
-                </div>
-            </SelectedWorkspaceProvider>
+            <DatabaseProvider>
+                <SelectedWorkspaceProvider>
+                    <Sidebar />
+                    <div className={styles.mainContent}>
+                        <Workspace />
+                    </div>
+                </SelectedWorkspaceProvider>
+            </DatabaseProvider>
         </div>
     );
 }
