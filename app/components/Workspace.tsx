@@ -1,10 +1,9 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { unsavedWorkspaces, savedWorkspaces } from "../utilities/database";
+import { useSelectedWorkspace } from "../utilities/WorkspaceContext";
 
-type Props = {
-    selectedWorkspaceId: number | null;
-};
+type Props = {};
 
 const styles = {
     container: "",
@@ -13,52 +12,53 @@ const styles = {
 };
 
 const Workspace = (props: Props) => {
-    const [workspaceTitle, setWorkspaceTitle] = useState<string>("");
-    const titleInputRef = useRef(null);
+    const { selectedWorkspace, setSelectedWorkspace } = useSelectedWorkspace();
 
-    const handleKeyDown = (e: { key: string }) => {
-        if (titleInputRef == null) return;
-        if (e.key === "Enter") {
-            titleInputRef.current.blur();
+    // Unselected Workspace
+    if (selectedWorkspace === null) {
+        // Loading Screen
+        return <h1>Please select a workspace.</h1>;
+    }
 
-            // TODO: Update Title
-            console.log("TODO!");
-        }
-    };
-
-    useEffect(() => {
-        setWorkspaceTitle("Job hunting");
-    }, []);
-
-    if (props.selectedWorkspaceId == null) {
+    // Unsaved Workspace
+    if (!selectedWorkspace.title && selectedWorkspace.id) {
         return (
-            <div className={styles.container}>
-                <p>Nothing selected :)</p>
+            <div>
+                <h1>Unsaved Workspace :)</h1>
+                <p>ID: {selectedWorkspace.id}</p>
+                <p>Tabs: {selectedWorkspace.tabs}</p>
             </div>
         );
     }
 
-    let wkspc = null;
+    // Saved Workspace
+    const [workspaceTitle, setWorkspaceTitle] = useState<string>(
+        selectedWorkspace.title || ""
+    );
+    const titleInputRef = useRef(null);
 
-    // Find the right workspace
-    for (let i = 0; i < unsavedWorkspaces.length; i++) {
-        if (unsavedWorkspaces[i].id == props.selectedWorkspaceId) {
-            wkspc = unsavedWorkspaces[i];
-        }
-    }
+    useEffect(() => {
+        setWorkspaceTitle(selectedWorkspace.title || "Unsaved Workspace");
+    }, [selectedWorkspace]);
 
-    for (let i = 0; i < savedWorkspaces.length; i++) {
-        if (savedWorkspaces[i].id == props.selectedWorkspaceId) {
-            wkspc = savedWorkspaces[i];
+    const handleKeyDown = (e: { key: string }) => {
+        if (titleInputRef === null || titleInputRef.current === null) return;
+
+        if (e.key === "Enter") {
+            titleInputRef.current.blur(); // Remove focus from input
+
+            // Update Title
+            setSelectedWorkspace({
+                ...selectedWorkspace,
+                title: workspaceTitle,
+            });
         }
-    }
+    };
 
     return (
         <div className={styles.container}>
-            {/* Title */}
             <div className={styles.headContainer}>
                 <input
-                    type="text"
                     ref={titleInputRef}
                     className={styles.title}
                     value={workspaceTitle}
@@ -68,8 +68,11 @@ const Workspace = (props: Props) => {
                     onKeyDown={handleKeyDown}
                 ></input>
             </div>
-            <p>{workspaceTitle}</p>
-            <p>{wkspc.id}</p>
+            <div>
+                <p>{selectedWorkspace.title}</p>
+                <p>ID: {selectedWorkspace.id}</p>
+                <p>Tabs: {selectedWorkspace.tabs}</p>
+            </div>
         </div>
     );
 };

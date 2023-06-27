@@ -1,4 +1,6 @@
-export const unsavedWorkspaces = [
+import { workspaceType } from "./WorkspaceContext";
+
+export const unsavedWorkspaces: workspaceType[] = [
     {
         id: 1,
         tabs: ["asdasd", "12121", "vbbvcbvc", "223213"],
@@ -13,7 +15,7 @@ export const unsavedWorkspaces = [
     },
 ];
 
-export const savedWorkspaces = [
+export const savedWorkspaces: workspaceType[] = [
     {
         id: 4,
         title: "Job Hunting",
@@ -40,4 +42,3 @@ export const savedWorkspaces = [
         ],
     },
 ];
-
