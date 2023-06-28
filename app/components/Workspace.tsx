@@ -11,6 +11,24 @@ const styles = {
     title: "",
 };
 
+const TabsContainer = ({ tabs }: { tabs: string[] }) => {
+    return (
+        <div>
+            <h1>Tabs</h1>
+            <ul>
+                {tabs.map((tab, index) => {
+                    return (
+                        <li>
+                            <span>[ ]</span>
+                            <span key={index}>{tab}</span>
+                        </li>
+                    );
+                })}
+            </ul>
+        </div>
+    );
+};
+
 const Workspace = (props: Props) => {
     const { selectedWorkspace, setSelectedWorkspace } = useSelectedWorkspace();
 
@@ -26,7 +44,8 @@ const Workspace = (props: Props) => {
             <div>
                 <h1>Unsaved Workspace :)</h1>
                 <p>ID: {selectedWorkspace.id}</p>
-                <p>Tabs: {selectedWorkspace.tabs}</p>
+
+                <TabsContainer tabs={selectedWorkspace.tabs} />
             </div>
         );
     }
@@ -71,7 +90,7 @@ const Workspace = (props: Props) => {
             <div>
                 <p>{selectedWorkspace.title}</p>
                 <p>ID: {selectedWorkspace.id}</p>
-                <p>Tabs: {selectedWorkspace.tabs}</p>
+                <TabsContainer tabs={selectedWorkspace.tabs} />
             </div>
         </div>
     );
