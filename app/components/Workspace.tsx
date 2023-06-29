@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { unsavedWorkspaces, savedWorkspaces } from "../utilities/database";
 import { useSelectedWorkspace } from "../utilities/WorkspaceContext";
 
 type Props = {};
