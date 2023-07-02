@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { workspaceType } from "./WorkspaceContext";
 
 type ContextType = {
@@ -25,7 +25,7 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
     );
     const [savedWorkspaces, setSavedWorkspaces] = useState<workspaceType[]>([]);
 
-    (() => {
+    useEffect(() => {
         setUnsavedWorkspaces([
             {
                 id: 1,
@@ -67,7 +67,7 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
                 ],
             },
         ]);
-    })();
+    }, []);
 
     return (
         <DatabaseContext.Provider

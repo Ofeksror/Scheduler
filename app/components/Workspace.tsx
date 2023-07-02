@@ -53,7 +53,7 @@ const Workspace = (props: Props) => {
     const [workspaceTitle, setWorkspaceTitle] = useState<string>(
         selectedWorkspace.title || ""
     );
-    const titleInputRef = useRef(null);
+    const titleInputRef = useRef<any>(null);
 
     useEffect(() => {
         setWorkspaceTitle(selectedWorkspace.title || "Unsaved Workspace");
