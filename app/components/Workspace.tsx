@@ -34,14 +34,14 @@ const Workspace = (props: Props) => {
     // Unselected Workspace
     if (selectedWorkspace === null) {
         // Loading Screen
-        return <h1>Please select a workspace.</h1>;
+        return <h1>🔔Please select a workspace🔔</h1>;
     }
 
     // Unsaved Workspace
     if (!selectedWorkspace.title && selectedWorkspace.id) {
         return (
             <div>
-                <h1>Unsaved Workspace :)</h1>
+                <h1>Unsaved Workspace🤭</h1>
                 <p>ID: {selectedWorkspace.id}</p>
 
                 <TabsContainer tabs={selectedWorkspace.tabs} />

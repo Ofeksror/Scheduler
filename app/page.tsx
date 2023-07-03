@@ -1,6 +1,10 @@
 "use client";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+
 import Sidebar from "./components/Sidebar";
 import Workspace from "./components/Workspace";
+
 import {
     SelectedWorkspaceProvider,
     workspaceType,
@@ -13,6 +17,12 @@ const styles = {
 };
 
 export default function Home() {
+    const session = useSession();
+
+    if (session.status === "unauthenticated") {
+        return redirect("/login");
+    }
+
     return (
         <div className={styles.rootContainer}>
             <DatabaseProvider>
