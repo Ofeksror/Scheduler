@@ -1,5 +1,7 @@
 import React, { Dispatch, SetStateAction, useContext, useEffect } from "react";
 
+import { signOut } from "next-auth/react"
+
 import {
     useSelectedWorkspace,
     workspaceType,
@@ -84,7 +86,7 @@ const Sidebar = (props: Props) => {
 
             <div className={styles.footer}>
                 {/* Account */}
-                <div className={styles.avatar}>OS</div>
+                <div className={styles.avatar} onClick={signOut}>OS</div>
 
                 {/* Settings */}
                 <div className={styles.settings}>S</div>

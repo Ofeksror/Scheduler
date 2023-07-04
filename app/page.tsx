@@ -23,6 +23,8 @@ export default function Home() {
         return redirect("/login");
     }
 
+    console.log(session);
+
     return (
         <div className={styles.rootContainer}>
             <DatabaseProvider>
