@@ -12,7 +12,8 @@ import {
 import { DatabaseProvider } from "./utilities/databaseContext";
 
 const styles = {
-    rootContainer: "flex-1 h-screen w-screen",
+    outerContainer: "w-full h-full flex",
+    rootContainer: "h-screen w-screen",
     mainContent: "bg-slate-200 w-full h-full",
 };
 
@@ -29,9 +30,11 @@ export default function Home() {
         <div className={styles.rootContainer}>
             <DatabaseProvider>
                 <SelectedWorkspaceProvider>
-                    <Sidebar />
-                    <div className={styles.mainContent}>
-                        <Workspace />
+                    <div className={styles.outerContainer}>
+                        <Sidebar />
+                        <div className={styles.mainContent}>
+                            <Workspace />
+                        </div>
                     </div>
                 </SelectedWorkspaceProvider>
             </DatabaseProvider>

@@ -5,21 +5,27 @@ import { useSelectedWorkspace } from "../utilities/WorkspaceContext";
 type Props = {};
 
 const styles = {
-    container: "",
+    container: "flex-1 overflow-auto w-full relative",
     headContainer: "",
     title: "",
+
+    tabsContainer: "w-11/12 mx-auto",
+    tabContainerHeader: "text-2xl",
+    tabsListContainer: "flex flex-col gap-2",
+    tabWrapper: "bg-slate-300 py-2 px-4",
+    tabText: "mx-4",
 };
 
 const TabsContainer = ({ tabs }: { tabs: string[] }) => {
     return (
-        <div>
-            <h1>Tabs</h1>
-            <ul>
+        <div className={styles.tabsContainer}>
+            <h1 className={styles.tabContainerHeader}>Tabs</h1>
+            <ul className={styles.tabsListContainer}>
                 {tabs.map((tab, index) => {
                     return (
-                        <li>
-                            <span>[ ]</span>
-                            <span key={index}>{tab}</span>
+                        <li className={styles.tabWrapper}>
+                            <input type="checkbox"></input>
+                            <span className={styles.tabText} key={index}>{tab}</span>
                         </li>
                     );
                 })}
@@ -40,7 +46,7 @@ const Workspace = (props: Props) => {
     // Unsaved Workspace
     if (!selectedWorkspace.title && selectedWorkspace.id) {
         return (
-            <div>
+            <div className={styles.container}>
                 <h1>Unsaved Workspace🤭</h1>
                 <p>ID: {selectedWorkspace.id}</p>
 

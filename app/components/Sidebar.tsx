@@ -11,7 +11,7 @@ import { useDatabase } from "../utilities/databaseContext";
 type Props = {};
 
 const styles = {
-    sidebarContainer: "relative float-left w-60 h-full bg-slate-400 p-4",
+    sidebarContainer: "flex-none w-60 h-full bg-slate-400 p-4 relative",
     logo: "text-xl font-bold text-white bg-slate-500 p-4 flex place-content-center",
     workspacesContainer: "bg-slate-300 my-8",
     workspaces: "",
@@ -86,7 +86,7 @@ const Sidebar = (props: Props) => {
 
             <div className={styles.footer}>
                 {/* Account */}
-                <div className={styles.avatar} onClick={signOut}>OS</div>
+                <div className={styles.avatar} onClick={() => {signOut()}}>OS</div>
 
                 {/* Settings */}
                 <div className={styles.settings}>S</div>
