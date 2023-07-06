@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { useSelectedWorkspace } from "../utilities/WorkspaceContext";
+import { tabType, useSelectedWorkspace } from "../utilities/WorkspaceContext";
 
 type Props = {};
 
@@ -13,19 +13,54 @@ const styles = {
     tabContainerHeader: "text-2xl",
     tabsListContainer: "flex flex-col gap-2",
     tabWrapper: "bg-slate-300 py-2 px-4",
+    selectedTabWrapper: "bg-slate-400 py-2 px-4",
     tabText: "mx-4",
 };
 
-const TabsContainer = ({ tabs }: { tabs: string[] }) => {
+const TabsContainer = ({ tabs }: { tabs: tabType[] }) => {
+    const [selectedTabs, setSelectedTabs] = useState<number[]>([]);
+
+    // Reset tab selection when switching workspaces
+    useEffect(() => {
+        setSelectedTabs([]);
+    }, [tabs]);
+
+    const handleTabSelect = (id: number) => {
+        const tabIndex = selectedTabs.indexOf(id);
+
+        // Tab is not selected
+        if (tabIndex === -1) {
+            // Select tab
+            setSelectedTabs([...selectedTabs, id]);
+            return;
+        } else {
+            // Tab already selected => Deselect tab
+            setSelectedTabs([
+                ...selectedTabs.slice(0, tabIndex),
+                ...selectedTabs.slice(tabIndex + 1),
+            ]);
+            return;
+        }
+    };
+
     return (
         <div className={styles.tabsContainer}>
             <h1 className={styles.tabContainerHeader}>Tabs</h1>
             <ul className={styles.tabsListContainer}>
                 {tabs.map((tab, index) => {
                     return (
-                        <li className={styles.tabWrapper}>
+                        <li
+                            className={
+                                selectedTabs.includes(tab.id)
+                                    ? styles.selectedTabWrapper
+                                    : styles.tabWrapper
+                            }
+                            onClick={() => handleTabSelect(tab.id)}
+                        >
                             <input type="checkbox"></input>
-                            <span className={styles.tabText} key={index}>{tab}</span>
+                            <span className={styles.tabText} key={index}>
+                                {tab.title} , {tab.url}
+                            </span>
                         </li>
                     );
                 })}

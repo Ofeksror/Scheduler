@@ -29,41 +29,70 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
         setUnsavedWorkspaces([
             {
                 id: 1,
-                tabs: ["asdasd", "12121", "vbbvcbvc", "223213"],
+                tabs: [
+                    { id: 1, title: "a", url: "a" },
+                    { id: 2, title: "b", url: "b" },
+                    { id: 3, title: "c", url: "c" },
+                    { id: 4, title: "d", url: "d" },
+                ],
             },
             {
                 id: 2,
-                tabs: ["2Asdsadsa", "2bdd", "2cccs", "2dddd"],
+                tabs: [
+                    { id: 1, title: "a", url: "a" },
+                    { id: 2, title: "b", url: "b" },
+                    { id: 3, title: "c", url: "c" },
+                    { id: 4, title: "d", url: "d" },
+                ],
             },
             {
                 id: 3,
-                tabs: ["3aaa", "3bb", "3ccc", "4dd"],
+                tabs: [
+                    { id: 1, title: "a", url: "a" },
+                    { id: 2, title: "b", url: "b" },
+                    { id: 3, title: "c", url: "c" },
+                    { id: 4, title: "d", url: "d" },
+                ],
             },
         ]);
         setSavedWorkspaces([
             {
                 id: 4,
                 title: "Job Hunting",
-                tabs: ["LinkedIn", "TechMonster", "AllJobs"],
+                tabs: [
+                    { id: 1, title: "LinkedIn", url: "a" },
+                    { id: 2, title: "TechMonster", url: "b" },
+                    { id: 3, title: "AllJobs", url: "c" },
+                    { id: 4, title: "Resume.pdf", url: "d" },
+                ],
             },
             {
                 id: 5,
                 title: "Learning Software",
-                tabs: ["StackOverflow", "TailwindCSS", "Vercel", "React Docs"],
+                tabs: [
+                    { id: 1, title: "StackOverflow", url: "a" },
+                    { id: 2, title: "ChatGPT", url: "b" },
+                    { id: 3, title: "TailwindCSS", url: "c" },
+                    { id: 4, title: "React Docs", url: "d" },
+                ],
             },
             {
                 id: 6,
                 title: "Learning Finance",
-                tabs: ["Graham Stephan", "Rich Dad Poor Dad", "Calcalist"],
+                tabs: [
+                    { id: 1, title: "Graham Stephen", url: "a" },
+                    { id: 2, title: "Rich dad poor dad", url: "b" },
+                    { id: 3, title: "Calcalist", url: "c" },
+                ],
             },
             {
                 id: 7,
                 title: "Style Glow Up",
                 tabs: [
-                    "Top 10 Perfumes",
-                    "Old Money Fashion Stores",
-                    "ZARA",
-                    "Pull & Bear",
+                    { id: 1, title: "Pull&Bear", url: "a" },
+                    { id: 2, title: "Top 10 Perfumes", url: "b" },
+                    { id: 3, title: "ZARA", url: "c" },
+                    { id: 4, title: "Old Money Fashion Stores", url: "d" },
                 ],
             },
         ]);

@@ -3,8 +3,14 @@ import { createContext, useContext, useState } from "react";
 export type workspaceType = {
     id: number;
     title?: string;
-    tabs: string[];
+    tabs: tabType[];
 };
+
+export type tabType = {
+    id: number;
+    title: string;
+    url: string;
+}
 
 type ContextType = {
     selectedWorkspace: workspaceType | null;
