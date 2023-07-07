@@ -21,15 +21,17 @@ const styles = {
     tabsListContainer: "flex flex-col gap-0.5 bg-slate-400",
 
     tabWrapper:
-        "bg-slate-300 py-2 px-2 hover:bg-slate-400 flex justify-between items-center group cursor-pointer",
+        "bg-slate-300 py-2 px-1 hover:bg-slate-400 flex justify-between items-center group cursor-pointer",
     selectedTabWrapper:
-        "bg-slate-400 py-2 px-2 flex justify-between content-center",
+        "bg-slate-400 py-2 px-1 flex justify-between content-center",
 
     buttonsContainer: "inline-flex gap-3",
 };
 
 const TabsContainer = (props: Props) => {
     const { selectedWorkspace, setSelectedWorkspace } = useSelectedWorkspace();
+
+    // order = [ids of tabs (stores in database)]
 
     if (selectedWorkspace === null) {
         return;
@@ -108,7 +110,7 @@ const TabsContainer = (props: Props) => {
                             <span className="inline-flex items-center gap-1">
                                 <span
                                     className={
-                                        "invisible w-2 text-lg " +
+                                        "invisible w-3 text-xl " +
                                         (selectedTabs.length == 0
                                             ? "group-hover:visible"
                                             : "")
