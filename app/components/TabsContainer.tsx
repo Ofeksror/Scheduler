@@ -1,27 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { useSelectedWorkspace } from "../utilities/WorkspaceContext";
 
+// Icons
+import {
+    GoKebabHorizontal,
+    GoMoveToEnd,
+    GoPaste,
+    GoBookmark,
+    GoTrash,
+    GoGrabber,
+    GoX,
+} from "react-icons/go";
+
 type Props = {};
 
 const styles = {
-    container: "flex-1 overflow-auto w-full relative",
-    headContainer: "",
-    title: "",
+    tabsContainer: "w-full mt-6",
+    tabContainerHeader: "text-xl w-full flex justify-between",
 
-    tabsContainer: "w-11/12 mx-auto",
-    tabContainerHeader: "text-2xl",
-    tabsListContainer: "flex flex-col gap-2",
-    tabWrapper: "bg-slate-300 py-2 px-4",
-    selectedTabWrapper: "bg-slate-400 py-2 px-4",
-    tabText: "mx-4",
+    tabsListContainer: "flex flex-col gap-0.5 bg-slate-400",
+
+    tabWrapper:
+        "bg-slate-300 py-2 px-4 hover:bg-slate-400 flex justify-between items-center group cursor-pointer",
+    selectedTabWrapper:
+        "bg-slate-400 py-2 px-4 flex justify-between content-center",
+
+    buttonsContainer: "inline-flex gap-3",
 };
 
 const TabsContainer = (props: Props) => {
     const { selectedWorkspace, setSelectedWorkspace } = useSelectedWorkspace();
 
     if (selectedWorkspace === null) {
-        // Loading Screen
-        return <h1>🔔Please select a workspace🔔</h1>;
+        return;
     }
 
     const [selectedTabs, setSelectedTabs] = useState<number[]>([]);
@@ -51,34 +62,94 @@ const TabsContainer = (props: Props) => {
 
     return (
         <div className={styles.tabsContainer}>
-            <h1 className={styles.tabContainerHeader}>Tabs</h1>
+            <div className={styles.tabContainerHeader}>
+                {selectedTabs.length == 0 ? (
+                    <>
+                        <h1>Tabs</h1>
+
+                        <span className={styles.buttonsContainer}>
+                            <span>
+                                <GoKebabHorizontal />
+                            </span>
+                        </span>
+                    </>
+                ) : (
+                    <>
+                        <span>{selectedTabs.length} Tabs Selected</span>
+
+                        <span className={styles.buttonsContainer}>
+                            <span title="Move">
+                                <GoMoveToEnd />
+                            </span>
+                            <span title="Save as Resource">
+                                <GoBookmark />
+                            </span>
+                            <span title="Delete">
+                                <GoTrash />
+                            </span>
+                        </span>
+                    </>
+                )}
+            </div>
             <ul className={styles.tabsListContainer}>
                 {selectedWorkspace.tabs.map((tab, index) => {
-                    if (selectedTabs.includes(tab.id))
-                        return (
-                            <li
-                                className={styles.selectedTabWrapper}
-                                onClick={() => handleTabSelect(tab.id)}
-                            >
-                                <input type="checkbox" checked></input>
-                                <span className={styles.tabText} key={index}>
+                    const isSelected = selectedTabs.includes(tab.id);
+
+                    return (
+                        <li
+                            className={
+                                isSelected
+                                    ? styles.selectedTabWrapper
+                                    : styles.tabWrapper
+                            }
+                            onClick={() => handleTabSelect(tab.id)}
+                            key={index}
+                        >
+                            <span className="inline-flex items-center gap-4">
+                                <span
+                                    className={
+                                        "invisible w-5 text-2xl " +
+                                        (selectedTabs.length == 0
+                                            ? "group-hover:visible"
+                                            : "")
+                                    }
+                                >
+                                    <GoGrabber />
+                                </span>
+
+                                <input
+                                    type="checkbox"
+                                    className="inline-block w-5 text-2xl"
+                                    checked={isSelected}
+                                ></input>
+                                <span>
                                     {tab.title} , {tab.url}
                                 </span>
-                            </li>
-                        );
-                    else {
-                        return (
-                            <li
-                                className={styles.tabWrapper}
-                                onClick={() => handleTabSelect(tab.id)}
+                            </span>
+
+                            <span
+                                className={
+                                    "hidden gap-3 " +
+                                    (selectedTabs.length == 0
+                                        ? "group-hover:inline-flex"
+                                        : "")
+                                }
                             >
-                                <input type="checkbox" checked={false}></input>
-                                <span className={styles.tabText} key={index}>
-                                    {tab.title} , {tab.url}
+                                <span title="Move">
+                                    <GoMoveToEnd />
                                 </span>
-                            </li>
-                        );
-                    }
+                                <span title="Copy Link">
+                                    <GoPaste />
+                                </span>
+                                <span title="Save as Resource">
+                                    <GoBookmark />
+                                </span>
+                                <span title="Close">
+                                    <GoX />
+                                </span>
+                            </span>
+                        </li>
+                    );
                 })}
             </ul>
         </div>

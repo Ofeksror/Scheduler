@@ -7,8 +7,8 @@ import TabsContainer from "./TabsContainer";
 type Props = {};
 
 const styles = {
-    container: "flex-1 overflow-auto w-full relative",
-    headContainer: "",
+    container: "px-12 py-4 flex-1 overflow-auto w-full relative",
+    headContainer: "text-2xl",
     title: "",
 };
 
@@ -17,15 +17,22 @@ const Workspace = (props: Props) => {
 
     // Unselected Workspace
     if (selectedWorkspace === null) {
-        return;
+        // Loading Screen
+        return <h1>🔔Please select a workspace🔔</h1>;
     }
 
     // Unsaved Workspace
     if (!selectedWorkspace.title && selectedWorkspace.id) {
         return (
             <div className={styles.container}>
-                <h1>Unsaved Workspace🤭</h1>
-                <p>ID: {selectedWorkspace.id}</p>
+                <div className={styles.headContainer}>
+                    <h1>
+                        Unsaved Workspace🤭{" "}
+                        <span className="text-lg text-slate-600">
+                            ID#{selectedWorkspace.id}
+                        </span>
+                    </h1>
+                </div>
 
                 <TabsContainer />
             </div>
