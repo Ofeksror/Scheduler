@@ -21,9 +21,9 @@ const styles = {
     tabsListContainer: "flex flex-col gap-0.5 bg-slate-400",
 
     tabWrapper:
-        "bg-slate-300 py-2 px-4 hover:bg-slate-400 flex justify-between items-center group cursor-pointer",
+        "bg-slate-300 py-2 px-2 hover:bg-slate-400 flex justify-between items-center group cursor-pointer",
     selectedTabWrapper:
-        "bg-slate-400 py-2 px-4 flex justify-between content-center",
+        "bg-slate-400 py-2 px-2 flex justify-between content-center",
 
     buttonsContainer: "inline-flex gap-3",
 };
@@ -105,10 +105,10 @@ const TabsContainer = (props: Props) => {
                             onClick={() => handleTabSelect(tab.id)}
                             key={index}
                         >
-                            <span className="inline-flex items-center gap-4">
+                            <span className="inline-flex items-center gap-1">
                                 <span
                                     className={
-                                        "invisible w-5 text-2xl " +
+                                        "invisible w-2 text-lg " +
                                         (selectedTabs.length == 0
                                             ? "group-hover:visible"
                                             : "")
@@ -122,7 +122,7 @@ const TabsContainer = (props: Props) => {
                                     className="inline-block w-5 text-2xl"
                                     checked={isSelected}
                                 ></input>
-                                <span>
+                                <span className="ml-4">
                                     {tab.title} , {tab.url}
                                 </span>
                             </span>
