@@ -131,7 +131,7 @@ const TabsContainer = (props: Props) => {
 
                             <span
                                 className={
-                                    "hidden gap-3 " +
+                                    "hidden gap-3 mr-3 " +
                                     (selectedTabs.length == 0
                                         ? "group-hover:inline-flex"
                                         : "")
