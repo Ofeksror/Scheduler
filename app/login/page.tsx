@@ -8,6 +8,10 @@ type Props = {};
 
 const styles = {
     container: "w-screen h-screen bg-slate-300",
+    header: "",
+    switcherContainer: "",
+    providersContainer: "",
+
 };
 
 const LoginPage = (props: Props) => {
@@ -17,7 +21,7 @@ const LoginPage = (props: Props) => {
         if (session.status === "authenticated") {
             return redirect("/");
         }
-    }, [session.status])
+    }, [session])
 
     const [email, setEmail] = useState<string>("");
     const emailRegex = /^\S+@\S+\.\S+$/;
@@ -37,46 +41,9 @@ const LoginPage = (props: Props) => {
         signIn(provider);
     };
 
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const credentialsAuthenticate = async () => {
-        // Validate form
-
-        // Valid Email
-        if (!email.match(emailRegex)) {
-            setErrorMessage("Invalid email address!");
-        }
-        // Passwords match
-        if (repeatedPassword !== password) {
-            setErrorMessage("Passwords don't match!");
-        }
-
-        // Login
-        if (authTypeLogin) {
-            const res: any = signIn("Credentials", {
-                email: email,
-                password: password,
-            });
-
-            redirect("/");
-        } // Register
-        else {
-            const res: any = await axios
-                .post("/api/register", { firstName, lastName, email, password })
-                .then(async () => {
-                    const res: any = signIn("Credentials", {
-                        email: email,
-                        password: password,
-                    });
-
-                    console.log(`res: ${res}`);
-
-                    redirect("/");
-                })
-                .catch((err: any) => {
-                    console.error(`Error in login/page.tsx: ${err}`);
-                });
-        }
+        // TODO
     };
 
     return (
@@ -108,6 +75,7 @@ const LoginPage = (props: Props) => {
                     </button>
                 ))}
             </div>
+
             {authTypeLogin ? (
                 <div>
                     <input

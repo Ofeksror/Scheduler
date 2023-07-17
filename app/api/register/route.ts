@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     await dbConnect();
 
     const databaseUser = await User.findOne({ email: email });
-    
+
     if (databaseUser) {
         console.log("Email already exists!");
         return NextResponse.json(
@@ -43,6 +43,12 @@ export async function POST(req: NextRequest) {
             );
         })
         .catch((err: string) => {
+            console.error(`Error from register route: ${err}`);
             return NextResponse.json({ error: err }, { status: 400 });
         });
+
+    return NextResponse.json(
+        { error: "How did you get here?" },
+        { status: 404 }
+    );
 }

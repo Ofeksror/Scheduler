@@ -2,6 +2,8 @@
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
+import { useEffect } from "react";
+
 import Sidebar from "./components/Sidebar";
 import Workspace from "./components/Workspace";
 
@@ -19,12 +21,14 @@ const styles = {
 
 export default function Home() {
     const session = useSession();
+    
+    useEffect(() => {
+        console.log(session);
+        if (session.status !== "authenticated") {
+            return redirect("/login");
+        }
+    }, [session])
 
-    if (session.status === "unauthenticated") {
-        return redirect("/login");
-    }
-
-    console.log(session);
 
     return (
         <div className={styles.rootContainer}>

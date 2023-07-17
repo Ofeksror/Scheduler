@@ -1,0 +1,16 @@
+{
+    "manifest_version": 3,
+    "name": "Tab Manager Extension",
+    "version": "0.1",
+    "icons": {
+    },
+    "action": {
+        "default_popup": "popup/popup.html"
+    },
+    "host_permissions": [
+        "https://developer.chrome.com/*"
+    ],
+    "permissions": [
+        "tabGroups"
+    ]
+}

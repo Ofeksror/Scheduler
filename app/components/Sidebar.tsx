@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useContext, useEffect } from "react";
 
-import { signOut } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
 
 import {
     useSelectedWorkspace,
@@ -27,6 +27,11 @@ const styles = {
 };
 
 const Sidebar = (props: Props) => {
+
+    const session = useSession();
+
+    console.log(session)
+
     const {
         savedWorkspaces,
         unsavedWorkspaces,
