@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { tabType, useSelectedWorkspace } from "../utilities/WorkspaceContext";
 
 import TabsContainer from "./TabsContainer";
+import { DragDropContext } from "react-beautiful-dnd";
 
 type Props = {};
 
@@ -11,6 +12,10 @@ const styles = {
     headContainer: "text-2xl",
     title: "",
 };
+
+const onDragEnd = (result: any) => {
+    // TODO
+}
 
 const Workspace = (props: Props) => {
     const { selectedWorkspace, setSelectedWorkspace } = useSelectedWorkspace();
@@ -79,7 +84,10 @@ const Workspace = (props: Props) => {
             <div>
                 <p>{selectedWorkspace.title}</p>
                 <p>ID: {selectedWorkspace.id}</p>
-                <TabsContainer />
+                
+                <DragDropContext onDragEnd={onDragEnd}>
+                    <TabsContainer />
+                </DragDropContext>
             </div>
         </div>
     );

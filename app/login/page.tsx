@@ -1,7 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { redirect } from "next/navigation";
+import axios from "axios";
 
 type Props = {};
 
@@ -11,32 +12,72 @@ const styles = {
 
 const LoginPage = (props: Props) => {
     const session = useSession();
-
-    if (session.status === "authenticated") {
-        return redirect("/");
-    }
-
-    const [authTypeLogin, setAuthTypeLogin] = useState<boolean>(true);
+    
+    useEffect(() => {
+        if (session.status === "authenticated") {
+            return redirect("/");
+        }
+    }, [session.status])
 
     const [email, setEmail] = useState<string>("");
+    const emailRegex = /^\S+@\S+\.\S+$/;
     const [password, setPassword] = useState<string>("");
 
     const [firstName, setFirstName] = useState<string>("");
     const [lastName, setLastName] = useState<string>("");
     const [repeatedPassword, setRepeatedPassword] = useState<string>("");
 
+    const [authTypeLogin, setAuthTypeLogin] = useState<boolean>(true);
     const switchAuthType = () => {
         setAuthTypeLogin(!authTypeLogin);
     };
 
     const providers = ["GitHub"];
-
     const handleProviderAuth = (provider: string) => {
         signIn(provider);
     };
 
-    const credentialsAuthenticate = () => {
-    }
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+    const credentialsAuthenticate = async () => {
+        // Validate form
+
+        // Valid Email
+        if (!email.match(emailRegex)) {
+            setErrorMessage("Invalid email address!");
+        }
+        // Passwords match
+        if (repeatedPassword !== password) {
+            setErrorMessage("Passwords don't match!");
+        }
+
+        // Login
+        if (authTypeLogin) {
+            const res: any = signIn("Credentials", {
+                email: email,
+                password: password,
+            });
+
+            redirect("/");
+        } // Register
+        else {
+            const res: any = await axios
+                .post("/api/register", { firstName, lastName, email, password })
+                .then(async () => {
+                    const res: any = signIn("Credentials", {
+                        email: email,
+                        password: password,
+                    });
+
+                    console.log(`res: ${res}`);
+
+                    redirect("/");
+                })
+                .catch((err: any) => {
+                    console.error(`Error in login/page.tsx: ${err}`);
+                });
+        }
+    };
 
     return (
         <div className={styles.container}>
@@ -50,7 +91,7 @@ const LoginPage = (props: Props) => {
                     </span>
                 ) : (
                     <span>
-                        Already registered? 
+                        Already registered?
                         <span onClick={switchAuthType}>Log in</span>
                     </span>
                 )}
