@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
     const hashedPassword = await md5(data.password);
 
     let responseMessage;
+    let responseUser;
     let responseStatus;
 
     await User.create({
@@ -33,9 +34,9 @@ export async function POST(req: NextRequest) {
         email: data.email,
         hashedPassword,
     })
-        .then((save) => {
-            console.log(`FROM save: ${save}`);
+        .then((newUser) => {
             responseMessage = "Successfully created new user.";
+            responseUser = newUser;
             responseStatus = 200;
         })
         .catch((err) => {
@@ -44,8 +45,15 @@ export async function POST(req: NextRequest) {
             responseStatus = 400;
         });
 
-    return NextResponse.json(
-        { message: responseMessage },
-        { status: responseStatus }
-    );
+    if (responseUser) {
+        return NextResponse.json(
+            { message: responseMessage, user: responseUser },
+            { status: responseStatus }
+        );
+    } else {
+        return NextResponse.json(
+            { message: responseMessage },
+            { status: responseStatus }
+        );
+    }
 }

@@ -17,13 +17,11 @@ const LoginPage = (props: Props) => {
     const session = useSession();
 
     useEffect(() => {
-        if (session.status === "authenticated") {
+        if (session.status === "authenticated")
             return redirect("/");
-        }
-    }, [session]);
+    }, [session])
 
     const [email, setEmail] = useState<string>("");
-    const emailRegex = "";
     const [password, setPassword] = useState<string>("");
 
     const [firstName, setFirstName] = useState<string>("");
@@ -39,18 +37,30 @@ const LoginPage = (props: Props) => {
 
     const loginUser = async (e: any) => {
         // Validate form
-        if (
-            !email ||
-            !password
-        ) {
-            setFormMessage("Missing credentials! Please fill the entire form");
-            return;
-        }
-        if (!email.match(/^\S+@\S+\.\S+$/)) {
-            setFormMessage("Invalid email address!");
-            return;
+        // Ignore validating the form again if the user has just registered
+        if (authTypeLogin) {
+            if (!email || !password) {
+                setFormMessage("Missing credentials! Please fill the entire form");
+                return;
+            }
+            if (!email.match(/^\S+@\S+\.\S+$/)) {
+                setFormMessage("Invalid email address!");
+                return;
+            }
         }
 
+        signIn("credentials", {
+            email: email,
+            password: password,
+            redirect: false
+        })
+        .then((result) => {
+            if (result) {
+                console.log(result)
+                if (result.error)
+                    setFormMessage(result.error);
+            }
+        });
     };
 
     const registerUser = async (e: any) => {
