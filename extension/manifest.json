@@ -7,10 +7,14 @@
     "action": {
         "default_popup": "popup/popup.html"
     },
-    "host_permissions": [
-        "https://developer.chrome.com/*"
-    ],
     "permissions": [
-        "tabGroups"
-    ]
+        "tabs"
+    ],
+    "background": {
+        "service_worker": "service_worker.js",
+        "type": "module"
+    },
+    "externally_connectable": {
+        "matches": ["http://localhost:3000/*"]
+    }
 }

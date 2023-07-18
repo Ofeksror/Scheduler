@@ -11,20 +11,19 @@ const styles = {
     header: "",
     switcherContainer: "",
     providersContainer: "",
-
 };
 
 const LoginPage = (props: Props) => {
     const session = useSession();
-    
+
     useEffect(() => {
         if (session.status === "authenticated") {
             return redirect("/");
         }
-    }, [session])
+    }, [session]);
 
     const [email, setEmail] = useState<string>("");
-    const emailRegex = /^\S+@\S+\.\S+$/;
+    const emailRegex = "";
     const [password, setPassword] = useState<string>("");
 
     const [firstName, setFirstName] = useState<string>("");
@@ -36,14 +35,77 @@ const LoginPage = (props: Props) => {
         setAuthTypeLogin(!authTypeLogin);
     };
 
-    const providers = ["GitHub"];
-    const handleProviderAuth = (provider: string) => {
-        signIn(provider);
+    const [formMessage, setFormMessage] = useState<string>("");
+
+    const loginUser = async (e: any) => {
+        // Validate form
+        if (
+            !email ||
+            !password
+        ) {
+            setFormMessage("Missing credentials! Please fill the entire form");
+            return;
+        }
+        if (!email.match(/^\S+@\S+\.\S+$/)) {
+            setFormMessage("Invalid email address!");
+            return;
+        }
+
     };
 
+    const registerUser = async (e: any) => {
+        // Validate form
+        if (
+            !firstName ||
+            !lastName ||
+            !email ||
+            !password ||
+            !repeatedPassword
+        ) {
+            setFormMessage("Missing credentials! Please fill the entire form");
+            return;
+        }
+        if (!email.match(/^\S+@\S+\.\S+$/)) {
+            setFormMessage("Invalid email address!");
+            return;
+        }
+        if (repeatedPassword !== password) {
+            setFormMessage("Passwords don't match!");
+            return;
+        }
 
-    const credentialsAuthenticate = async () => {
-        // TODO
+        // Register the user to the database
+        try {
+            const response = await fetch(`/api/auth/register`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                    firstName: firstName,
+                    lastName: lastName,
+                }),
+            });
+            if (response.status == 200) {
+                // Successful, continue to login
+                setFormMessage("");
+                console.log("Successful");
+            } else if (response.status == 400) {
+                // Email already exists
+                setFormMessage(
+                    "Email already exists! Please use a different one or login."
+                );
+                console.log("Email exists");
+            } else {
+                setFormMessage("I have no idea.");
+                console.log("What?");
+            }
+        } catch (err) {
+            console.log(err);
+        }
+
+        // Login User
+        loginUser(e);
     };
 
     return (
@@ -52,32 +114,20 @@ const LoginPage = (props: Props) => {
                 <h1>{authTypeLogin ? "Log in🤗" : "Register👋"}</h1>
             </div>
             <div className={styles.switcherContainer}>
-                {authTypeLogin ? (
-                    <span>
-                        New here? <span onClick={switchAuthType}>Register</span>
+                <span>
+                    {authTypeLogin ? "New here?" : "Already registered?"}
+                    <span onClick={switchAuthType}>
+                        {authTypeLogin ? "Register" : "Log in"}
                     </span>
-                ) : (
-                    <span>
-                        Already registered?
-                        <span onClick={switchAuthType}>Log in</span>
-                    </span>
-                )}
+                </span>
             </div>
 
-            <div className={styles.providersContainer}>
-                {providers.map((provider: string) => (
-                    <button
-                        onClick={() => {
-                            handleProviderAuth(provider.toLowerCase());
-                        }}
-                    >
-                        Continue with {provider}
-                    </button>
-                ))}
+            <div>
+                <h2>{formMessage}</h2>
             </div>
 
             {authTypeLogin ? (
-                <div>
+                <form>
                     <input
                         placeholder="Email"
                         value={email}
@@ -90,9 +140,9 @@ const LoginPage = (props: Props) => {
                         onChange={(e) => setPassword(e.target.value)}
                         type="password"
                     ></input>
-                </div>
+                </form>
             ) : (
-                <div>
+                <form>
                     <input
                         placeholder="First name"
                         value={firstName}
@@ -121,10 +171,10 @@ const LoginPage = (props: Props) => {
                         onChange={(e) => setRepeatedPassword(e.target.value)}
                         type="password"
                     ></input>
-                </div>
+                </form>
             )}
 
-            <button onClick={credentialsAuthenticate}>
+            <button onClick={authTypeLogin ? loginUser : registerUser}>
                 {authTypeLogin ? "Login" : "Register"}
             </button>
         </div>
