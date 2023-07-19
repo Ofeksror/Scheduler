@@ -75,7 +75,7 @@ const Sidebar = (props: Props) => {
                 <ul className={styles.workspaces}>
 
 
-                    {savedWorkspaces.map((workspaceData) => {
+                    {savedWorkspaces.map((workspaceData, index) => {
                         return (
                             <Workspace
                                 data={workspaceData}
@@ -83,6 +83,7 @@ const Sidebar = (props: Props) => {
                                     selectedWorkspace?._id == workspaceData._id
                                 }
                                 onClickHandler={handleSelectWorkspace}
+                                key={index}
                             />
                         );
                     })}

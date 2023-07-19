@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelectedWorkspace } from "../utilities/WorkspaceContext";
 
-import { Droppable } from "react-beautiful-dnd";
-
 // Icons
 import {
     GoKebabHorizontal,
