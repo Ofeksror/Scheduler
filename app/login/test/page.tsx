@@ -30,7 +30,9 @@ const testPage = (props: Props) => {
 
     return (
         <div>
-            <button onClick={handler}>Click to try</button>
+            <p>Email: <span className="italic">test@test.test</span></p>
+            <p>Password: <span className="italic">test</span></p>
+            <button onClick={handler}>Click to Authenticate via demo user</button>
         </div>
     );
 };

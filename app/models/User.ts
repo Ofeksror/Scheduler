@@ -23,6 +23,10 @@ const userSchema = new Schema({
         required: true,
         minlength: 5,
     },
+    workspaces: [{
+        type: Schema.Types.ObjectId,
+        ref: "Workspace"
+    }]
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);

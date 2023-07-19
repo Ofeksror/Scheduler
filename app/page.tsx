@@ -22,15 +22,11 @@ const styles = {
 export default function Home() {
     const session = useSession();
     
-    console.log(session);
-
     useEffect(() => {
-        console.log(session);
         if (session.status !== "authenticated") {
             return redirect("/login");
         }
     }, [session])
-
 
     return (
         <div className={styles.rootContainer}>
