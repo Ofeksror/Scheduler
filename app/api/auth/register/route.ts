@@ -33,6 +33,7 @@ export async function POST(req: NextRequest) {
         lastName: data.lastName,
         email: data.email,
         hashedPassword,
+        workspaces: [],
     })
         .then((newUser) => {
             responseMessage = "Successfully created new user.";

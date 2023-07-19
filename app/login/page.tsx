@@ -17,9 +17,8 @@ const LoginPage = (props: Props) => {
     const session = useSession();
 
     useEffect(() => {
-        if (session.status === "authenticated")
-            return redirect("/");
-    }, [session])
+        if (session.status === "authenticated") return redirect("/");
+    }, [session]);
 
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
@@ -40,7 +39,9 @@ const LoginPage = (props: Props) => {
         // Ignore validating the form again if the user has just registered
         if (authTypeLogin) {
             if (!email || !password) {
-                setFormMessage("Missing credentials! Please fill the entire form");
+                setFormMessage(
+                    "Missing credentials! Please fill the entire form"
+                );
                 return;
             }
             if (!email.match(/^\S+@\S+\.\S+$/)) {
@@ -52,13 +53,11 @@ const LoginPage = (props: Props) => {
         signIn("credentials", {
             email: email,
             password: password,
-            redirect: false
-        })
-        .then((result) => {
+            redirect: false,
+        }).then((result) => {
             if (result) {
-                console.log(result)
-                if (result.error)
-                    setFormMessage(result.error);
+                console.log(result);
+                if (result.error) setFormMessage(result.error);
             }
         });
     };
@@ -120,6 +119,22 @@ const LoginPage = (props: Props) => {
 
     return (
         <div className={styles.container}>
+            <div className="bg-red-600 flex gap-4">
+                <button onClick={() => console.log(session)}>
+                    Log Session
+                </button>
+                <button
+                    onClick={() => {
+                        signIn("credentials", {
+                            email: "test@test.test",
+                            password: "test",
+                            redirect: false,
+                        });
+                    }}
+                >
+                    Quick sign in [Demo Only]
+                </button>
+            </div>
             <div className={styles.header}>
                 <h1>{authTypeLogin ? "Log in🤗" : "Register👋"}</h1>
             </div>

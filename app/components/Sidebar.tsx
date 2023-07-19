@@ -30,8 +30,6 @@ const Sidebar = (props: Props) => {
 
     const session = useSession();
 
-    console.log(session)
-
     const {
         savedWorkspaces,
         unsavedWorkspaces,
@@ -91,7 +89,11 @@ const Sidebar = (props: Props) => {
 
             <div className={styles.footer}>
                 {/* Account */}
-                <div className={styles.avatar} onClick={() => {signOut()}}>OS</div>
+                <div className={styles.avatar} onClick={() => {signOut()}}>
+                    {
+                        session.data?.user?.firstName[0] + session.data?.user?.lastName[0]
+                    }
+                </div>
 
                 {/* Settings */}
                 <div className={styles.settings}>S</div>
