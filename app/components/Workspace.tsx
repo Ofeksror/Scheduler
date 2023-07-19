@@ -27,14 +27,14 @@ const Workspace = (props: Props) => {
     }
 
     // Unsaved Workspace
-    if (!selectedWorkspace.title && selectedWorkspace.id) {
+    if (!selectedWorkspace.title && selectedWorkspace._id) {
         return (
             <div className={styles.container}>
                 <div className={styles.headContainer}>
                     <h1>
                         Unsaved Workspace🤭{" "}
                         <span className="text-lg text-slate-600">
-                            ID#{selectedWorkspace.id}
+                            ID#{selectedWorkspace._id.toString()}
                         </span>
                     </h1>
                 </div>
@@ -83,7 +83,7 @@ const Workspace = (props: Props) => {
             </div>
             <div>
                 <p>{selectedWorkspace.title}</p>
-                <p>ID: {selectedWorkspace.id}</p>
+                <p>ID: {selectedWorkspace._id.toString()}</p>
                 
                 <DragDropContext onDragEnd={onDragEnd}>
                     <TabsContainer />

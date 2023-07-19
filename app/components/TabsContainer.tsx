@@ -39,6 +39,7 @@ const TabsContainer = (props: Props) => {
         return;
     }
 
+    // Stores the indexes of the tabs selected
     const [selectedTabs, setSelectedTabs] = useState<number[]>([]);
 
     // Reset tab selection when switching workspaces
@@ -46,19 +47,19 @@ const TabsContainer = (props: Props) => {
         setSelectedTabs([]);
     }, [selectedWorkspace]);
 
-    const handleTabSelect = (id: number) => {
-        const tabIndex = selectedTabs.indexOf(id);
+    const handleTabSelect = (tabIndexKey: number) => {
+        const indexInSelectedTabs = selectedTabs.indexOf(tabIndexKey);
 
         // Tab is not selected
-        if (tabIndex === -1) {
+        if (indexInSelectedTabs === -1) {
             // Select tab
-            setSelectedTabs([...selectedTabs, id]);
+            setSelectedTabs([...selectedTabs, tabIndexKey]);
             return;
         } else {
             // Tab already selected => Deselect tab
             setSelectedTabs([
-                ...selectedTabs.slice(0, tabIndex),
-                ...selectedTabs.slice(tabIndex + 1),
+                ...selectedTabs.slice(0, indexInSelectedTabs),
+                ...selectedTabs.slice(indexInSelectedTabs + 1),
             ]);
             return;
         }
@@ -97,7 +98,7 @@ const TabsContainer = (props: Props) => {
             </div>
             <ul className={styles.tabsListContainer}>
                 {selectedWorkspace.tabs.map((tab, index) => {
-                    const isSelected = selectedTabs.includes(tab.id);
+                    const isSelected = selectedTabs.includes(index);
 
                     return (
                         <li
@@ -106,7 +107,7 @@ const TabsContainer = (props: Props) => {
                                     ? styles.selectedTabWrapper
                                     : styles.tabWrapper
                             }
-                            onClick={() => handleTabSelect(tab.id)}
+                            onClick={() => handleTabSelect(index)}
                             key={index}
                         >
                             <span className="inline-flex items-center gap-1">
