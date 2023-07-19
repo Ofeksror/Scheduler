@@ -44,8 +44,8 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
 
                 const results = await Promise.all(promises);
 
-                const workspacesFetched = results.map(result => result.data);
-                setSavedWorkspaces(workspacesFetched as workspaceType[])
+                const workspacesFetched = results.map(result => result.data.workspace);
+                setSavedWorkspaces(workspacesFetched)
             } catch (err) {
                 console.warn("Failed to fetch workspaces. Error: " + err);
             }

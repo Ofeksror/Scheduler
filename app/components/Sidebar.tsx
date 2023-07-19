@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useContext, useEffect } from "react";
 
-import { signOut, useSession } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react";
 
 import {
     useSelectedWorkspace,
@@ -27,9 +27,6 @@ const styles = {
 };
 
 const Sidebar = (props: Props) => {
-
-    const session = useSession();
-
     const {
         savedWorkspaces,
         unsavedWorkspaces,
@@ -48,6 +45,7 @@ const Sidebar = (props: Props) => {
             <div className={styles.logo}>Tab Manager</div>
 
             {/* Unsaved Workspaces */}
+            {/*
             <div className={styles.workspacesContainer}>
                 <h2>Unsaved Workspaces</h2>
 
@@ -65,6 +63,8 @@ const Sidebar = (props: Props) => {
                     })}
                 </ul>
             </div>
+            */}
+            <h2>Unsaved Workspaces supposed to be here</h2>
 
             <hr className={styles.divider}></hr>
 
@@ -73,12 +73,14 @@ const Sidebar = (props: Props) => {
                 <h2>Saved Workspaces</h2>
 
                 <ul className={styles.workspaces}>
+
+
                     {savedWorkspaces.map((workspaceData) => {
                         return (
                             <Workspace
                                 data={workspaceData}
                                 isSelected={
-                                    selectedWorkspace?.id == workspaceData.id
+                                    selectedWorkspace?._id == workspaceData._id
                                 }
                                 onClickHandler={handleSelectWorkspace}
                             />
@@ -89,14 +91,17 @@ const Sidebar = (props: Props) => {
 
             <div className={styles.footer}>
                 {/* Account */}
-                <div className={styles.avatar} onClick={() => {signOut()}}>
-                    {
-                        session.data?.user?.firstName[0] + session.data?.user?.lastName[0]
-                    }
+                <div
+                    className={styles.avatar}
+                    onClick={() => {
+                        signOut();
+                    }}
+                >
+                    👤
                 </div>
 
                 {/* Settings */}
-                <div className={styles.settings}>S</div>
+                <div className={styles.settings}>⚙️</div>
             </div>
         </div>
     );
@@ -109,18 +114,15 @@ type WorkspaceProps = {
 };
 
 const Workspace = ({ data, isSelected, onClickHandler }: WorkspaceProps) => {
-    
-    console.log(data.workspace._id);
-
     return (
         <li
             className={
                 isSelected ? styles.selectedWorkspaceItem : styles.workspaceItem
             }
-            id={data.workspace._id.toString()}
+            id={data._id.toString()}
             onClick={(e) => onClickHandler(data)}
         >
-            {data.workspace.title ? data.workspace.title : "Unsaved Workspace"}
+            {data.title ? data.title : "Unsaved Workspace"}
         </li>
     );
 };
