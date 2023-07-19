@@ -8,7 +8,7 @@ import md5 from "md5";
 import dbConnect from "@/app/lib/dbConnect";
 import { ObjectId } from "mongoose";
 import { workspaceType } from "@/app/utilities/WorkspaceContext";
-
+import Workspace from "@/app/models/Workspace";
 
 /* Resource for adding properties to the Session object
 // https://reacthustle.com/blog/extend-user-session-nextauth-typescript */
@@ -19,9 +19,9 @@ declare module "next-auth" {
         firstName: string;
         lastName: string;
         _id: ObjectId;
-        workspaces: workspaceType[];
+        workspaces: ObjectId[];
     }
-  
+
     interface Session extends DefaultSession {
         user?: User;
     }
@@ -33,7 +33,7 @@ declare module "next-auth/jwt" {
         firstName: string;
         lastName: string;
         userId: ObjectId;
-        workspaces: workspaceType[];
+        workspaces: ObjectId[];
     }
 }
 
@@ -54,7 +54,6 @@ const handler = NextAuth({
             return token;
         },
         async session({ session, token, user }) {
-
             if (token && session.user) {
                 session.user.email = token.email;
                 session.user.firstName = token.firstName;
@@ -62,9 +61,9 @@ const handler = NextAuth({
                 session.user._id = token.userId;
                 session.user.workspaces = token.workspaces;
             }
-            
+
             return session;
-        }
+        },
     },
     providers: [
         CredentialsProvider({

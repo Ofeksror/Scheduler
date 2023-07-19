@@ -1,15 +1,16 @@
+import { ObjectId } from "mongoose";
 import { createContext, useContext, useState } from "react";
 
 export type workspaceType = {
-    id: number;
+    _id: ObjectId;
     title?: string;
     tabs: tabType[];
 };
 
 export type tabType = {
-    id: number;
     title: string;
     url: string;
+    pinned: boolean;
 }
 
 type ContextType = {

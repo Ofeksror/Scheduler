@@ -109,15 +109,18 @@ type WorkspaceProps = {
 };
 
 const Workspace = ({ data, isSelected, onClickHandler }: WorkspaceProps) => {
+    
+    console.log(data.workspace._id);
+
     return (
         <li
             className={
                 isSelected ? styles.selectedWorkspaceItem : styles.workspaceItem
             }
-            id={data.id.toString()}
+            id={data.workspace._id.toString()}
             onClick={(e) => onClickHandler(data)}
         >
-            {data.title ? data.title : "Unsaved Workspace"}
+            {data.workspace.title ? data.workspace.title : "Unsaved Workspace"}
         </li>
     );
 };
