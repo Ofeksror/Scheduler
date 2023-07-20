@@ -4,6 +4,8 @@ import { tabType, useSelectedWorkspace } from "../utilities/WorkspaceContext";
 
 import TabsContainer from "./TabsContainer";
 import { DragDropContext } from "react-beautiful-dnd";
+import axios from "axios";
+import { useDatabase } from "../utilities/databaseContext";
 
 type Props = {};
 
@@ -18,9 +20,8 @@ const onDragEnd = (result: any) => {
 }
 
 const Workspace = (props: Props) => {
+    const { refreshWorkspace } = useDatabase();
     const { selectedWorkspace, setSelectedWorkspace } = useSelectedWorkspace();
-
-
 
     // Handle switching to different workspaces
     useEffect(() => {
@@ -54,8 +55,22 @@ const Workspace = (props: Props) => {
                 title: workspaceTitle,
             });
 
-            // TODO: Update title on database
-            
+            // Update title on database
+            axios({
+                method: "put",
+                url: `/api/workspaces/title/`,
+                data: {
+                    workspaceId: selectedWorkspace._id,
+                    title: workspaceTitle
+                }
+            })
+                .then((res) => {
+                    refreshWorkspace(selectedWorkspace._id);
+                })
+                .catch((error) => {
+                    console.warn(error);
+                })
+
             // TODO: Refresh databaseContext
         }
     };

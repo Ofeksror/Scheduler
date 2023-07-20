@@ -1,4 +1,7 @@
 "use client";
+import { useSelectedWorkspace } from "@/app/utilities/WorkspaceContext";
+import { useDatabase } from "@/app/utilities/databaseContext";
+import axios from "axios";
 import { ObjectId } from "mongoose";
 import React, { useState } from "react";
 
@@ -7,6 +10,13 @@ interface Props {
 }
 
 const NewTab = (props: Props) => {
+
+    const { refreshWorkspace } = useDatabase();
+    const { selectedWorkspace } = useSelectedWorkspace();
+
+    if (!selectedWorkspace)
+        return <></>;
+
     const [tabTitle, setTabTitle] = useState<string>("");
     const [tabUrl, setTabUrl] = useState<string>("");
     const [isPinned, setIsPinned] = useState<boolean>(false);
@@ -14,7 +24,23 @@ const NewTab = (props: Props) => {
     const handleFormSubmittion = () => {
         console.log("Mark I:\n/handleFormSubmittion func was called/\ndetails provided by user:\n" + {tabTitle, tabUrl, isPinned});
 
-        
+        axios({
+            method: "post",
+            url: `/api/workspaces/${selectedWorkspace._id}/title/`,
+            data: {
+                "newTab": {
+                    "url": tabUrl,
+                    "title": tabTitle,
+                    "pinned": isPinned
+                }
+            }
+        })
+            .then((res) => {
+                refreshWorkspace(selectedWorkspace._id);
+            })
+            .catch((error) => {
+                console.warn(error);
+            })
     }
 
 
