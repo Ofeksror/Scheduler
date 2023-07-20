@@ -39,7 +39,7 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
         const fetchWorkspaces = async () => {
             try {
                 const promises = workspaceIds.map((_id) => {
-                    return axios.get(`/api/db/workspaces/${_id}`)
+                    return axios.get(`/db/workspaces/${_id}`)
                 })
 
                 const results = await Promise.all(promises);
