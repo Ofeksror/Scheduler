@@ -9,7 +9,7 @@ type ContextType = {
     setUnsavedWorkspaces: (workspaces: workspaceType[]) => void;
     savedWorkspaces: workspaceType[];
     setSavedWorkspaces: (workspaces: workspaceType[]) => void;
-    refreshWorkspace: (_id: ObjectId) => void;
+    refreshWorkspace: (updatedWorkspace: workspaceType) => void;
     refreshWorkspaces: () => void;
 };
 
@@ -34,18 +34,12 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
     );
     const [savedWorkspaces, setSavedWorkspaces] = useState<workspaceType[]>([]);
 
-    const refreshWorkspace = async (workspaceId: ObjectId) => {
-        if (session.status != "authenticated") return;
+    const refreshWorkspace = async (updatedWorkspace: workspaceType) => {
+        if (session.status !== "authenticated") return;
 
-        try {
-            // Get the updated/new workspace
-            const updatedWorkspace = await axios.get(`/api/workspaces/${workspaceId}`)
-                .then((res) => {
-                    return res.data.workspace;
-                })
-            
-            const prevWorkspaceIndex = savedWorkspaces.findIndex((workspace) => workspace._id === workspaceId);
-            
+        try {           
+            const prevWorkspaceIndex = savedWorkspaces.findIndex((iter) => iter._id === updatedWorkspace._id);
+
             if (prevWorkspaceIndex !== -1) {
                 // Replace existing workspace with updated one
                 setSavedWorkspaces([

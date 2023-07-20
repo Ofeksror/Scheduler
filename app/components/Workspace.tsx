@@ -65,13 +65,12 @@ const Workspace = (props: Props) => {
                 }
             })
                 .then((res) => {
-                    refreshWorkspace(selectedWorkspace._id);
+                    refreshWorkspace(res.data.workspace);
+                    setSelectedWorkspace(res.data.workspace);
                 })
                 .catch((error) => {
                     console.warn(error);
                 })
-
-            // TODO: Refresh databaseContext
         }
     };
 

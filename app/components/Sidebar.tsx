@@ -115,6 +115,8 @@ type WorkspaceProps = {
 };
 
 const Workspace = ({ data, isSelected, onClickHandler }: WorkspaceProps) => {
+    console.log(data);
+
     return (
         <li
             className={

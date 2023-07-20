@@ -12,7 +12,7 @@ interface Props {
 const NewTab = (props: Props) => {
 
     const { refreshWorkspace } = useDatabase();
-    const { selectedWorkspace } = useSelectedWorkspace();
+    const { selectedWorkspace, setSelectedWorkspace } = useSelectedWorkspace();
 
     if (!selectedWorkspace)
         return <></>;
@@ -21,13 +21,14 @@ const NewTab = (props: Props) => {
     const [tabUrl, setTabUrl] = useState<string>("");
     const [isPinned, setIsPinned] = useState<boolean>(false);
 
-    const handleFormSubmittion = () => {
-        console.log("Mark I:\n/handleFormSubmittion func was called/\ndetails provided by user:\n" + {tabTitle, tabUrl, isPinned});
+    const handleFormSubmittion = (e: any) => {
+        e.preventDefault();
 
         axios({
             method: "post",
-            url: `/api/workspaces/${selectedWorkspace._id}/title/`,
+            url: `/api/workspaces/tabs/`,
             data: {
+                "workspaceId": selectedWorkspace._id,
                 "newTab": {
                     "url": tabUrl,
                     "title": tabTitle,
@@ -36,7 +37,8 @@ const NewTab = (props: Props) => {
             }
         })
             .then((res) => {
-                refreshWorkspace(selectedWorkspace._id);
+                refreshWorkspace(res.data.workspace);
+                setSelectedWorkspace(res.data.workspace);
             })
             .catch((error) => {
                 console.warn(error);
