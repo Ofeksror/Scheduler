@@ -94,10 +94,10 @@ export async function PUT(req: NextRequest) {
 
 
 /* ================================================ //
-// DELETE: Update workspace's tab details
+// PATCH: Update workspace's tab details
 // Parameters:
-//  1. JSON Body: ID of workspace 
-//  2. JSON Body: tab object to replace
+//  1. JSON Body: workspaceId - ID of workspace 
+//  2. JSON Body: updatedTab - tab object to replace
 // Returns:
 //  - Updated workspace
 // ================================================ */
