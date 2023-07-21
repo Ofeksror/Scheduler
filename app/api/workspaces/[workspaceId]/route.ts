@@ -2,7 +2,7 @@ import dbConnect from "@/app/lib/dbConnect";
 import User from "@/app/models/User";
 import Workspace from "@/app/models/Workspace";
 import { workspaceType } from "@/app/utilities/WorkspaceContext";
-import { ObjectId } from "mongoose";
+import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
 // Get workspace from an Id
@@ -24,50 +24,54 @@ export async function GET(
     return NextResponse.json({ workspace: workspace }, { status: 200 });
 }
 
-// Delete a workspace from an Id
-export async function DELETE(
-    req: NextRequest,
-    { params }: { params: { workspaceId: ObjectId } }
-) {
+// Get a list of users referencing workspaceId
+const getUsersReferencingWorkspace = async (workspaceId: string) => {
+    const users = await User.find({ workspaces: new ObjectId(workspaceId) });
+    return users;
+};
+
+// Remove reference to workspaceId from all users.
+const deleteWorkspaceReferences = async (workspaceId: string) => {
     await dbConnect();
 
-    // Get all the users that reference workspaceId
-    const users = await User.find({workspaces: "64b79e9c7384ee78bcadc660"});
+    const users = await getUsersReferencingWorkspace(workspaceId);
 
-    console.log(users);
-
-    return;
-}
-/*
-    users.forEach(user => {
-        // Find index of the workspaceId in the workspaces array
-        const indexInUserWorkspaces = user.workspaces.findIndex(
-            (workspaceIter: workspaceType) =>
-                workspaceIter._id === params.workspaceId
-            );
-                
+    users.forEach(async (user: any) => {
         // Remove reference to workspace from user
+        const indexInUserWorkspaces = user.workspaces.findIndex(
+            (workspaceIterId: ObjectId) =>
+                workspaceIterId.toString() == workspaceId
+        );
+
         if (indexInUserWorkspaces !== -1) {
             user.workspaces = [
                 ...user.workspaces.splice(0, indexInUserWorkspaces),
-                ...user.workspaces.splice(indexInUserWorkspaces),
+                ...user.workspaces.splice(indexInUserWorkspaces + 1),
             ];
             user.save();
         }
-    })
+    });
+};
 
-    return;
+// Delete a workspace from an Id , and deletes all references to that workspace
+export async function DELETE(
+    req: NextRequest,
+    { params }: { params: { workspaceId: string } }
+) {
+    await dbConnect();
 
-    // Delete workspace from workspaces DB
-    const res = await Workspace.deleteOne({ _id: params.workspaceId });
+    // Delete references to workspace in users
+    deleteWorkspaceReferences(params.workspaceId);
 
-    if (res.deletedCount !== 1) {
+    // Delete workspace from DB
+    const res = await Workspace.deleteOne({
+        _id: new ObjectId(params.workspaceId),
+    });
+    if (res.deletedCount != 1)
         return NextResponse.json(
-            { error: "Workspace ID not found in database." },
+            { error: "Workspace not found or is already deleted" },
             { status: 400 }
         );
-    }
 
-    return NextResponse.json({ status: 200 });
+    return NextResponse.json({}, { status: 200 });
 }
-*/
