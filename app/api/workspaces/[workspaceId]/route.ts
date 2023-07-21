@@ -1,5 +1,7 @@
 import dbConnect from "@/app/lib/dbConnect";
+import User from "@/app/models/User";
 import Workspace from "@/app/models/Workspace";
+import { workspaceType } from "@/app/utilities/WorkspaceContext";
 import { ObjectId } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -27,6 +29,36 @@ export async function DELETE(
     req: NextRequest,
     { params }: { params: { workspaceId: ObjectId } }
 ) {
+    await dbConnect();
+
+    // Get all the users that reference workspaceId
+    const users = await User.find({workspaces: "64b79e9c7384ee78bcadc660"});
+
+    console.log(users);
+
+    return;
+}
+/*
+    users.forEach(user => {
+        // Find index of the workspaceId in the workspaces array
+        const indexInUserWorkspaces = user.workspaces.findIndex(
+            (workspaceIter: workspaceType) =>
+                workspaceIter._id === params.workspaceId
+            );
+                
+        // Remove reference to workspace from user
+        if (indexInUserWorkspaces !== -1) {
+            user.workspaces = [
+                ...user.workspaces.splice(0, indexInUserWorkspaces),
+                ...user.workspaces.splice(indexInUserWorkspaces),
+            ];
+            user.save();
+        }
+    })
+
+    return;
+
+    // Delete workspace from workspaces DB
     const res = await Workspace.deleteOne({ _id: params.workspaceId });
 
     if (res.deletedCount !== 1) {
@@ -38,3 +70,4 @@ export async function DELETE(
 
     return NextResponse.json({ status: 200 });
 }
+*/
