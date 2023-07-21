@@ -1,4 +1,4 @@
-import { ObjectId } from "mongoose";
+import { ObjectId } from "mongodb";
 import { createContext, useContext, useState } from "react";
 
 export type workspaceType = {
@@ -8,10 +8,11 @@ export type workspaceType = {
 };
 
 export type tabType = {
+    _id: ObjectId;
     title: string;
     url: string;
     pinned: boolean;
-}
+};
 
 type ContextType = {
     selectedWorkspace: workspaceType | null;
