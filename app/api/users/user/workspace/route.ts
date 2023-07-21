@@ -13,6 +13,10 @@ import { NextRequest, NextResponse } from "next/server";
 //   2. JSON body: workspaceId 
 // Returns:
 //   - User's updated list of workspaces
+// Status Codes:
+//   - 200: Successfully added
+//   - 201: Nothing changed
+//   - 400: Something went wrong
 // ================================================ */
 export async function PUT(req: NextRequest) {
     await dbConnect();
@@ -43,7 +47,7 @@ export async function PUT(req: NextRequest) {
 
     // Check if workspace already exists
     if (user.workspaces.includes(workspaceId))
-        return NextResponse.json({message: "Workspace already associated with user"}, { status: 200 });
+        return NextResponse.json({message: "Workspace already associated with user"}, { status: 201 });
 
     // Add new workspace
     user.workspaces.push(workspaceId);
