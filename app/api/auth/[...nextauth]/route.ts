@@ -42,7 +42,13 @@ const handler = NextAuth({
         strategy: "jwt",
     },
     callbacks: {
-        async jwt({ token, user }) {
+        async jwt({ token, user, trigger, session }) {
+            // https://www.youtube.com/watch?v=gDsCueKkFEk
+            if (trigger === "update") {
+                token = session.user;
+                return token;
+            }
+
             if (user) {
                 token.email = user.email;
                 token.firstName = user.firstName;

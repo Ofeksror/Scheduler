@@ -7,6 +7,8 @@ import { useEffect } from "react";
 import Sidebar from "./components/Sidebar";
 import Workspace from "./components/Workspace";
 
+import UpdateSession from "./components/demo/UpdateSession";
+
 import {
     SelectedWorkspaceProvider,
     workspaceType,
@@ -37,6 +39,10 @@ export default function Home() {
                         <div className={styles.mainContent}>
                             <Workspace />
                         </div>
+                    </div>
+
+                    <div>
+                        <UpdateSession />
                     </div>
                 </SelectedWorkspaceProvider>
             </DatabaseProvider>

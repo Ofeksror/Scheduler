@@ -7,8 +7,8 @@ import { NextRequest, NextResponse } from "next/server";
 /* ================================================ //
 // POST: Add a tab to workspace
 // Parameters:
-//  1. JSON Body: ID of workspace 
-//  2. JSON Body: New tab to add to workspace 
+//  1. JSON Body: workspaceId - ID of workspace 
+//  2. JSON Body: newTab - New tab to add to workspace 
 // Returns:
 //  - Updated workspace
 // ================================================ */
@@ -47,8 +47,8 @@ export async function POST(req: NextRequest) {
 /* ================================================ //
 // DELETE: Delete a tab from workspace
 // Parameters:
-//  1. JSON Body: ID of workspace 
-//  2. JSON Body: ID of tab to remove from workspace 
+//  1. JSON Body: workspaceId - ID of workspace 
+//  2. JSON Body: tabId - ID of tab to remove from workspace 
 // Returns:
 //  - Updated workspace
 // ================================================ */

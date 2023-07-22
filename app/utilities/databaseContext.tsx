@@ -19,7 +19,7 @@ const DatabaseContext = createContext<ContextType>({
     savedWorkspaces: [],
     setSavedWorkspaces: () => {},
     refreshWorkspace: () => {},
-    refreshWorkspaces: () => {}
+    refreshWorkspaces: () => {},
 });
 
 type ProviderProps = {
@@ -27,7 +27,7 @@ type ProviderProps = {
 };
 
 export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
-    const session = useSession();
+    const { data: session, update, status } = useSession();
 
     const [unsavedWorkspaces, setUnsavedWorkspaces] = useState<workspaceType[]>(
         []
@@ -35,54 +35,73 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
     const [savedWorkspaces, setSavedWorkspaces] = useState<workspaceType[]>([]);
 
     const refreshWorkspace = async (updatedWorkspace: workspaceType) => {
-        if (session.status !== "authenticated") return;
+        if (status !== "authenticated") return;
 
-        try {           
-            const prevWorkspaceIndex = savedWorkspaces.findIndex((iter) => iter._id === updatedWorkspace._id);
+        try {
+            const prevWorkspaceIndex = savedWorkspaces.findIndex(
+                (iter) => iter._id === updatedWorkspace._id
+            );
 
             if (prevWorkspaceIndex !== -1) {
                 // Replace existing workspace with updated one
                 setSavedWorkspaces([
                     ...savedWorkspaces.slice(0, prevWorkspaceIndex),
                     updatedWorkspace,
-                    ...savedWorkspaces.slice(prevWorkspaceIndex + 1)
+                    ...savedWorkspaces.slice(prevWorkspaceIndex + 1),
                 ]);
-            }
-            else {
-                // Add new workspace to savedWorkspaces  
-                setSavedWorkspaces([
-                    ...savedWorkspaces,
-                    updatedWorkspace
-                ]);
+            } else {
+                // Add new workspace to savedWorkspaces
+                setSavedWorkspaces([...savedWorkspaces, updatedWorkspace]);
             }
         } catch (err) {
             console.warn("Failed to fetch workspace. Error: " + err);
         }
-    }
+    };
 
     const refreshWorkspaces = async () => {
-        if (session.status != "authenticated") return;
+        console.log(session);
 
-        const workspaceIds = session?.data?.user?.workspaces;
-        if (!workspaceIds) return
+        if (status != "authenticated") return;
 
-        try {
-            const promises = workspaceIds.map((_id) => {
-                return axios.get(`/api/workspaces/${_id}`)
-            })
+        const workspaceIds = session?.user?.workspaces;
+        if (!workspaceIds) return;
 
-            const results = await Promise.all(promises);
+        let newWorkspacesIds: ObjectId[] = [];
 
-            const workspacesFetched = results.map(result => result.data.workspace);
-            setSavedWorkspaces(workspacesFetched)
-        } catch (err) {
-            console.warn("Failed to fetch workspaces. Error: " + err);
-        }
-    }
+        const promises = workspaceIds.map(async (_id) => {
+            try {
+                const response = await axios.get(`/api/workspaces/${_id}`);
+                console.log(response);
+                newWorkspacesIds.push(_id);
+                return response.data.workspace;
+            } catch (error) {
+                // Workspace doesn't exist in database and is falsely attached to user
+                // Delete all references to workspace from all users
+                await axios.delete(`/api/workspaces/${_id}`);
+                return null;
+            }
+        });
+
+        console.log(workspaceIds);
+        console.log(newWorkspacesIds);
+        console.log(session);
+
+        const results = await Promise.all(promises);
+
+        const workspacesFetched = results.filter((workspace) => {
+            workspace !== null;
+        });
+
+        setSavedWorkspaces(workspacesFetched);
+    };
 
     useEffect(() => {
-        refreshWorkspaces()
-    }, [session]);
+        refreshWorkspaces();
+    }, []);
+
+    useEffect(() => {
+        console.log(session);
+    }, [session])
 
     return (
         <DatabaseContext.Provider
@@ -92,7 +111,7 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
                 savedWorkspaces,
                 setSavedWorkspaces,
                 refreshWorkspace,
-                refreshWorkspaces
+                refreshWorkspaces,
             }}
         >
             {children}

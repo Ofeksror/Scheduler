@@ -53,8 +53,8 @@ export async function DELETE(
     });
     if (res.deletedCount != 1)
         return NextResponse.json(
-            { error: "Workspace not found or is already deleted" },
-            { status: 400 }
+            { message: "Workspace not found or is already deleted" },
+            { status: 201 }
         );
 
     return NextResponse.json({}, { status: 200 });
