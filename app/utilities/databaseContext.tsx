@@ -66,13 +66,9 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
         const workspaceIds = session?.user?.workspaces;
         if (!workspaceIds) return;
 
-        let newWorkspacesIds: ObjectId[] = [];
-
         const promises = workspaceIds.map(async (_id) => {
             try {
-                const response = await axios.get(`/api/workspaces/${_id}`);
-                console.log(response);
-                newWorkspacesIds.push(_id);
+                const response = await axios.get(`/api/workspaces/${_id}`);                
                 return response.data.workspace;
             } catch (error) {
                 // Workspace doesn't exist in database and is falsely attached to user
@@ -82,15 +78,19 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
             }
         });
 
-        console.log(workspaceIds);
-        console.log(newWorkspacesIds);
-        console.log(session);
-
         const results = await Promise.all(promises);
+        const workspacesFetched = results.filter((workspace) => workspace == null);
 
-        const workspacesFetched = results.filter((workspace) => {
-            workspace !== null;
-        });
+        // Update session workspace IDs
+        await update({
+            ...session,
+            user: {
+                ...session.user,
+                workspaces: [
+                    ...workspacesFetched.map((workspace) => workspace._id)
+                ]
+            }
+        })
 
         setSavedWorkspaces(workspacesFetched);
     };
@@ -98,10 +98,6 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
     useEffect(() => {
         refreshWorkspaces();
     }, []);
-
-    useEffect(() => {
-        console.log(session);
-    }, [session])
 
     return (
         <DatabaseContext.Provider
