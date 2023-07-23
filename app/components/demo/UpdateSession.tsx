@@ -2,11 +2,14 @@
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { ObjectId } from "mongodb";
+import { useDatabase } from "@/app/utilities/databaseContext";
 
 type Props = {};
 
 const UpdateSession = (props: Props) => {
     const { data: session, update, status } = useSession();
+
+    const { savedWorkspaces } = useDatabase();
 
     const [testInput, setTestInput] = useState<string>("");
 
@@ -37,6 +40,9 @@ const UpdateSession = (props: Props) => {
     const logSessionHandler = async () => {
         console.log(session);
     };
+    const logWorkspaces = () => {
+        console.log(savedWorkspaces);
+    }
 
     return (
         <div>
@@ -52,6 +58,8 @@ const UpdateSession = (props: Props) => {
             <button onClick={updateSessionHandler}>update first name</button>
 
             <button onClick={logSessionHandler}>log session</button>
+
+            <button onClick={logWorkspaces}>log workspaces</button>
         </div>
     );
 };

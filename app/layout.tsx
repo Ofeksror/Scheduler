@@ -1,6 +1,9 @@
+"use client"
 import "./globals.css";
 import { Inter } from "next/font/google";
 import AuthProvider from "./utilities/AuthProvider";
+import { DatabaseProvider } from "./utilities/databaseContext";
+import { SelectedWorkspaceProvider } from "./utilities/WorkspaceContext";
 
 export const metadata = {
     title: "Create Next App",
@@ -15,7 +18,11 @@ export default function RootLayout({
     return (
         <html lang="en">
             <AuthProvider>
-                <body>{children}</body>
+                <DatabaseProvider>
+                    <SelectedWorkspaceProvider>
+                        <body>{children}</body>
+                    </SelectedWorkspaceProvider>
+                </DatabaseProvider>
             </AuthProvider>
         </html>
     );

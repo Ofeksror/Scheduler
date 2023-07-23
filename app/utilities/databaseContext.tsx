@@ -11,8 +11,12 @@ type ContextType = {
     setSavedWorkspaces: (workspaces: workspaceType[]) => void;
     refreshWorkspace: (updatedWorkspace: workspaceType) => void;
     refreshWorkspaces: () => void;
+    test: () => number;
 };
 
+
+// The problem to fix: the function executes whatever it is that is set here, and somehow for some reason doesnt replace these values with the values defined in the component.
+// IDK 
 const DatabaseContext = createContext<ContextType>({
     unsavedWorkspaces: [],
     setUnsavedWorkspaces: () => {},
@@ -20,6 +24,7 @@ const DatabaseContext = createContext<ContextType>({
     setSavedWorkspaces: () => {},
     refreshWorkspace: () => {},
     refreshWorkspaces: () => {},
+    test: () => 7,
 });
 
 type ProviderProps = {
@@ -33,6 +38,11 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
         []
     );
     const [savedWorkspaces, setSavedWorkspaces] = useState<workspaceType[]>([]);
+
+    const test = () => {
+        console.log("het");
+        return 3;
+    }
 
     const refreshWorkspace = async (updatedWorkspace: workspaceType) => {
         if (status !== "authenticated") return;
@@ -59,12 +69,14 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
     };
 
     const refreshWorkspaces = async () => {
-        console.log(session);
-
-        if (status != "authenticated") return;
-
+        if (status === "unauthenticated") {
+            return
+        };
+        
         const workspaceIds = session?.user?.workspaces;
-        if (!workspaceIds) return;
+        if (!workspaceIds) {
+            return;
+        }
 
         const promises = workspaceIds.map(async (_id) => {
             try {
@@ -79,7 +91,7 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
         });
 
         const results = await Promise.all(promises);
-        const workspacesFetched = results.filter((workspace) => workspace == null);
+        const workspacesFetched = results.filter((workspace) => workspace !== null);
 
         // Update session workspace IDs
         await update({
@@ -95,10 +107,6 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
         setSavedWorkspaces(workspacesFetched);
     };
 
-    useEffect(() => {
-        refreshWorkspaces();
-    }, []);
-
     return (
         <DatabaseContext.Provider
             value={{
@@ -108,6 +116,7 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
                 setSavedWorkspaces,
                 refreshWorkspace,
                 refreshWorkspaces,
+                test
             }}
         >
             {children}

@@ -1,3 +1,4 @@
+"use client"
 import { ObjectId } from "mongodb";
 import { createContext, useContext, useState } from "react";
 
