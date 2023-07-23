@@ -11,7 +11,6 @@ type ContextType = {
     setSavedWorkspaces: (workspaces: workspaceType[]) => void;
     refreshWorkspace: (updatedWorkspace: workspaceType) => void;
     refreshWorkspaces: () => void;
-    test: () => number;
 };
 
 
@@ -24,7 +23,6 @@ const DatabaseContext = createContext<ContextType>({
     setSavedWorkspaces: () => {},
     refreshWorkspace: () => {},
     refreshWorkspaces: () => {},
-    test: () => 7,
 });
 
 type ProviderProps = {
@@ -38,11 +36,6 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
         []
     );
     const [savedWorkspaces, setSavedWorkspaces] = useState<workspaceType[]>([]);
-
-    const test = () => {
-        console.log("het");
-        return 3;
-    }
 
     const refreshWorkspace = async (updatedWorkspace: workspaceType) => {
         if (status !== "authenticated") return;
@@ -116,7 +109,6 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
                 setSavedWorkspaces,
                 refreshWorkspace,
                 refreshWorkspaces,
-                test
             }}
         >
             {children}
