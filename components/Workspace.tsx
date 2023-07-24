@@ -1,11 +1,11 @@
 "use client";
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { tabType, useSelectedWorkspace } from "../utilities/WorkspaceContext";
+import { tabType, useSelectedWorkspace } from "@/utilities/WorkspaceContext";
 
-import TabsContainer from "./TabsContainer";
+import TabsContainer from "@/components/TabsContainer";
 import { DragDropContext } from "react-beautiful-dnd";
 import axios from "axios";
-import { useDatabase } from "../utilities/databaseContext";
+import { useDatabase } from "@/utilities/databaseContext";
 
 type Props = {};
 

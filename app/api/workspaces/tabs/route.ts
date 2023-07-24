@@ -1,6 +1,6 @@
-import dbConnect from "@/app/lib/dbConnect";
+import dbConnect from "@/lib/dbConnect";
 import Workspace from "@/app/models/Workspace";
-import { tabType } from "@/app/utilities/WorkspaceContext";
+import { tabType } from "@/utilities/WorkspaceContext";
 import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -74,8 +74,8 @@ export async function PUT(req: NextRequest) {
         );
 
     // Attempt to delete tab from workspace
-    const tabIndexInWorkspace = workspace.tabs.findIndex(
-        (workspaceTab: any) => tabId.equals(workspaceTab._id)
+    const tabIndexInWorkspace = workspace.tabs.findIndex((workspaceTab: any) =>
+        tabId.equals(workspaceTab._id)
     );
     if (tabIndexInWorkspace === -1)
         return NextResponse.json(
@@ -91,7 +91,6 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json({ workspace: workspace }, { status: 200 });
 }
-
 
 /* ================================================ //
 // PATCH: Update workspace's tab details
@@ -124,8 +123,8 @@ export async function PATCH(req: NextRequest) {
         );
 
     // Attempt to delete tab from workspace
-    const tabIndexInWorkspace = workspace.tabs.findIndex(
-        (workspaceTab: any) => tabId.equals(workspaceTab._id)
+    const tabIndexInWorkspace = workspace.tabs.findIndex((workspaceTab: any) =>
+        tabId.equals(workspaceTab._id)
     );
     if (tabIndexInWorkspace === -1)
         return NextResponse.json(
@@ -133,9 +132,8 @@ export async function PATCH(req: NextRequest) {
             { status: 400 }
         );
 
-    workspace.tabs[tabIndexInWorkspace] = updatedTab
+    workspace.tabs[tabIndexInWorkspace] = updatedTab;
     workspace.save();
 
     return NextResponse.json({ workspace: workspace }, { status: 200 });
 }
-

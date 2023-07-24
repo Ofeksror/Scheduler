@@ -5,9 +5,9 @@ import clientPromise from "@/app/lib/mongodb";
 import CredentialsProvider from "next-auth/providers/credentials";
 import User from "@/app/models/User";
 import md5 from "md5";
-import dbConnect from "@/app/lib/dbConnect";
+import dbConnect from "@/lib/dbConnect";
 import { ObjectId } from "mongoose";
-import { workspaceType } from "@/app/utilities/WorkspaceContext";
+import { workspaceType } from "@/utilities/WorkspaceContext";
 import Workspace from "@/app/models/Workspace";
 
 /* Resource for adding properties to the Session object

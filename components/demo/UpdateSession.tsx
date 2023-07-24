@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { ObjectId } from "mongodb";
-import { useDatabase } from "@/app/utilities/databaseContext";
+import { useDatabase } from "@/utilities/databaseContext";
 
 type Props = {};
 
@@ -19,8 +19,7 @@ const UpdateSession = (props: Props) => {
         const one = "asdasd";
         const two = "asdas";
 
-        if (!session?.user?.workspaces)
-            return;
+        if (!session?.user?.workspaces) return;
 
         const prevWorkspaces = session.user.workspaces;
         console.log(prevWorkspaces);
@@ -29,11 +28,7 @@ const UpdateSession = (props: Props) => {
             ...session,
             user: {
                 ...session?.user,
-                workspaces: [
-                    ...prevWorkspaces,
-                    one,
-                    two,
-                ],
+                workspaces: [...prevWorkspaces, one, two],
             },
         });
     };
@@ -42,7 +37,7 @@ const UpdateSession = (props: Props) => {
     };
     const logWorkspaces = () => {
         console.log(savedWorkspaces);
-    }
+    };
 
     return (
         <div>

@@ -1,6 +1,6 @@
-import dbConnect from "@/app/lib/dbConnect";
+import dbConnect from "@/lib/dbConnect";
 import Workspace from "@/app/models/Workspace";
-import { tabType } from "@/app/utilities/WorkspaceContext";
+import { tabType } from "@/utilities/WorkspaceContext";
 import { NextRequest, NextResponse } from "next/server";
 
 // ======================================================================= //

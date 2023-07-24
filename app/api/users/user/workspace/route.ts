@@ -1,4 +1,4 @@
-import dbConnect from "@/app/lib/dbConnect";
+import dbConnect from "@/lib/dbConnect";
 import User from "@/app/models/User";
 import Workspace from "@/app/models/Workspace";
 import { ObjectId } from "mongodb";
@@ -39,7 +39,7 @@ export async function PUT(req: NextRequest) {
         );
 
     // Check if workspace exists
-    if (await Workspace.findById(workspaceId) === null)
+    if ((await Workspace.findById(workspaceId)) === null)
         return NextResponse.json(
             { error: "Invalid Workspace ID. Workspace was not found in DB" },
             { status: 400 }
@@ -47,7 +47,10 @@ export async function PUT(req: NextRequest) {
 
     // Check if workspace already exists
     if (user.workspaces.includes(workspaceId))
-        return NextResponse.json({message: "Workspace already associated with user"}, { status: 201 });
+        return NextResponse.json(
+            { message: "Workspace already associated with user" },
+            { status: 201 }
+        );
 
     // Add new workspace
     user.workspaces.push(workspaceId);

@@ -1,4 +1,4 @@
-import dbConnect from "@/app/lib/dbConnect";
+import dbConnect from "@/lib/dbConnect";
 import Workspace from "@/app/models/Workspace";
 import { ObjectId } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
