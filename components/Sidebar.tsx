@@ -5,8 +5,8 @@ import { signOut, useSession } from "next-auth/react";
 import {
     useSelectedWorkspace,
     workspaceType,
-} from "../utilities/WorkspaceContext";
-import { useDatabase } from "../utilities/databaseContext";
+} from "@/utilities/WorkspaceContext";
+import { useDatabase } from "@/utilities/databaseContext";
 
 type Props = {};
 

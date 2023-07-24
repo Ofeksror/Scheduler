@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import User from "@/app/models/User";
+import User from "@/models/User";
 import { ObjectId } from "mongodb";
 
 // Get a list of users referencing workspaceId

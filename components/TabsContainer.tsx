@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useSelectedWorkspace } from "../utilities/WorkspaceContext";
+import { useSelectedWorkspace } from "@/utilities/WorkspaceContext";
 
-import NewTab from "./demo/newTab";
+import NewTab from "@/components/demo/newTab";
 
 // Icons
 import {

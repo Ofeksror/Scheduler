@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import Workspace from "@/app/models/Workspace";
+import Workspace from "@/models/Workspace";
 import { ObjectId } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 

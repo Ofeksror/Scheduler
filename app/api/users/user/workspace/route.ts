@@ -1,6 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
-import User from "@/app/models/User";
-import Workspace from "@/app/models/Workspace";
+import User from "@/models/User";
+import Workspace from "@/models/Workspace";
 import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 

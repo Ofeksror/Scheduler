@@ -4,16 +4,16 @@ import { redirect } from "next/navigation";
 
 import { useEffect, useRef } from "react";
 
-import Sidebar from "./components/Sidebar";
-import Workspace from "./components/Workspace";
+import Sidebar from "@/components/Sidebar";
+import Workspace from "@/components/Workspace";
 
-import UpdateSession from "../components/demo/UpdateSession";
+import UpdateSession from "@/components/demo/UpdateSession";
 
 import {
     SelectedWorkspaceProvider,
     workspaceType,
-} from "../utilities/WorkspaceContext";
-import { DatabaseProvider, useDatabase } from "../utilities/databaseContext";
+} from "@/utilities/WorkspaceContext";
+import { DatabaseProvider, useDatabase } from "@/utilities/databaseContext";
 import { ObjectId } from "mongodb";
 
 const styles = {

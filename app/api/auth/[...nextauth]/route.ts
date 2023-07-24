@@ -1,14 +1,14 @@
 import NextAuth, { DefaultSession } from "next-auth";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter"; // https://stackoverflow.com/questions/76503606/next-auth-error-adapter-is-not-assignable-to-type-adapter-undefined
-import clientPromise from "@/app/lib/mongodb";
+import clientPromise from "@/lib/mongodb";
 
 import CredentialsProvider from "next-auth/providers/credentials";
-import User from "@/app/models/User";
+import User from "@/models/User";
 import md5 from "md5";
 import dbConnect from "@/lib/dbConnect";
 import { ObjectId } from "mongoose";
 import { workspaceType } from "@/utilities/WorkspaceContext";
-import Workspace from "@/app/models/Workspace";
+import Workspace from "@/models/Workspace";
 
 /* Resource for adding properties to the Session object
 // https://reacthustle.com/blog/extend-user-session-nextauth-typescript */
