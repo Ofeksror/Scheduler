@@ -24,8 +24,7 @@ const styles = {
 
 export default function Home() {
     const session = useSession();
-
-    const { test, refreshWorkspaces } = useDatabase();
+    const { refreshWorkspaces } = useDatabase();
 
     const hasRun = useRef(false);
 
