@@ -13,40 +13,75 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import axios from "axios";
+import { useSession } from "next-auth/react";
+import { useDatabase } from "@/utilities/databaseContext";
+import { useSelectedWorkspace } from "@/utilities/WorkspaceContext";
 
 type Props = {};
 
 const NewWorkspace = (props: Props) => {
+    const session = useSession();
+    const { refreshWorkspace } = useDatabase();
+    const { setSelectedWorkspace } = useSelectedWorkspace();
+
     const [title, setTitle] = useState<string>("");
-
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+    const [wait, setWait] = useState<boolean>(false);
 
-    const submitForm = () => {
-        console.log(title);
+    const submitForm = async () => {
+        // Disable button to avoid spam
+        setWait(true);
 
-        axios({
+        // Create the new workspace
+        const workspace = await axios({
             method: "post",
             url: `/api/workspaces/new/`,
             data: {
-                title: title,
+                title: title || "Untitled workspace",
                 tabs: []
             },
         })
             .then((res) => {
-                // Attach workspace to user
-                
-                refreshWorkspace(res.data.workspace);
-                setSelectedWorkspace(res.data.workspace);
+                return res.data.workspace
             })
             .catch((error) => {
                 console.warn(error);
             });
+        
+        // Attach new workspace to user
+        axios({
+            method: "put",
+            url: "/api/users/user/workspace/",
+            data: {
+                userId: session.data?.user?._id, 
+                workspaceId: workspace._id
+            }
+        })
+            .then((res) => {
 
-            // TODO: Attach workspace to user!
+                if (res.status === 201) {
+                    // Nothing changed.
+                    console.log("Nothing changed");
+                    return;
+                }
+
+                console.log("✅ :: New workspace successfully attached to user >>")
+            })
+            .catch((error) => {
+                console.warn(error);
+            })
+
+        // TODO: Update Session
+        
+
+        // Update client-side
+        refreshWorkspace(workspace);
+        setSelectedWorkspace(workspace);
 
         // Reset data
         setDialogOpen(false);
         setTitle("");
+        setWait(false);
     };
 
     return (
@@ -69,7 +104,7 @@ const NewWorkspace = (props: Props) => {
                         />
                     </DialogDescription>
                     <DialogFooter>
-                        <Button type="submit" onClick={submitForm}>Create</Button>
+                        <Button type="submit" onClick={submitForm} disabled={wait}>Create</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

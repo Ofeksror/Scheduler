@@ -66,12 +66,23 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
             return
         };
         
-        const workspaceIds = session?.user?.workspaces;
+        // Get workspace IDs attached to user
+        const workspaceIds = await axios({
+            method: "get",
+            url: `/api/users/${session?.user?._id}/workspaces`
+        })
+            .then((res) => {
+                return res.data.workspaces;
+            })
+            .catch((error) => {
+                console.warn(error);
+            });
+
         if (!workspaceIds) {
             return;
         }
 
-        const promises = workspaceIds.map(async (_id) => {
+        const promises = workspaceIds.map(async (_id: string) => {
             try {
                 const response = await axios.get(`/api/workspaces/${_id}`);                
                 return response.data.workspace;
