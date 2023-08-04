@@ -51,10 +51,6 @@ export default function Home() {
                     <Workspace />
                 </div>
             </div>
-
-            <div>
-                <UpdateSession />
-            </div>
         </div>
     );
 }
