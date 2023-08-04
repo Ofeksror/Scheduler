@@ -32,7 +32,7 @@ declare module "next-auth/jwt" {
         email: string;
         firstName: string;
         lastName: string;
-        userId: ObjectId;
+        _id: ObjectId;
         workspaces: ObjectId[];
     }
 }
@@ -53,7 +53,7 @@ const handler = NextAuth({
                 token.email = user.email;
                 token.firstName = user.firstName;
                 token.lastName = user.lastName;
-                token.userId = user._id;
+                token._id = user._id;
                 token.workspaces = user.workspaces;
             }
 
@@ -64,7 +64,7 @@ const handler = NextAuth({
                 session.user.email = token.email;
                 session.user.firstName = token.firstName;
                 session.user.lastName = token.lastName;
-                session.user._id = token.userId;
+                session.user._id = token._id;
                 session.user.workspaces = token.workspaces;
             }
 
@@ -97,7 +97,7 @@ const handler = NextAuth({
                     throw new Error("Invalid password");
                 }
 
-                console.log(userFound);
+                console.log(`the user found: ${userFound}`);
 
                 // Authorize user
                 return userFound;

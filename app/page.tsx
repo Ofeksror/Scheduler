@@ -7,14 +7,13 @@ import { useEffect, useRef } from "react";
 import Sidebar from "@/components/Sidebar";
 import Workspace from "@/components/Workspace";
 
-import UpdateSession from "@/components/demo/UpdateSession";
-
 import {
     SelectedWorkspaceProvider,
     workspaceType,
 } from "@/utilities/WorkspaceContext";
 import { DatabaseProvider, useDatabase } from "@/utilities/databaseContext";
 import { ObjectId } from "mongodb";
+import NewWorkspace from "@/components/demo/NewWorkspace";
 
 const styles = {
     outerContainer: "w-full h-full flex",
@@ -51,6 +50,12 @@ export default function Home() {
                     <Workspace />
                 </div>
             </div>
+            
+            {/*  */}
+            <NewWorkspace />
+            <button onClick={() => {console.log(session)}}>Click to log session</button>
+            {/*  */}
         </div>
+
     );
 }

@@ -56,7 +56,7 @@ const LoginPage = (props: Props) => {
             redirect: false,
         }).then((result) => {
             if (result) {
-                console.log(result);
+                console.log(`results: ${result}`);
                 if (result.error) setFormMessage(result.error);
             }
         });
