@@ -16,6 +16,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import NewWorkspace from "./NewWorkspace";
 
 type Props = {};
 
@@ -53,30 +54,6 @@ const Sidebar = (props: Props) => {
         <div className={styles.sidebarContainer}>
             <div className={styles.logo}>Tab Manager</div>
 
-            {/* Unsaved Workspaces */}
-            {/*
-            <div className={styles.workspacesContainer}>
-                <h2>Unsaved Workspaces</h2>
-
-                <ul className={styles.workspaces}>
-                    {unsavedWorkspaces.map((workspaceData) => {
-                        return (
-                            <Workspace
-                                data={workspaceData}
-                                isSelected={
-                                    selectedWorkspace?.id == workspaceData.id
-                                }
-                                onClickHandler={handleSelectWorkspace}
-                            />
-                        );
-                    })}
-                </ul>
-            </div>
-            */}
-            <h2>Unsaved Workspaces supposed to be here</h2>
-
-            <hr className={styles.divider}></hr>
-
             {/* Saved Workspaces */}
             <div className={styles.workspacesContainer}>
                 <h2>Saved Workspaces</h2>
@@ -109,6 +86,9 @@ const Sidebar = (props: Props) => {
                         <DropdownMenuItem onClick={() => {signOut()}}>Sign Out</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
+
+                {/* New workspace */}
+                <NewWorkspace />
             </div>
         </div>
     );
@@ -121,8 +101,6 @@ type WorkspaceProps = {
 };
 
 const Workspace = ({ data, isSelected, onClickHandler }: WorkspaceProps) => {
-    console.log(data);
-
     return (
         <li
             className={

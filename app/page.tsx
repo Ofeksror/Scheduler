@@ -13,7 +13,7 @@ import {
 } from "@/utilities/WorkspaceContext";
 import { DatabaseProvider, useDatabase } from "@/utilities/databaseContext";
 import { ObjectId } from "mongodb";
-import NewWorkspace from "@/components/demo/NewWorkspace";
+import NewWorkspace from "@/components/NewWorkspace";
 
 const styles = {
     outerContainer: "w-full h-full flex",
@@ -52,7 +52,6 @@ export default function Home() {
             </div>
             
             {/*  */}
-            <NewWorkspace />
             <button onClick={() => {console.log(session)}}>Click to log session</button>
             {/*  */}
         </div>

@@ -85,30 +85,30 @@ const NewWorkspace = (props: Props) => {
     };
 
     return (
-        <div>
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                <DialogTrigger>New Workspace</DialogTrigger>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger>
+                <span className="rounded-full bg-slate-600 flex justify-center items-center w-14 h-14">➕</span>
+            </DialogTrigger>
 
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Create a new workspace</DialogTitle>
-                    </DialogHeader>
-                    <DialogDescription>
-                        <Input
-                            type="text"
-                            placeholder="Workspace Title"
-                            value={title}
-                            onChange={(e) => {
-                                setTitle(e.target.value);
-                            }}
-                        />
-                    </DialogDescription>
-                    <DialogFooter>
-                        <Button type="submit" onClick={submitForm} disabled={wait}>Create</Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
-        </div>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Create a new workspace</DialogTitle>
+                </DialogHeader>
+                <DialogDescription>
+                    <Input
+                        type="text"
+                        placeholder="Workspace Title"
+                        value={title}
+                        onChange={(e) => {
+                            setTitle(e.target.value);
+                        }}
+                    />
+                </DialogDescription>
+                <DialogFooter>
+                    <Button type="submit" onClick={submitForm} disabled={wait}>Create</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     );
 };
 
