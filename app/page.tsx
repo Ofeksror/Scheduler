@@ -50,10 +50,6 @@ export default function Home() {
                     <Workspace />
                 </div>
             </div>
-            
-            {/*  */}
-            <button onClick={() => {console.log(session)}}>Click to log session</button>
-            {/*  */}
         </div>
 
     );

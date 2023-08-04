@@ -17,6 +17,8 @@ import { useSession } from "next-auth/react";
 import { useDatabase } from "@/utilities/databaseContext";
 import { useSelectedWorkspace } from "@/utilities/WorkspaceContext";
 
+import { Plus } from "lucide-react"
+
 type Props = {};
 
 const NewWorkspace = (props: Props) => {
@@ -87,7 +89,7 @@ const NewWorkspace = (props: Props) => {
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger>
-                <span className="rounded-full bg-slate-600 flex justify-center items-center w-14 h-14">➕</span>
+                <span className="rounded-full bg-gray-300 flex justify-center items-center p-2"><Plus size={24} color="#27272a" strokeWidth={1.5}/></span>
             </DialogTrigger>
 
             <DialogContent>

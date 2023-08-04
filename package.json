@@ -28,7 +28,7 @@
     "clsx": "^2.0.0",
     "eslint": "8.43.0",
     "eslint-config-next": "13.4.6",
-    "lucide-react": "^0.263.0",
+    "lucide-react": "^0.263.1",
     "md5": "^2.3.0",
     "mongodb": "^5.7.0",
     "mongoose": "^7.3.1",

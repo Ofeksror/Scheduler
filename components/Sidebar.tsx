@@ -18,11 +18,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import NewWorkspace from "./NewWorkspace";
 
+import { Settings, Plus } from 'lucide-react';
+
 type Props = {};
 
 const styles = {
     sidebarContainer: "flex-none w-60 h-full bg-gray-200 p-4 relative",
-    logo: "text-xl font-black text-gray-800 bg-gray-300 p-4 flex place-content-center rounded-xl",
+    logo: "text-xl text-gray-800 bg-gray-300 p-4 flex place-content-center rounded-xl",
     workspacesContainer: "font-medium my-8",
     workspaces: "mt-2 flex flex-col gap-1 font-normal text-sm",
     workspaceItem:
@@ -31,9 +33,8 @@ const styles = {
         "bg-gray-300 hover:bg-gray-300 hover:cursor-pointer py-1 px-3 rounded",
     divider: "w-4/5 h-1 border-0 rounded bg-slate-500 mx-auto",
     footer: "absolute bottom-0 right-0 p-4 w-full h-auto flex place-content-between",
-    avatar: "rounded-full bg-slate-600 flex justify-center items-center w-14 h-14",
     settings:
-        "rounded-full bg-slate-600 flex justify-center items-center w-14 h-14",
+        "rounded-full bg-gray-300 flex justify-center items-center p-2",
 };
 
 const Sidebar = (props: Props) => {
@@ -78,7 +79,7 @@ const Sidebar = (props: Props) => {
                 {/* Settings */}
                 <DropdownMenu>
                     <DropdownMenuTrigger>
-                        <div className={styles.settings}>⚙️</div>
+                        <div className={styles.settings}><Settings size={24} color="#27272a" strokeWidth={1.5}/></div>
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent>
