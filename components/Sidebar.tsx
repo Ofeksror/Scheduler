@@ -8,6 +8,15 @@ import {
 } from "@/utilities/WorkspaceContext";
 import { useDatabase } from "@/utilities/databaseContext";
 
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 type Props = {};
 
 const styles = {
@@ -73,8 +82,6 @@ const Sidebar = (props: Props) => {
                 <h2>Saved Workspaces</h2>
 
                 <ul className={styles.workspaces}>
-
-
                     {savedWorkspaces.map((workspaceData, index) => {
                         return (
                             <Workspace
@@ -91,18 +98,17 @@ const Sidebar = (props: Props) => {
             </div>
 
             <div className={styles.footer}>
-                {/* Account */}
-                <div
-                    className={styles.avatar}
-                    onClick={() => {
-                        signOut();
-                    }}
-                >
-                    👤
-                </div>
-
                 {/* Settings */}
-                <div className={styles.settings}>⚙️</div>
+                <DropdownMenu>
+                    <DropdownMenuTrigger>
+                        <div className={styles.settings}>⚙️</div>
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() => {signOut()}}>Sign Out</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
         </div>
     );
