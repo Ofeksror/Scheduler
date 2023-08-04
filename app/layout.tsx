@@ -1,6 +1,5 @@
 "use client";
 import "./globals.css";
-import { Inter } from "next/font/google";
 import AuthProvider from "@/utilities/AuthProvider";
 import { DatabaseProvider } from "@/utilities/databaseContext";
 import { SelectedWorkspaceProvider } from "@/utilities/WorkspaceContext";

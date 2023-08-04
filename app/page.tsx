@@ -18,7 +18,7 @@ import NewWorkspace from "@/components/NewWorkspace";
 const styles = {
     outerContainer: "w-full h-full flex",
     rootContainer: "h-screen w-screen",
-    mainContent: "bg-slate-200 w-full h-full",
+    mainContent: "bg-gray-50 w-full h-full",
 };
 
 export default function Home() {

@@ -21,14 +21,14 @@ import NewWorkspace from "./NewWorkspace";
 type Props = {};
 
 const styles = {
-    sidebarContainer: "flex-none w-60 h-full bg-slate-400 p-4 relative",
-    logo: "text-xl font-bold text-white bg-slate-500 p-4 flex place-content-center",
-    workspacesContainer: "bg-slate-300 my-8",
-    workspaces: "",
+    sidebarContainer: "flex-none w-60 h-full bg-gray-200 p-4 relative",
+    logo: "text-xl font-black text-gray-800 bg-gray-300 p-4 flex place-content-center rounded-xl",
+    workspacesContainer: "font-medium my-8",
+    workspaces: "mt-2 flex flex-col gap-1 font-normal text-sm",
     workspaceItem:
-        "bg-slate-400 hover:bg-slate-500 hover:cursor-pointer p-2 my-1",
+        "hover:bg-gray-300 hover:cursor-pointer py-1 px-3 rounded",
     selectedWorkspaceItem:
-        "bg-slate-500 hover:bg-slate-500 hover:cursor-pointer p-2 my-1",
+        "bg-gray-300 hover:bg-gray-300 hover:cursor-pointer py-1 px-3 rounded",
     divider: "w-4/5 h-1 border-0 rounded bg-slate-500 mx-auto",
     footer: "absolute bottom-0 right-0 p-4 w-full h-auto flex place-content-between",
     avatar: "rounded-full bg-slate-600 flex justify-center items-center w-14 h-14",
