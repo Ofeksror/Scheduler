@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelectedWorkspace } from "@/utilities/WorkspaceContext";
 
-import NewTab from "@/components/demo/newTab";
+import NewTab from "@/components/NewTab";
 
 // Icons
 import {
@@ -23,14 +23,13 @@ const styles = {
     tabsListContainer: "flex flex-col gap-0.5",
 
     tabWrapper:
-        "bg-gray-100 py-1.5 px-1 text-sm hover:bg-gray-200 transition flex justify-between items-center group cursor-pointer rounded-md",
-        // "bg-slate-300 py-2.5 px-1 hover:bg-slate-400 flex justify-between items-center group cursor-pointer",
+        "bg-gray-100 h-10 py-auto px-1 text-sm hover:bg-gray-200 transition flex justify-between items-center group cursor-pointer rounded-md",
     selectedTabWrapper:
-    "bg-gray-200 hover:bg-gray-300 transition py-1.5 px-1 text-sm flex justify-between content-center cursor-pointer rounded-md",
+    "bg-gray-200 hover:bg-gray-300 transition h-10 py-auto px-1 text-sm flex justify-between content-center cursor-pointer rounded-md",
 
     buttonsContainer: "inline-flex gap-3",
 
-    hoverButton: "hover:bg-slate-300 rounded-full p-1"
+    hoverButton: "hover:bg-gray-100 transition rounded-full p-1"
 };
 
 
@@ -174,10 +173,7 @@ const TabsContainer = (props: Props) => {
                 })}
             </ul>
 
-            {/* TEST / DEMO */}
-            <div className="bg-red-200 mt-20">
-                <NewTab workspaceId={selectedWorkspace._id}/>
-            </div>
+            <NewTab />
         </div>
     );
 };

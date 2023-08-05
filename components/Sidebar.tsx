@@ -28,7 +28,7 @@ const styles = {
     workspacesContainer: "font-medium my-8",
     workspaces: "mt-2 flex flex-col gap-1 font-normal text-sm",
     workspaceItem:
-        "hover:bg-gray-300 hover:cursor-pointer py-1 px-3 rounded",
+        "hover:bg-gray-300 hover:cursor-pointer py-1 px-3 rounded transition",
     selectedWorkspaceItem:
         "bg-gray-300 hover:bg-gray-300 hover:cursor-pointer py-1 px-3 rounded",
     divider: "w-4/5 h-1 border-0 rounded bg-slate-500 mx-auto",
