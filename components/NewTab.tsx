@@ -25,7 +25,7 @@ const NewTab = (props: Props) => {
 
     const addNewTab = async () => {
 
-        const tabDefaultUrl = "?";
+        const tabDefaultUrl = "This tab was added programmatically";
 
         axios({
             method: "post",
@@ -46,6 +46,9 @@ const NewTab = (props: Props) => {
             .catch((error) => {
                 console.warn(error);
             });
+
+        setIsPinned(false);
+        setTabUrl("");
     };
 
     return (
