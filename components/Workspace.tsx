@@ -10,9 +10,9 @@ import { useDatabase } from "@/utilities/databaseContext";
 type Props = {};
 
 const styles = {
-    container: "px-12 py-4 flex-1 overflow-auto w-full relative",
+    container: "px-14 py-10 flex-1 overflow-auto w-full h-full relative",
     headContainer: "text-2xl",
-    title: "",
+    title: "bg-transparent border-transparent outline-transparent",
 };
 
 const onDragEnd = (result: any) => {
@@ -94,7 +94,6 @@ const Workspace = (props: Props) => {
                 ></input>
             </div>
             <div>
-                <p>{selectedWorkspace.title}</p>
                 <p>ID: {selectedWorkspace._id.toString()}</p>
                 
                 {/* <DragDropContext onDragEnd={onDragEnd}> */}

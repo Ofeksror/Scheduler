@@ -17,15 +17,16 @@ import {
 type Props = {};
 
 const styles = {
-    tabsContainer: "w-full mt-6",
+    tabsContainer: "w-full max-w-4xl mt-6",
     tabContainerHeader: "text-xl w-full flex justify-between",
 
-    tabsListContainer: "flex flex-col gap-0.5 bg-slate-400",
+    tabsListContainer: "flex flex-col gap-0.5",
 
     tabWrapper:
-        "bg-slate-300 py-2.5 px-1 hover:bg-slate-400 flex justify-between items-center group cursor-pointer",
+        "bg-gray-100 py-1.5 px-1 text-sm hover:bg-gray-200 transition flex justify-between items-center group cursor-pointer rounded-md",
+        // "bg-slate-300 py-2.5 px-1 hover:bg-slate-400 flex justify-between items-center group cursor-pointer",
     selectedTabWrapper:
-        "bg-slate-400 py-2.5 px-1 flex justify-between content-center",
+    "bg-gray-200 hover:bg-gray-300 transition py-1.5 px-1 text-sm flex justify-between content-center cursor-pointer rounded-md",
 
     buttonsContainer: "inline-flex gap-3",
 
