@@ -40,7 +40,11 @@ const Workspace = (props: Props) => {
     // Unselected Workspace
     if (selectedWorkspace === null) {
         // Loading Screen
-        return <h1>🔔Please select a workspace🔔</h1>;
+        return (
+            <div className="h-full w-full flex items-center justify-center">
+                <h1 className="text-gray-500">No workspace selected</h1>
+            </div>
+        );
     }
     
     const handleKeyDown = (e: { key: string }) => {
