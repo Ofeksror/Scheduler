@@ -57,7 +57,7 @@ const NewTab = (props: Props) => {
     };
 
     return (
-        <div className="mt-6 w-full h-12 py-auto px-5 bg-gray-100 flex items-center justify-between rounded-md">
+        <div className="mt-6 w-full h-10 py-auto px-5 bg-gray-100 flex items-center justify-between rounded-md">
             <div className=" flex flex-row items-center flex-1">
                 <Input
                     placeholder="URL"
@@ -72,9 +72,9 @@ const NewTab = (props: Props) => {
                     aria-label="Pin tab"
                     pressed={isPinned}
                     onPressedChange={setIsPinned}
-                    className="mx-2 h-8 w-8 p-1.5 hover:bg-gray-200 data-[state=on]:bg-gray-200"
+                    className="mx-2 h-8 w-7 p-1.5 hover:bg-gray-200 data-[state=on]:bg-gray-200"
                 >
-                    <BsPinAngleFill className="w-full h-full" />
+                    <BsPinAngleFill className="w-full h-full text-gray-700" />
                 </Toggle>
             </div>
 

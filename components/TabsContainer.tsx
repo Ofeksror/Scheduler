@@ -18,14 +18,14 @@ type Props = {};
 
 const styles = {
     tabsContainer: "w-full max-w-4xl mt-6",
-    tabContainerHeader: "text-xl w-full flex justify-between",
+    tabContainerHeader: "text-xl w-full flex justify-between mb-2",
 
-    tabsListContainer: "flex flex-col gap-0.5",
+    tabsListContainer: "flex flex-col gap-1",
 
     tabWrapper:
-        "bg-gray-100 h-10 py-auto px-1 text-sm hover:bg-gray-200 transition flex justify-between items-center group cursor-pointer rounded-md relative",
+        "bg-gray-100 hover:bg-gray-200 h-9 py-auto px-1 text-sm transition flex justify-between items-center group cursor-pointer rounded-md relative",
     selectedTabWrapper:
-    "bg-gray-200 hover:bg-gray-300 transition h-10 py-auto px-1 text-sm flex justify-between content-center cursor-pointer rounded-md relative",
+        "bg-gray-200 hover:bg-gray-300 h-9 py-auto px-1 text-sm transition flex justify-between items-center group cursor-pointer rounded-md relative",
 
     buttonsContainer: "inline-flex gap-3 z-10",
 
@@ -134,10 +134,11 @@ const TabsContainer = (props: Props) => {
 
                                 <input
                                     type="checkbox"
-                                    className="inline-block w-5 text-2xl cursor-pointer"
+                                    className="inline-block w-3.5 h-3.5 aspect-square cursor-pointer bg-red-500 border-0 rounded"
                                     checked={isSelected}
                                     onClick={() => handleTabSelect(index)}
                                 ></input>
+
                                 <span className="ml-4 mr-10 w-full whitespace-nowrap overflow-hidden text-ellipsis "
                                     onClick={() => {selectedTabs.length == 0 ? openTab(tab.url) : handleTabSelect(index)}}
                                 >
