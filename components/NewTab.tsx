@@ -25,6 +25,11 @@ const NewTab = (props: Props) => {
 
     const addNewTab = async () => {
 
+        // TODO: Disable button for now
+
+        // TODO: Validate URL value
+
+        // TODO: Get the title of the URL
         const tabDefaultUrl = "This tab was added programmatically";
 
         axios({
@@ -74,7 +79,7 @@ const NewTab = (props: Props) => {
             </div>
 
             <Button onClick={addNewTab}
-                className="text-sm h-8 bg-gray-200 hover:bg-gray-300 text-gray-800 font-normal"
+                className="text-sm h-8 bg-gray-200 hover:bg-gray-300 text-gray-800 font-normal whitespace-nowrap overflow-hidden"
             >
                 Add a new tab
             </Button>

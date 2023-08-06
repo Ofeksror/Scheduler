@@ -23,11 +23,11 @@ const styles = {
     tabsListContainer: "flex flex-col gap-0.5",
 
     tabWrapper:
-        "bg-gray-100 h-10 py-auto px-1 text-sm hover:bg-gray-200 transition flex justify-between items-center group cursor-pointer rounded-md",
+        "bg-gray-100 h-10 py-auto px-1 text-sm hover:bg-gray-200 transition flex justify-between items-center group cursor-pointer rounded-md relative",
     selectedTabWrapper:
-    "bg-gray-200 hover:bg-gray-300 transition h-10 py-auto px-1 text-sm flex justify-between content-center cursor-pointer rounded-md",
+    "bg-gray-200 hover:bg-gray-300 transition h-10 py-auto px-1 text-sm flex justify-between content-center cursor-pointer rounded-md relative",
 
-    buttonsContainer: "inline-flex gap-3",
+    buttonsContainer: "inline-flex gap-3 z-10",
 
     hoverButton: "hover:bg-gray-100 transition rounded-full p-1"
 };
@@ -138,7 +138,7 @@ const TabsContainer = (props: Props) => {
                                     checked={isSelected}
                                     onClick={() => handleTabSelect(index)}
                                 ></input>
-                                <span className="ml-4 w-full"
+                                <span className="ml-4 mr-10 w-full whitespace-nowrap overflow-hidden text-ellipsis "
                                     onClick={() => {selectedTabs.length == 0 ? openTab(tab.url) : handleTabSelect(index)}}
                                 >
                                     {tab.title}
@@ -147,9 +147,10 @@ const TabsContainer = (props: Props) => {
 
                             <span
                                 className={
-                                    "invisible inline-flex gap-3 mr-3 ml-3 " +
+                                    // "invisible inline-flex gap-3 mr-3 z-10 justify-self-end " +
+                                    "opacity-0 transition inline-flex gap-3 pl-8 mr-3 z-10 justify-self-end absolute top-auto right-3 bg-gradient-to-r from-transparent to-gray-200 to-20% " +
                                     (selectedTabs.length == 0
-                                        ? "group-hover:visible"
+                                        ? "group-hover:opacity-100"
                                         : "")
                                 }
                             >
