@@ -16,6 +16,7 @@ import axios from "axios";
 import { useSelectedWorkspace } from "@/utilities/WorkspaceContext";
 import { useDatabase } from "@/utilities/databaseContext";
 import { Trash } from "lucide-react"
+import { toast } from "@/components/ui/use-toast";
 
 type Props = {};
 
@@ -54,6 +55,12 @@ const DeleteWorkspace = (props: Props) => {
         // Update client-side
         updateDeletedWorkspace(selectedWorkspace._id);
         setSelectedWorkspace(null);
+
+        // Notify User
+        toast({
+            description: `Deleted workspace ${titleInput}`,
+            duration: 4000
+        })
 
         // Close dialog
         setDialogOpen(false);

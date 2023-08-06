@@ -14,6 +14,7 @@ import {
 import { DatabaseProvider, useDatabase } from "@/utilities/databaseContext";
 import { ObjectId } from "mongodb";
 import NewWorkspace from "@/components/NewWorkspace";
+import { Toaster } from "@/components/ui/toaster";
 
 const styles = {
     outerContainer: "w-full h-full flex",
@@ -50,6 +51,7 @@ export default function Home() {
                     <Workspace />
                 </div>
             </div>
+            <Toaster />
         </div>
 
     );
