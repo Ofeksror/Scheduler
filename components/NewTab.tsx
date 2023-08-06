@@ -30,7 +30,9 @@ const NewTab = (props: Props) => {
         // TODO: Validate URL value
 
         // TODO: Get the title of the URL
-        const tabDefaultUrl = "This tab was added programmatically";
+
+
+        const tabDefaultUrl = await getURLTitle(tabUrl) || "Untitled";
 
         axios({
             method: "post",
