@@ -29,10 +29,18 @@ const NewTab = (props: Props) => {
 
         // TODO: Validate URL value
 
-        // TODO: Get the title of the URL
-
-
-        const tabDefaultUrl = await getURLTitle(tabUrl) || "Untitled";
+        // Get the title of the URL
+        const tabDefaultUrl = await axios({
+            url: `/api/helpers/url/${encodeURIComponent(tabUrl)}`,
+            method: "get"
+        })
+        .then((res) => {
+            return res.data.title;
+        })
+        .catch((error) => {
+            console.warn("ERROR OCURRED!");
+            return "ERROR OCURRED!";
+        })
 
         axios({
             method: "post",
