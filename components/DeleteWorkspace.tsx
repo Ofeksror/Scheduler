@@ -100,7 +100,7 @@ const DeleteWorkspace = (props: Props) => {
                     <DialogTitle>Delete Your Workspace</DialogTitle>
                 </DialogHeader>
                 <DialogDescription>
-                    <p className="select-none mb-3">Please enter the name of your workspace, <span className="font-bold">{selectedWorkspace?.title}</span>, if you wish to permanently delete it.</p>
+                    <p className="select-none mb-4">Please enter the name of your workspace, <span className="font-bold">{selectedWorkspace?.title}</span>, if you wish to permanently delete it.</p>
                     <Input
                         className={
                             error ? "border-red-400 focus-visible:ring-red-100" : ""

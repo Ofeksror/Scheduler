@@ -87,10 +87,16 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
             return
         };
         
+        const userId = session?.user?._id;
+        
+        if (!userId) {
+            return;
+        }
+
         // Get workspace IDs attached to user
         const workspaceIds = await axios({
             method: "get",
-            url: `/api/users/${session?.user?._id}/workspaces`
+            url: `/api/users/${userId}/workspaces`
         })
             .then((res) => {
                 return res.data.workspaces;
@@ -102,11 +108,23 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
         if (!workspaceIds) {
             return;
         }
+        
+        // Update session workspace IDs
+        await update({
+            ...session,
+            user: {
+                ...session.user,
+                workspaces: [
+                    ...workspaceIds
+                ]
+            }
+        })
 
         const promises = workspaceIds.map(async (_id: string) => {
             try {
                 const response = await axios.get(`/api/workspaces/${_id}`);                
-                return response.data.workspace;
+                // return response.data.workspace;
+                return response;
             } catch (error) {
                 // Workspace doesn't exist in database and is falsely attached to user
                 // Delete all references to workspace from all users
@@ -115,21 +133,13 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
             }
         });
 
-        const results = await Promise.all(promises);
-        const workspacesFetched = results.filter((workspace) => workspace !== null);
+        const resolves = await Promise.all(promises);
+        const results = resolves.map((resolve) => {
+            if (resolve !== null)
+                return resolve.data.workspace;
+        });
 
-        // Update session workspace IDs
-        await update({
-            ...session,
-            user: {
-                ...session.user,
-                workspaces: [
-                    ...workspacesFetched.map((workspace) => workspace._id)
-                ]
-            }
-        })
-
-        setSavedWorkspaces(workspacesFetched);
+        setSavedWorkspaces(results);
     };
 
     return (

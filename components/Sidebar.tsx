@@ -19,6 +19,7 @@ import {
 import NewWorkspace from "./NewWorkspace";
 
 import { Settings, Plus } from 'lucide-react';
+import { Skeleton } from "@/components/ui/skeleton";
 
 type Props = {};
 
@@ -28,9 +29,9 @@ const styles = {
     workspacesContainer: "font-medium my-8",
     workspaces: "mt-2 flex flex-col gap-1 font-normal text-sm",
     workspaceItem:
-        "hover:bg-gray-300 hover:cursor-pointer py-1 px-3 rounded transition",
+        "hover:bg-gray-300 hover:cursor-pointer py-auto px-3 rounded transition h-7 flex items-center",
     selectedWorkspaceItem:
-        "bg-gray-300 hover:bg-gray-300 hover:cursor-pointer py-1 px-3 rounded",
+        "bg-gray-300 hover:bg-gray-300 hover:cursor-pointer h-7 px-3 rounded flex items-center",
     divider: "w-4/5 h-1 border-0 rounded bg-slate-500 mx-auto",
     footer: "absolute bottom-0 right-0 px-4 py-6 w-full h-auto flex place-content-between",
     settings:
@@ -47,6 +48,8 @@ const Sidebar = (props: Props) => {
 
     const { selectedWorkspace, setSelectedWorkspace } = useSelectedWorkspace();
 
+    const session = useSession();
+
     const handleSelectWorkspace = (data: workspaceType) => {
         setSelectedWorkspace(data);
     };
@@ -60,7 +63,9 @@ const Sidebar = (props: Props) => {
                 <h2>Saved Workspaces</h2>
 
                 <ul className={styles.workspaces}>
-                    {savedWorkspaces.map((workspaceData, index) => {
+                    {
+                    savedWorkspaces.length !== 0 ? (
+                    savedWorkspaces.map((workspaceData, index) => {
                         return (
                             <Workspace
                                 data={workspaceData}
@@ -71,7 +76,18 @@ const Sidebar = (props: Props) => {
                                 key={index}
                             />
                         );
-                    })}
+                    })
+                    ) : (
+                        <>
+                        <li>
+                            <Skeleton className={styles.workspaceItem + " h-6 hover:cursor-default"} />
+                        </li>
+                        <li>
+                            <Skeleton className={styles.workspaceItem + " h-6 w-3/4 hover:cursor-default"} />
+                        </li>
+                        </>
+                    )
+                    }
                 </ul>
             </div>
 
@@ -83,6 +99,7 @@ const Sidebar = (props: Props) => {
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent>
+                        <DropdownMenuItem onClick={() => {console.log(session)}}>Log Session</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => {signOut()}}>Sign Out</DropdownMenuItem>
                     </DropdownMenuContent>
@@ -110,7 +127,7 @@ const Workspace = ({ data, isSelected, onClickHandler }: WorkspaceProps) => {
             id={data._id.toString()}
             onClick={(e) => onClickHandler(data)}
         >
-            {data.title ? data.title : "Unsaved Workspace"}
+            <span className="">{data.title ? data.title : "Unsaved Workspace"}</span>
         </li>
     );
 };

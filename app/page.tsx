@@ -38,8 +38,8 @@ export default function Home() {
         if (session.status === "unauthenticated") return redirect("/login");
 
         if (session.status === "authenticated" && !hasRun.current) {
-            hasRun.current = true;
             refreshWorkspaces();
+            hasRun.current = true;
         }
     }, [session]);
 
