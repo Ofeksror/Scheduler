@@ -31,9 +31,8 @@ const styles = {
 
     buttonsContainer: "inline-flex gap-3 z-10",
 
-    hoverButton: "hover:bg-gray-100 transition rounded-full p-1"
+    hoverButton: "hover:bg-gray-100 transition rounded-full p-1",
 };
-
 
 const TabsContainer = (props: Props) => {
     const { selectedWorkspace, setSelectedWorkspace } = useSelectedWorkspace();
@@ -44,7 +43,7 @@ const TabsContainer = (props: Props) => {
     if (selectedWorkspace === null) {
         return;
     }
-    
+
     // Stores the indexes of the tabs selected
     const [selectedTabs, setSelectedTabs] = useState<number[]>([]);
 
@@ -52,18 +51,18 @@ const TabsContainer = (props: Props) => {
     useEffect(() => {
         setSelectedTabs([]);
     }, [selectedWorkspace]);
-    
+
     const openTab = (url: string) => {
         window.open(url, "_blank");
-    }
-    
+    };
+
     const copyLink = (url: string) => {
-        navigator.clipboard.writeText(url)
-    }
-    
+        navigator.clipboard.writeText(url);
+    };
+
     const handleTabSelect = (tabIndexKey: number) => {
         const indexInSelectedTabs = selectedTabs.indexOf(tabIndexKey);
-        
+
         // Tab is not selected
         if (indexInSelectedTabs === -1) {
             // Select tab
@@ -78,35 +77,44 @@ const TabsContainer = (props: Props) => {
             return;
         }
     };
-    
+
     const handleDeleteTabs = async () => {
         // Get the tab IDs of the selected tabs
-        const tabsIDs = selectedTabs.map((tabIndex) => {
+        const tabIDsToRemove = selectedTabs.map((tabIndex) => {
             return selectedWorkspace.tabs[tabIndex]._id;
+        });
+
+        // Create a list of tabs that would remain in the workspace
+        const newTabsList = selectedWorkspace.tabs.filter((tab) => {
+            return !tabIDsToRemove.includes(tab._id);
         })
 
-        // Delete tabs from workspace
-        tabsIDs.forEach(async (tabId, index) => {
-            await axios({
-                url: "/api/workspaces/tabs/",
-                method: "put",
-                data: {
-                    workspaceId: selectedWorkspace._id,
-                    tabId: tabId
-                }
-            })
-            .then((res) => {
-                // Update the workspace in local DB after deleting the last tab 
-                if (index === tabsIDs.length - 1) {
-                    setSelectedWorkspace(res.data.workspace);
-                    refreshWorkspace(res.data.workspace);
-                }
-            })
-            .catch((error) =>{
-                console.warn(error);
-            })
+        const newWorkspaceObject = {
+            _id: selectedWorkspace._id,
+            title: selectedWorkspace.title,
+            tabs: newTabsList
+        }
+
+        // Update workspace client-side
+        setSelectedWorkspace(newWorkspaceObject);
+        refreshWorkspace(newWorkspaceObject);
+
+        // Update the workspace with only the remaining tabs in DB
+        await axios({
+            url: `/api/workspaces/${selectedWorkspace._id}/`,
+            method: "put",
+            data: {
+                workspace: newWorkspaceObject
+            }
         })
-    }
+            .then((res) => {
+                return res.data.workspace;
+            })
+            .catch((error) => {
+                console.warn(error);
+                return null;
+            })
+    };
 
     return (
         <div className={styles.tabsContainer}>
@@ -171,8 +179,13 @@ const TabsContainer = (props: Props) => {
                                     onClick={() => handleTabSelect(index)}
                                 ></input>
 
-                                <span className="ml-4 mr-10 w-full whitespace-nowrap overflow-hidden text-ellipsis "
-                                    onClick={() => {selectedTabs.length == 0 ? openTab(tab.url) : handleTabSelect(index)}}
+                                <span
+                                    className="ml-4 mr-10 w-full whitespace-nowrap overflow-hidden text-ellipsis "
+                                    onClick={() => {
+                                        selectedTabs.length == 0
+                                            ? openTab(tab.url)
+                                            : handleTabSelect(index);
+                                    }}
                                 >
                                     {tab.title}
                                 </span>
@@ -187,18 +200,31 @@ const TabsContainer = (props: Props) => {
                                         : "")
                                 }
                             >
-                                <span title="Move" className={styles.hoverButton}>
+                                <span
+                                    title="Move"
+                                    className={styles.hoverButton}
+                                >
                                     <GoMoveToEnd />
                                 </span>
-                                <span title="Copy Link"
+                                <span
+                                    title="Copy Link"
                                     className={styles.hoverButton}
-                                    onClick={() => {copyLink(tab.url)}}>
+                                    onClick={() => {
+                                        copyLink(tab.url);
+                                    }}
+                                >
                                     <GoPaste />
                                 </span>
-                                <span title="Save as Resource" className={styles.hoverButton}>
+                                <span
+                                    title="Save as Resource"
+                                    className={styles.hoverButton}
+                                >
                                     <GoBookmark />
                                 </span>
-                                <span title="Close" className={styles.hoverButton}>
+                                <span
+                                    title="Close"
+                                    className={styles.hoverButton}
+                                >
                                     <GoX />
                                 </span>
                             </span>
