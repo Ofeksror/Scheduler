@@ -67,7 +67,7 @@ const NewTab = (props: Props) => {
     };
 
     return (
-        <div className="mt-6 w-full h-10 py-auto px-5 bg-gray-100 flex items-center justify-between rounded-md">
+        <div className="mt-6 w-full h-10 py-auto flex items-center justify-between rounded-md">
             <div className=" flex flex-row items-center flex-1">
                 <Input
                     placeholder="URL"

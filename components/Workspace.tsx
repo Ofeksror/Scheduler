@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { tabType, useSelectedWorkspace } from "@/utilities/WorkspaceContext";
 
 import TabsContainer from "@/components/TabsContainer";
+import DeleteWorkspace from "@/components/DeleteWorkspace"
 import { DragDropContext } from "react-beautiful-dnd";
 import axios from "axios";
 import { useDatabase } from "@/utilities/databaseContext";
@@ -93,9 +94,12 @@ const Workspace = (props: Props) => {
                     onKeyDown={handleKeyDown}
                 ></input>
             </div>
-            <div>
-                <p>ID: {selectedWorkspace._id.toString()}</p>
-                
+
+            <div className="float-right">
+                <DeleteWorkspace />
+            </div>
+            
+            <div>                
                 {/* <DragDropContext onDragEnd={onDragEnd}> */}
                 <TabsContainer />
                 {/* </DragDropContext> */}

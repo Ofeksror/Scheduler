@@ -2,13 +2,15 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { workspaceType } from "./WorkspaceContext";
 import { useSession } from "next-auth/react";
 import axios from "axios";
-import { ObjectId } from "mongoose";
+import { ObjectId } from "mongodb";
+// import { ObjectId } from "mongoose";
 
 type ContextType = {
     unsavedWorkspaces: workspaceType[];
     setUnsavedWorkspaces: (workspaces: workspaceType[]) => void;
     savedWorkspaces: workspaceType[];
     setSavedWorkspaces: (workspaces: workspaceType[]) => void;
+    updateDeletedWorkspace: (deletedId: ObjectId) => void;
     refreshWorkspace: (updatedWorkspace: workspaceType) => void;
     refreshWorkspaces: () => void;
 };
@@ -21,6 +23,7 @@ const DatabaseContext = createContext<ContextType>({
     setUnsavedWorkspaces: () => {},
     savedWorkspaces: [],
     setSavedWorkspaces: () => {},
+    updateDeletedWorkspace: () => {},
     refreshWorkspace: () => {},
     refreshWorkspaces: () => {},
 });
@@ -36,6 +39,24 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
         []
     );
     const [savedWorkspaces, setSavedWorkspaces] = useState<workspaceType[]>([]);
+
+    const updateDeletedWorkspace = async (deletedId: ObjectId) => {
+        if (status !== "authenticated") return;
+
+        const prevIndex = savedWorkspaces.findIndex(
+            (iter) => iter._id === deletedId
+        )
+
+        if (prevIndex == -1) {
+            console.warn("Something went wrong...");
+            return;
+        }
+
+        setSavedWorkspaces([
+            ...savedWorkspaces.slice(0, prevIndex),
+            ...savedWorkspaces.slice(prevIndex + 1)
+        ]);
+    }
 
     const refreshWorkspace = async (updatedWorkspace: workspaceType) => {
         if (status !== "authenticated") return;
@@ -118,6 +139,7 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
                 setUnsavedWorkspaces,
                 savedWorkspaces,
                 setSavedWorkspaces,
+                updateDeletedWorkspace,
                 refreshWorkspace,
                 refreshWorkspaces,
             }}
