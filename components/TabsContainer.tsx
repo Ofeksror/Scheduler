@@ -13,6 +13,8 @@ import {
     GoGrabber,
     GoX,
 } from "react-icons/go";
+import axios from "axios";
+import { useDatabase } from "@/utilities/databaseContext";
 
 type Props = {};
 
@@ -35,13 +37,14 @@ const styles = {
 
 const TabsContainer = (props: Props) => {
     const { selectedWorkspace, setSelectedWorkspace } = useSelectedWorkspace();
+    const { refreshWorkspace } = useDatabase();
 
     // order = [ids of tabs (stores in database)]
 
     if (selectedWorkspace === null) {
         return;
     }
-
+    
     // Stores the indexes of the tabs selected
     const [selectedTabs, setSelectedTabs] = useState<number[]>([]);
 
@@ -53,14 +56,14 @@ const TabsContainer = (props: Props) => {
     const openTab = (url: string) => {
         window.open(url, "_blank");
     }
-
+    
     const copyLink = (url: string) => {
         navigator.clipboard.writeText(url)
     }
-
+    
     const handleTabSelect = (tabIndexKey: number) => {
         const indexInSelectedTabs = selectedTabs.indexOf(tabIndexKey);
-
+        
         // Tab is not selected
         if (indexInSelectedTabs === -1) {
             // Select tab
@@ -75,6 +78,35 @@ const TabsContainer = (props: Props) => {
             return;
         }
     };
+    
+    const handleDeleteTabs = async () => {
+        // Get the tab IDs of the selected tabs
+        const tabsIDs = selectedTabs.map((tabIndex) => {
+            return selectedWorkspace.tabs[tabIndex]._id;
+        })
+
+        // Delete tabs from workspace
+        tabsIDs.forEach(async (tabId, index) => {
+            await axios({
+                url: "/api/workspaces/tabs/",
+                method: "put",
+                data: {
+                    workspaceId: selectedWorkspace._id,
+                    tabId: tabId
+                }
+            })
+            .then((res) => {
+                // Update the workspace in local DB after deleting the last tab 
+                if (index === tabsIDs.length - 1) {
+                    setSelectedWorkspace(res.data.workspace);
+                    refreshWorkspace(res.data.workspace);
+                }
+            })
+            .catch((error) =>{
+                console.warn(error);
+            })
+        })
+    }
 
     return (
         <div className={styles.tabsContainer}>
@@ -100,7 +132,7 @@ const TabsContainer = (props: Props) => {
                             <span title="Save as Resource">
                                 <GoBookmark />
                             </span>
-                            <span title="Delete">
+                            <span title="Delete" onClick={handleDeleteTabs}>
                                 <GoTrash />
                             </span>
                         </span>
