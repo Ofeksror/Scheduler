@@ -3,7 +3,12 @@ const getTabsInWindow = async () => {
 };
 
 const button = document.querySelector("button");
+// button.addEventListener("click", async () => {
+//     const tabs = await getTabsInWindow();
+//     console.log(tabs);
+// });
+
 button.addEventListener("click", async () => {
-    const tabs = await getTabsInWindow();
-    console.log(tabs);
+    chrome.runtime.sendMessage({});
+    console.log("Message sent!");
 });

@@ -1,6 +1,6 @@
 "use client"
 import { ObjectId } from "mongodb";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 export type workspaceType = {
     _id: ObjectId;
@@ -42,6 +42,15 @@ export const SelectedWorkspaceProvider: React.FC<ProviderProps> = ({
 }) => {
     const [selectedWorkspace, setSelectedWorkspace] =
         useState<workspaceType | null>(null);
+
+    useEffect(() => {
+
+        console.log("Changed");
+
+        // Dispatch an event to the extension whenever the selectedWorkspace is updated
+        const event = new CustomEvent("SelectedWorkspaceUpdated", { detail: selectedWorkspace });
+        window.dispatchEvent(event);
+    }, [selectedWorkspace]);
 
     return (
         <SelectedWorkspaceContext.Provider
