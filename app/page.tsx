@@ -29,12 +29,6 @@ export default function Home() {
     const hasRun = useRef(false);
 
     useEffect(() => {
-        if (session.status === "unauthenticated") {
-            return redirect("/login");
-        }
-    }, [session]);
-
-    useEffect(() => {
         if (session.status === "unauthenticated") return redirect("/login");
 
         if (session.status === "authenticated" && !hasRun.current) {
@@ -42,6 +36,23 @@ export default function Home() {
             hasRun.current = true;
         }
     }, [session]);
+
+    useEffect(() => {
+        const MyFunc = () => {
+            console.log("Hey!!@!@!@1");
+        };
+
+        const handleMessage = (event: any) => {
+            // Ensure the message is what you're expecting
+            if (event.data.type === "TRIGGER_MYFUNC") {
+                MyFunc();
+            }
+        };
+
+        window.addEventListener("message", handleMessage);
+
+        return () => window.removeEventListener("message", handleMessage);
+    }, []);
 
     return (
         <div className={styles.rootContainer}>
@@ -53,6 +64,5 @@ export default function Home() {
             </div>
             <Toaster />
         </div>
-
     );
 }

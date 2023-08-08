@@ -51,6 +51,10 @@ export const SelectedWorkspaceProvider: React.FC<ProviderProps> = ({
 
         setCookie("WorkspaceSelected", selectedWorkspace, { path: "/" }); 
 
+        const ExtensionId = "ogbejghmlaeeigdllhhmhfdblmcgbjlo";
+        chrome.runtime.sendMessage(
+
+
         // localStorage.setItem("SelectedWorkspace", JSON.stringify(selectedWorkspace));
     }, [selectedWorkspace]);
 
