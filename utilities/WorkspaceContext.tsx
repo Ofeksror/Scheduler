@@ -47,15 +47,8 @@ export const SelectedWorkspaceProvider: React.FC<ProviderProps> = ({
     const [ cookies, setCookie ] = useCookies(["WorkspaceSelected"]);
 
     useEffect(() => {
-        console.log("Changed");
-
-        setCookie("WorkspaceSelected", selectedWorkspace, { path: "/" }); 
-
-        const ExtensionId = "ogbejghmlaeeigdllhhmhfdblmcgbjlo";
-        chrome.runtime.sendMessage(
-
-
-        // localStorage.setItem("SelectedWorkspace", JSON.stringify(selectedWorkspace));
+        // setCookie("WorkspaceSelected", selectedWorkspace, { path: "/" }); 
+        window.postMessage({ type: "MY_STATE_UPDATE", value: selectedWorkspace?._id }, "*");
     }, [selectedWorkspace]);
 
     return (

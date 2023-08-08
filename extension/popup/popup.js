@@ -11,13 +11,6 @@ const button = document.querySelector("button");
 button.addEventListener("click", async () => {
     chrome.runtime.sendMessage({ action: "triggerFunction" });
     console.log("Message sent!");
-
-    chrome.cookies.set(
-        { url: "http://localhost:3000/", name: "lol", value: "LOL" },
-        () => {
-            console.log("Created a new cookie lol");
-        }
-    );
 });
 
 // setInterval(async () => {
