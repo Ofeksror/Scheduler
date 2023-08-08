@@ -1,6 +1,7 @@
 "use client";
 import "./globals.css";
 import AuthProvider from "@/utilities/AuthProvider";
+import { CookiesProvider } from "react-cookie";
 import { DatabaseProvider } from "@/utilities/databaseContext";
 import { SelectedWorkspaceProvider } from "@/utilities/WorkspaceContext";
 
@@ -16,13 +17,15 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <AuthProvider>
-                <DatabaseProvider>
-                    <SelectedWorkspaceProvider>
-                        <body>{children}</body>
-                    </SelectedWorkspaceProvider>
-                </DatabaseProvider>
-            </AuthProvider>
+            <CookiesProvider>
+                <AuthProvider>
+                    <DatabaseProvider>
+                        <SelectedWorkspaceProvider>
+                            <body>{children}</body>
+                        </SelectedWorkspaceProvider>
+                    </DatabaseProvider>
+                </AuthProvider>
+            </CookiesProvider>
         </html>
     );
 }

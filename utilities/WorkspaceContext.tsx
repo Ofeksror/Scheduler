@@ -1,6 +1,7 @@
 "use client"
 import { ObjectId } from "mongodb";
 import { createContext, useContext, useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 
 export type workspaceType = {
     _id: ObjectId;
@@ -43,13 +44,14 @@ export const SelectedWorkspaceProvider: React.FC<ProviderProps> = ({
     const [selectedWorkspace, setSelectedWorkspace] =
         useState<workspaceType | null>(null);
 
-    useEffect(() => {
+    const [ cookies, setCookie ] = useCookies(["WorkspaceSelected"]);
 
+    useEffect(() => {
         console.log("Changed");
 
-        // Dispatch an event to the extension whenever the selectedWorkspace is updated
-        const event = new CustomEvent("SelectedWorkspaceUpdated", { detail: selectedWorkspace });
-        window.dispatchEvent(event);
+        setCookie("WorkspaceSelected", selectedWorkspace, { path: "/" }); 
+
+        // localStorage.setItem("SelectedWorkspace", JSON.stringify(selectedWorkspace));
     }, [selectedWorkspace]);
 
     return (

@@ -2,19 +2,17 @@
     "manifest_version": 3,
     "name": "Tab Manager Extension",
     "version": "0.1",
-    "icons": {
-    },
+    "icons": {},
     "action": {
         "default_popup": "popup/popup.html"
     },
-    "permissions": [
-        "tabs"
-    ],
+    "permissions": ["tabs", "cookies"],
     "background": {
         "service_worker": "service_worker.js",
         "type": "module"
     },
     "externally_connectable": {
         "matches": ["http://localhost:3000/*"]
-    }
+    },
+    "host_permissions": ["http://localhost:3000/*"]
 }
