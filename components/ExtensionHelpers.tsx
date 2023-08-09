@@ -23,7 +23,7 @@ const ExtensionHelpers = (props: Props) => {
     return (
         <div>
             <button
-                id="cliclMeExtension"
+                id="clickMeExtension"
                 onClick={() => {
                     console.log("Hey!");
                 }}
