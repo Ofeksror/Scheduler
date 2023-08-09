@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction, useContext, useEffect } from "react";
+import React, {
+    Dispatch,
+    SetStateAction,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 
 import { signOut, useSession } from "next-auth/react";
 
@@ -18,7 +24,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import NewWorkspace from "./NewWorkspace";
 
-import { Settings, Plus } from 'lucide-react';
+import { Settings, Plus } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 type Props = {};
@@ -34,8 +40,7 @@ const styles = {
         "bg-gray-300 hover:bg-gray-300 hover:cursor-pointer h-7 px-3 rounded flex items-center",
     divider: "w-4/5 h-1 border-0 rounded bg-slate-500 mx-auto",
     footer: "absolute bottom-0 right-0 px-4 py-6 w-full h-auto flex place-content-between",
-    settings:
-        "rounded-full bg-gray-300 flex justify-center items-center p-2",
+    settings: "rounded-full bg-gray-300 flex justify-center items-center p-2",
 };
 
 const Sidebar = (props: Props) => {
@@ -47,6 +52,17 @@ const Sidebar = (props: Props) => {
     } = useDatabase();
 
     const { selectedWorkspace, setSelectedWorkspace } = useSelectedWorkspace();
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (savedWorkspaces.length == 0) {
+            setIsLoading(true);
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 2500);
+        }
+    }, [savedWorkspaces]);
 
     const session = useSession();
 
@@ -63,31 +79,45 @@ const Sidebar = (props: Props) => {
                 <h2>Saved Workspaces</h2>
 
                 <ul className={styles.workspaces}>
-                    {
-                    savedWorkspaces.length !== 0 ? (
-                    savedWorkspaces.map((workspaceData, index) => {
-                        return (
-                            <Workspace
-                                data={workspaceData}
-                                isSelected={
-                                    selectedWorkspace?._id == workspaceData._id
-                                }
-                                onClickHandler={handleSelectWorkspace}
-                                key={index}
-                            />
-                        );
-                    })
-                    ) : (
+                    {isLoading ? (
                         <>
-                        <li>
-                            <Skeleton className={styles.workspaceItem + " h-6 hover:cursor-default"} />
-                        </li>
-                        <li>
-                            <Skeleton className={styles.workspaceItem + " h-6 w-3/4 hover:cursor-default"} />
-                        </li>
+                            <li>
+                                <Skeleton
+                                    className={
+                                        styles.workspaceItem +
+                                        " h-6 hover:cursor-default"
+                                    }
+                                />
+                            </li>
+                            <li>
+                                <Skeleton
+                                    className={
+                                        styles.workspaceItem +
+                                        " h-6 w-3/4 hover:cursor-default"
+                                    }
+                                />
+                            </li>
                         </>
+                    ) : (
+                        savedWorkspaces.length === 0
+                            ? (<li className="text-gray-500">Empty</li>)
+                            : (
+                            savedWorkspaces.map((workspaceData, index) => {
+                                return (
+                                    <Workspace
+                                        key={index}
+                                        data={workspaceData}
+                                        isSelected={
+                                            selectedWorkspace?._id ==
+                                            workspaceData._id
+                                        }
+                                        onClickHandler={handleSelectWorkspace}
+                                    />
+                                );
+                            })
+                        )
                     )
-                    }
+                }
                 </ul>
             </div>
 
@@ -95,13 +125,31 @@ const Sidebar = (props: Props) => {
                 {/* Settings */}
                 <DropdownMenu>
                     <DropdownMenuTrigger>
-                        <div className={styles.settings}><Settings size={24} color="#27272a" strokeWidth={1.5}/></div>
+                        <div className={styles.settings}>
+                            <Settings
+                                size={24}
+                                color="#27272a"
+                                strokeWidth={1.5}
+                            />
+                        </div>
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent>
-                        <DropdownMenuItem onClick={() => {console.log(session)}}>Log Session</DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={() => {
+                                console.log(session);
+                            }}
+                        >
+                            Log Session
+                        </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => {signOut()}}>Sign Out</DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={() => {
+                                signOut();
+                            }}
+                        >
+                            Sign Out
+                        </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
 
@@ -127,7 +175,9 @@ const Workspace = ({ data, isSelected, onClickHandler }: WorkspaceProps) => {
             id={data._id.toString()}
             onClick={(e) => onClickHandler(data)}
         >
-            <span className="">{data.title ? data.title : "Unsaved Workspace"}</span>
+            <span className="">
+                {data.title ? data.title : "Unsaved Workspace"}
+            </span>
         </li>
     );
 };

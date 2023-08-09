@@ -18,8 +18,8 @@ import { Toaster } from "@/components/ui/toaster";
 import ExtensionHelpers from "@/components/ExtensionHelpers";
 
 const styles = {
-    outerContainer: "w-full h-full flex",
     rootContainer: "h-screen w-screen",
+    outerContainer: "w-full h-full flex",
     mainContent: "bg-gray-50 w-full h-full",
 };
 
