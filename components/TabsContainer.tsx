@@ -87,13 +87,13 @@ const TabsContainer = (props: Props) => {
         // Create a list of tabs that would remain in the workspace
         const newTabsList = selectedWorkspace.tabs.filter((tab) => {
             return !tabIDsToRemove.includes(tab._id);
-        })
+        });
 
         const newWorkspaceObject = {
             _id: selectedWorkspace._id,
             title: selectedWorkspace.title,
-            tabs: newTabsList
-        }
+            tabs: newTabsList,
+        };
 
         // Update workspace client-side
         setSelectedWorkspace(newWorkspaceObject);
@@ -104,8 +104,8 @@ const TabsContainer = (props: Props) => {
             url: `/api/workspaces/${selectedWorkspace._id}/`,
             method: "put",
             data: {
-                workspace: newWorkspaceObject
-            }
+                workspace: newWorkspaceObject,
+            },
         })
             .then((res) => {
                 return res.data.workspace;
@@ -113,7 +113,7 @@ const TabsContainer = (props: Props) => {
             .catch((error) => {
                 console.warn(error);
                 return null;
-            })
+            });
     };
 
     return (
@@ -176,7 +176,7 @@ const TabsContainer = (props: Props) => {
                                     type="checkbox"
                                     className="inline-block w-3.5 h-3.5 aspect-square cursor-pointer bg-red-500 border-0 rounded"
                                     checked={isSelected}
-                                    onClick={() => handleTabSelect(index)}
+                                    onChange={() => handleTabSelect(index)}
                                 ></input>
 
                                 <span

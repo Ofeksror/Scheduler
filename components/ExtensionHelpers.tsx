@@ -11,14 +11,17 @@ const ExtensionHelpers = (props: Props) => {
     const { selectedWorkspace } = useSelectedWorkspace();
     const { refreshWorkspaces } = useDatabase();
 
+    const handleMessage = (event: any) => {
+        console.log("Incoming event received on React Component");
+
+        if (event.data.type == "MY_EXTENSION_UPDATE") {
+            console.log(event);
+        }
+    };
+
     useEffect(() => {
         window.addEventListener("message", handleMessage);
     }, []);
-
-    const handleMessage = (event: any) => {
-        // Handle messages if they are requiring you to refresh workspace
-        console.log(event);
-    };
 
     return (
         <div>
