@@ -1,28 +1,37 @@
-"use client"
-import React, { useEffect } from 'react'
-import { useSelectedWorkspace } from '@/utilities/WorkspaceContext';
-import { useDatabase } from '@/utilities/databaseContext';
-import { useSession } from 'next-auth/react';
+"use client";
+import React, { useEffect } from "react";
+import { useSelectedWorkspace } from "@/utilities/WorkspaceContext";
+import { useDatabase } from "@/utilities/databaseContext";
+import { useSession } from "next-auth/react";
 
-type Props = {}
+type Props = {};
 
 const ExtensionHelpers = (props: Props) => {
     const session = useSession();
-    const {selectedWorkspace} = useSelectedWorkspace();
+    const { selectedWorkspace } = useSelectedWorkspace();
     const { refreshWorkspaces } = useDatabase();
 
-    if (!session || session.data === null || session.data?.user === undefined || selectedWorkspace === null) {
-        console.log("Nothing to show");
-        return <></>;
-    }
+    useEffect(() => {
+        window.addEventListener("message", handleMessage);
+    }, []);
+
+    const handleMessage = (event: any) => {
+        // Handle messages if they are requiring you to refresh workspace
+        console.log(event);
+    };
 
     return (
-    <div className="">
-        <p id="userId">{session.data.user._id.toString()}</p>
-        <p id="selectedWorkspaceId">{selectedWorkspace?._id.toString()}</p>
-        {/* <button onClick={} ></button> */}
-    </div>
-  )
-}
+        <div>
+            <button
+                id="cliclMeExtension"
+                onClick={() => {
+                    console.log("Hey!");
+                }}
+            >
+                Click to RefreshWorkspaces
+            </button>
+        </div>
+    );
+};
 
-export default ExtensionHelpers
+export default ExtensionHelpers;

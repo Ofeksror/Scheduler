@@ -38,23 +38,6 @@ export default function Home() {
         }
     }, [session]);
 
-    useEffect(() => {
-        const MyFunc = () => {
-            console.log("Hey!!@!@!@1");
-        };
-
-        const handleMessage = (event: any) => {
-            // Ensure the message is what you're expecting
-            if (event.data.type === "TRIGGER_MYFUNC") {
-                MyFunc();
-            }
-        };
-
-        window.addEventListener("message", handleMessage);
-
-        return () => window.removeEventListener("message", handleMessage);
-    }, []);
-
     return (
         <div className={styles.rootContainer}>
             <div className={styles.outerContainer}>

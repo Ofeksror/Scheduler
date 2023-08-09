@@ -8,9 +8,16 @@ const getSelectedWorkspace = () => {
     );
 }
 
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+    // Receives a message from popup
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log(request);
-    console.log(sender);
-    console.log(sendResponse);
+    
+    // Get relevant tab (url of localhost:3000)
+    // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/sendMessage
+    const [tab] = await chrome.tabs.query({ url: "http://localhost:3000/*" });
+    console.log(tab);
+    
+    // Send a message to content-script
+    const response = await chrome.tabs.sendMessage(tab.id, { message: "Message to content script" });
+    console.log(response);
 })
