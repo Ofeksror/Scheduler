@@ -8,14 +8,15 @@ type Props = {};
 
 const ExtensionHelpers = (props: Props) => {
     const session = useSession();
-    const { selectedWorkspace } = useSelectedWorkspace();
-    const { refreshWorkspaces } = useDatabase();
+    const { selectedWorkspace, setSelectedWorkspace } = useSelectedWorkspace();
+    const { refreshWorkspace, refreshWorkspaces } = useDatabase();
 
     const handleMessage = (event: any) => {
         console.log("Incoming event received on React Component");
 
         if (event.data.type == "MY_EXTENSION_UPDATE") {
-            console.log(event);
+            refreshWorkspace(event.data.workspace);
+            setSelectedWorkspace(event.data.workspace);
         }
     };
 
