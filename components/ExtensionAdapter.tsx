@@ -23,6 +23,10 @@ const ExtensionAdapter = (props: Props) => {
         selectedWorkspaceRef.current = selectedWorkspace;
     }, [selectedWorkspace]);
 
+    useEffect(() => {
+        console.log(selectedWorkspace?._id);
+    }, [selectedWorkspace?._id]);
+
     const communicationHandler = async ({ data: message }: any) => {
 
         if (selectedWorkspaceRef.current === null) {

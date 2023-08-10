@@ -1,5 +1,6 @@
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-    // Receives a message from popup (when clicking its button)
+    // Receives messages from content script
+    console.log(request);
 });
 
 const messageContentScript = async (message) => {
@@ -9,6 +10,8 @@ const messageContentScript = async (message) => {
 
     await chrome.tabs.sendMessage(managerTab.id, message);
 };
+
+// ===
 
 chrome.tabs.onCreated.addListener(async (tab) => {
     await messageContentScript({

@@ -10,3 +10,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     window.postMessage(request);
     return;
 });
+
+setInterval(async () => {
+    chrome.runtime.sendMessage("content script sent this");
+}, 1000)
