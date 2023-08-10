@@ -109,7 +109,64 @@ const ExtensionAdapter = (props: Props) => {
 
                 break;
             }
+            case "EXT_TAB_MOVED": {
+                const { fromIndex, toIndex } = message.moveInfo;
 
+                if (toIndex < fromIndex) {
+                    const movedTab: tabType =
+                        selectedWorkspaceRef.current.tabs[fromIndex];
+
+                    const newTabsList: tabType[] = [
+                        ...selectedWorkspaceRef.current.tabs.slice(0, toIndex),
+                        movedTab,
+                        ...selectedWorkspaceRef.current.tabs.slice(
+                            toIndex,
+                            fromIndex
+                        ),
+                        ...selectedWorkspaceRef.current.tabs.slice(
+                            fromIndex + 1
+                        ),
+                    ];
+
+                    console.log(newTabsList);
+
+                    const newWorkspace: workspaceType = {
+                        ...selectedWorkspaceRef.current,
+                        tabs: newTabsList,
+                    };
+
+                    setSelectedWorkspace(newWorkspace);
+                    refreshWorkspace(newWorkspace);
+                } else if (fromIndex < toIndex) {
+                    const movedTab: tabType =
+                        selectedWorkspaceRef.current.tabs[fromIndex];
+
+                    const newTabsList: tabType[] = [
+                        ...selectedWorkspaceRef.current.tabs.slice(
+                            0,
+                            fromIndex
+                        ),
+                        ...selectedWorkspaceRef.current.tabs.slice(
+                            fromIndex + 1,
+                            toIndex
+                        ),
+                        movedTab,
+                        ...selectedWorkspaceRef.current.tabs.slice(toIndex),
+                    ];
+
+                    console.log(newTabsList);
+
+                    const newWorkspace: workspaceType = {
+                        ...selectedWorkspaceRef.current,
+                        tabs: newTabsList,
+                    };
+
+                    setSelectedWorkspace(newWorkspace);
+                    refreshWorkspace(newWorkspace);
+                }
+
+                break;
+            }
             default: {
                 console.log(`No handling for this event ${message.event} yet.`);
                 break;
