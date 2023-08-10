@@ -167,6 +167,29 @@ const ExtensionAdapter = (props: Props) => {
 
                 break;
             }
+            case "EXT_TAB_PINNED": {
+                const newTabList = selectedWorkspaceRef.current.tabs.map(
+                    (iteratedTab) => {
+                        if (iteratedTab.browserTabId == message.browserTabId) {
+                            return {
+                                ...iteratedTab,
+                                pinned: !iteratedTab.pinned,
+                            };
+                        }
+                        return iteratedTab;
+                    }
+                );
+
+                const newWorkspace: workspaceType = {
+                    ...selectedWorkspaceRef.current,
+                    tabs: newTabList,
+                };
+
+                setSelectedWorkspace(newWorkspace);
+                refreshWorkspace(newWorkspace);
+
+                break;
+            }
             default: {
                 console.log(`No handling for this event ${message.event} yet.`);
                 break;
