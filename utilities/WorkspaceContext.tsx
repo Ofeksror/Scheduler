@@ -42,7 +42,7 @@ export const SelectedWorkspaceProvider: React.FC<ProviderProps> = ({
 
     useEffect(() => {
         // setCookie("WorkspaceSelected", selectedWorkspace, { path: "/" }); 
-        window.postMessage({ type: "MY_STATE_UPDATE", value: selectedWorkspace?._id }, "*");
+        // window.postMessage({ type: "MY_STATE_UPDATE", value: selectedWorkspace?._id }, "*");
     }, [selectedWorkspace]);
 
     return (

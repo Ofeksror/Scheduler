@@ -1,6 +1,10 @@
 "use client";
 import React, { useEffect, useRef } from "react";
-import { tabType, useSelectedWorkspace, workspaceType } from "@/utilities/WorkspaceContext";
+import {
+    tabType,
+    useSelectedWorkspace,
+    workspaceType,
+} from "@/utilities/WorkspaceContext";
 import { useDatabase } from "@/utilities/databaseContext";
 import { useSession } from "next-auth/react";
 
@@ -13,17 +17,14 @@ const ExtensionAdapter = (props: Props) => {
     const { selectedWorkspace, setSelectedWorkspace } = useSelectedWorkspace();
     const { refreshWorkspace, refreshWorkspaces } = useDatabase();
 
-    const selectedWorkspaceRef = useRef(selectedWorkspace)
+    const selectedWorkspaceRef = useRef(selectedWorkspace);
     useEffect(() => {
         selectedWorkspaceRef.current = selectedWorkspace;
-    }, [selectedWorkspace])
+    }, [selectedWorkspace]);
 
-
-    const communicationHandler = async ({data: message}: any) => {
-        console.log(message);
+    const communicationHandler = async ({ data: message }: any) => {
 
         if (selectedWorkspaceRef.current === null) {
-            console.log("No workspace selected");
             return;
         }
 
@@ -35,34 +36,39 @@ const ExtensionAdapter = (props: Props) => {
                     url: message.tab.url,
                     pinned: message.tab.pinned,
                     browserTabId: message.tab.browserTabId,
-                    faviconUrl: message.tab.faviconUrl
-                }
-                
+                    faviconUrl: message.tab.faviconUrl,
+                };
+
                 const newTabsList: tabType[] = [
-                    ...selectedWorkspaceRef.current.tabs.slice(0, message.tab.index),
+                    ...selectedWorkspaceRef.current.tabs.slice(
+                        0,
+                        message.tab.index
+                    ),
                     newTab,
-                    ...selectedWorkspaceRef.current.tabs.slice(message.tab.index)
-                ]
-                
+                    ...selectedWorkspaceRef.current.tabs.slice(
+                        message.tab.index
+                    ),
+                ];
+
                 const newWorkspace: workspaceType = {
                     ...selectedWorkspaceRef.current,
-                    tabs: newTabsList
-                }
+                    tabs: newTabsList,
+                };
 
                 setSelectedWorkspace(newWorkspace);
                 refreshWorkspace(newWorkspace);
 
                 break;
             }
-            case "EXT_TAB_UPDATED": {
-
-                break;
-            }
             default: {
-                console.log(`No handling for this event ${message.event} yet.`)
+                console.log(`No handling for this event ${message.event} yet.`);
                 break;
             }
         }
+    };
+
+    const syncToDatabase = async () => {
+
     }
 
     useEffect(() => {
@@ -71,7 +77,7 @@ const ExtensionAdapter = (props: Props) => {
 
     return (
         <div>
-            <button>Sync to DB</button>
+            <button onClick={syncToDatabase}>Sync to DB</button>
         </div>
     );
 };
