@@ -60,6 +60,38 @@ const ExtensionAdapter = (props: Props) => {
 
                 break;
             }
+            case "EXT_TAB_UPDATED": {
+                const prevTabIndex =
+                    selectedWorkspaceRef.current.tabs.findIndex(
+                        (iteratedTab) =>
+                            iteratedTab.browserTabId === message.tab.id
+                    );
+
+                const newTabsList: tabType[] = [
+                    ...selectedWorkspaceRef.current.tabs.slice(0, prevTabIndex),
+                    {
+                        _id: null,
+                        title: message.tab.title,
+                        url: message.tab.url,
+                        pinned: message.tab.pinned,
+                        browserTabId: message.tab.id,
+                        faviconUrl: message.tab.faviconUrl,
+                    },
+                    ...selectedWorkspaceRef.current.tabs.slice(
+                        prevTabIndex + 1
+                    ), // remove the previous version of that tab
+                ];
+
+                const newWorkspace: workspaceType = {
+                    ...selectedWorkspaceRef.current,
+                    tabs: newTabsList,
+                };
+
+                setSelectedWorkspace(newWorkspace);
+                refreshWorkspace(newWorkspace);
+
+                break;
+            }
             default: {
                 console.log(`No handling for this event ${message.event} yet.`);
                 break;
