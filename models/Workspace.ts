@@ -9,7 +9,9 @@ const workspaceSchema = new Schema({
             url: String,
             title: String,
             pinned: Boolean,
-        },
+            browserTabId: Number,
+            faviconUrl: String,
+        }
     ],
 });
 

@@ -15,7 +15,7 @@ import { DatabaseProvider, useDatabase } from "@/utilities/databaseContext";
 import { ObjectId } from "mongodb";
 import NewWorkspace from "@/components/NewWorkspace";
 import { Toaster } from "@/components/ui/toaster";
-import ExtensionHelpers from "@/components/ExtensionHelpers";
+import ExtensionAdapter from "@/components/ExtensionAdapter";
 
 const styles = {
     rootContainer: "h-screen w-screen",
@@ -38,6 +38,7 @@ export default function Home() {
         }
     }, [session]);
 
+
     return (
         <div className={styles.rootContainer}>
             <div className={styles.outerContainer}>
@@ -47,7 +48,7 @@ export default function Home() {
                 </div>
             </div>
             <Toaster />
-            <ExtensionHelpers />
+            <ExtensionAdapter />
         </div>
     );
 }

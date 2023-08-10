@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { tabType, useSelectedWorkspace } from "@/utilities/WorkspaceContext";
+import { useSelectedWorkspace } from "@/utilities/WorkspaceContext";
 
 import TabsContainer from "@/components/TabsContainer";
 import DeleteWorkspace from "@/components/DeleteWorkspace"
