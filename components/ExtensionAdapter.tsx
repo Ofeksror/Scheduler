@@ -7,6 +7,7 @@ import {
 } from "@/utilities/WorkspaceContext";
 import { useDatabase } from "@/utilities/databaseContext";
 import { useSession } from "next-auth/react";
+import axios from "axios";
 
 // import { } from "@/utilities/ExtensionHelpers";
 
@@ -198,7 +199,22 @@ const ExtensionAdapter = (props: Props) => {
     };
 
     const syncToDatabase = async () => {
-
+        await axios({
+            url: "/api/workspaces/update/",
+            method: "PUT",
+            data: {
+                workspace: selectedWorkspace
+            }
+        })
+            .then((res) => {
+                console.log(res);
+                if (res.status == 200) {
+                    console.log("Successfully synced to database");
+                }
+            })
+            .catch((error) => {
+                console.warn(error);
+            })
     }
 
     useEffect(() => {

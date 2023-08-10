@@ -60,7 +60,7 @@ export async function DELETE(
 }
 
 /* ================================================ //
-// PUT: Gets a new workspace objects and updates the one found in database
+// PUT: Gets a new workspace object and updates the one found in database
 // Parameters:
     1. route parameter: The workspace ID to update 
     2. JSON body: The new workspace object to update in DB 
