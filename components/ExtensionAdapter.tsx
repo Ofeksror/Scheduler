@@ -23,8 +23,16 @@ const ExtensionAdapter = (props: Props) => {
         selectedWorkspaceRef.current = selectedWorkspace;
     }, [selectedWorkspace]);
 
-    useEffect(() => {
-        console.log(selectedWorkspace?._id);
+    useEffect(() => {        
+        if (!selectedWorkspace?._id) {
+            console.log("No workspace is selected");
+            return;
+        }
+
+        window.postMessage({
+            event: "WEB_WORKSPACE_CHANGED",
+            tabs: selectedWorkspace?.tabs
+        });
     }, [selectedWorkspace?._id]);
 
     const communicationHandler = async ({ data: message }: any) => {
