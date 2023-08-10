@@ -92,6 +92,24 @@ const ExtensionAdapter = (props: Props) => {
 
                 break;
             }
+            case "EXT_TAB_REMOVED": {
+                const newTabList = selectedWorkspaceRef.current.tabs.filter(
+                    (iteratedTab) => {
+                        iteratedTab.browserTabId !== message.browserTabId;
+                    }
+                );
+
+                const newWorkspace: workspaceType = {
+                    ...selectedWorkspaceRef.current,
+                    tabs: newTabList,
+                };
+
+                setSelectedWorkspace(newWorkspace);
+                refreshWorkspace(newWorkspace);
+
+                break;
+            }
+
             default: {
                 console.log(`No handling for this event ${message.event} yet.`);
                 break;
