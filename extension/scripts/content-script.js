@@ -9,6 +9,10 @@ window.addEventListener("message", ({ data: message }) => {
             chrome.runtime.sendMessage(message);
             break;
         }
+        case "WEB_TABS_DELETED": {
+            chrome.runtime.sendMessage(message);
+            break;
+        }
         default: break
     }
 });

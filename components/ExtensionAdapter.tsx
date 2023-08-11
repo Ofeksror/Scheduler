@@ -106,15 +106,11 @@ const ExtensionAdapter = (props: Props) => {
                 break;
             }
             case "EXT_TAB_REMOVED": {
-                const newTabList = selectedWorkspaceRef.current.tabs.filter(
-                    (iteratedTab) => {
-                        iteratedTab.browserTabId !== message.browserTabId;
-                    }
-                );
+                const remainingTabs = selectedWorkspaceRef.current.tabs.filter((tab) => tab.browserTabId != message.browserTabId);
 
                 const newWorkspace: workspaceType = {
                     ...selectedWorkspaceRef.current,
-                    tabs: newTabList,
+                    tabs: remainingTabs,
                 };
 
                 setSelectedWorkspace(newWorkspace);
@@ -223,6 +219,9 @@ const ExtensionAdapter = (props: Props) => {
                 if (res.status == 200) {
                     console.log("Successfully synced to database");
                 }
+                
+                setSelectedWorkspace(res.data.workspace);
+                refreshWorkspace(res.data.workspace);
             })
             .catch((error) => {
                 console.warn(error);

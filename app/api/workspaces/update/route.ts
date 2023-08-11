@@ -1,5 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import Workspace from "@/models/Workspace";
+import { tabType } from "@/utilities/WorkspaceContext";
+import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
 /* ================================================ //
@@ -21,7 +23,14 @@ export async function PUT(req: NextRequest) {
 
     // Update values in DB
     workspace.title = newWorkspace.title;
-    workspace.tabs = newWorkspace.tabs;
+    
+    workspace.tabs = [];
+    newWorkspace.tabs.forEach((tab: tabType) => {
+        if (tab._id === null) {
+            tab._id = new ObjectId();
+        }
+        workspace.tabs.push(tab);
+    });
 
     // Save workspace model
     workspace.save();
