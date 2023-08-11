@@ -79,41 +79,27 @@ const TabsContainer = (props: Props) => {
     };
 
     const handleDeleteTabs = async () => {
-        // Get the tab IDs of the selected tabs
-        const tabIDsToRemove = selectedTabs.map((tabIndex) => {
-            return selectedWorkspace.tabs[tabIndex]._id;
-        });
+        // Separates closed tabs and remaining tabs 
+        const closedTabs = selectedWorkspace.tabs.filter((tab, index) => selectedTabs.includes(index));
+        const remainingTabs = selectedWorkspace.tabs.filter((tab, index) => !selectedTabs.includes(index));
 
-        // Create a list of tabs that would remain in the workspace
-        const newTabsList = selectedWorkspace.tabs.filter((tab) => {
-            return !tabIDsToRemove.includes(tab._id);
-        });
-
-        const newWorkspaceObject = {
+        const updatedWorkspace = {
             _id: selectedWorkspace._id,
             title: selectedWorkspace.title,
-            tabs: newTabsList,
+            tabs: remainingTabs,
         };
 
-        // Update workspace client-side
-        setSelectedWorkspace(newWorkspaceObject);
-        refreshWorkspace(newWorkspaceObject);
+        // Update front-end
+        setSelectedWorkspace(updatedWorkspace);
+        refreshWorkspace(updatedWorkspace);
 
-        // Update the workspace with only the remaining tabs in DB
-        await axios({
-            url: `/api/workspaces/${selectedWorkspace._id}/`,
-            method: "put",
-            data: {
-                workspace: newWorkspaceObject,
-            },
-        })
-            .then((res) => {
-                return res.data.workspace;
-            })
-            .catch((error) => {
-                console.warn(error);
-                return null;
-            });
+        setSelectedTabs([]);
+
+        // Message extension to close tabs
+        window.postMessage({
+            event: "WEB_TABS_DELETED",
+            tabs: closedTabs,
+        });
     };
 
     return (
