@@ -1,6 +1,6 @@
 let ignoreEvents = false;
 
-let tabsCreated = [];
+let createdTabsIds = [];
 
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     // Receives messages from content script
@@ -20,7 +20,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             // await request.tabs.forEach(async (tab, index) => {
             //     await chrome.tabs.create({
             //         index,
-            //         active: false,
+            //         active:  false,
             //         pinned: tab.pinned,
             //         url: tab.url
             //     }, (tab) => {
@@ -29,6 +29,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             // });
 
             const { id: managerId } = await getManager();
+            console.log(managerId);
 
             for (let i = 0; i < request.tabs.length; i++) {
                 await chrome.tabs.create(
@@ -40,7 +41,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                         openerTabId: managerId,
                     },
                     (tab) => {
-                        tabsCreated.push(tab.id);
+                        createdTabsIds.push(tab.id);
                     }
                 );
             }
@@ -116,28 +117,14 @@ const getManager = async () => {
 // ===
 
 chrome.tabs.onCreated.addListener(async (tab) => {
-    // if (tabsCreated.length == 0) {
-    //     ignoreEvents = false;
+    // if (createdTabsIds.length !== 0) {
+    //     const index = createdTabsIds.indexOf(tab.id);
+    //     if (index != -1) {
+    //         createdTabsIds.splice(0, index);
+    //         console.log(createdTabsIds);
+    //         return;
+    //     }
     // }
-    // else if (tabsCreated.includes(tab.id)) {
-    //     const index = tabsCreated.indexOf(tab.id);
-    //     tabsCreated = [
-    //         ...tabsCreated.splice(0, index),
-    //         ...tabsCreated.splice(index + 1),
-    //     ];
-
-    //     console.log(tabsCreated);
-    //     return;
-    // }
-
-    const {id: managerId} = await getManager();
-    console.log(
-        `this tab's openerTabId = ${tab.openerTabId} against ${managerId}`
-    );
-    if (tab.openerTabId == managerId) {
-        console.log("opened by manager tab");
-        return;
-    }
 
     await messageContentScript({
         event: "EXT_TAB_CREATED",
@@ -153,14 +140,11 @@ chrome.tabs.onCreated.addListener(async (tab) => {
 });
 
 chrome.tabs.onUpdated.addListener(async (browserTabId, changeInfo, tab) => {
-    const { id: managerId } = await getManager();
-    console.log(
-        `this updated tab's openerTabId = ${tab.openerTabId} against ${managerId}`
-    );
-    if (tab.openerTabId == managerId) {
-        console.log("opened by manager tab");
-        return;
-    }
+    // const { id: managerId } = await getManager();
+    // if (tab.openerTabId == managerId) {
+    //     console.log("opened by manager tab");
+    //     return;
+    // }
 
     if (changeInfo.status && changeInfo.status == "complete") {
         await messageContentScript({

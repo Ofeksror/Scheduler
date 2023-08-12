@@ -33,6 +33,11 @@ const ExtensionAdapter = (props: Props) => {
             event: "WEB_WORKSPACE_CHANGED",
             tabs: selectedWorkspace?.tabs
         });
+
+        setSelectedWorkspace({
+            ...selectedWorkspace,
+            tabs: []
+        });
     }, [selectedWorkspace?._id]);
 
     const communicationHandler = async ({ data: message }: any) => {
