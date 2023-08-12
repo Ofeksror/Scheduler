@@ -57,6 +57,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             ignoreEvents = false;
             break;
         }
+        case "WEB_TAB_ACTIVATE": {
+            chrome.tabs.update(request.tab.browserTabId, { active: true });
+        }
         default:
             break;
     }

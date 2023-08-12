@@ -13,6 +13,9 @@ window.addEventListener("message", ({ data: message }) => {
             chrome.runtime.sendMessage(message);
             break;
         }
+        case "WEB_TAB_ACTIVATE": {
+            chrome.runtime.sendMessage(message);
+        }
         default: break
     }
 });

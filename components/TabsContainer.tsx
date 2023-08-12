@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelectedWorkspace } from "@/utilities/WorkspaceContext";
+import { tabType, useSelectedWorkspace } from "@/utilities/WorkspaceContext";
 
 import NewTab from "@/components/NewTab";
 
@@ -52,8 +52,12 @@ const TabsContainer = (props: Props) => {
         setSelectedTabs([]);
     }, [selectedWorkspace]);
 
-    const openTab = (url: string) => {
-        window.open(url, "_blank");
+    const openTab = (tab: tabType) => {
+        window.postMessage({
+            event: "WEB_TAB_ACTIVATE",
+            tab: tab
+        });
+        // window.open(url, "_blank");
     };
 
     const copyLink = (url: string) => {
@@ -169,7 +173,7 @@ const TabsContainer = (props: Props) => {
                                     className="ml-4 mr-10 w-full whitespace-nowrap overflow-hidden text-ellipsis "
                                     onClick={() => {
                                         selectedTabs.length == 0
-                                            ? openTab(tab.url)
+                                            ? openTab(tab)
                                             : handleTabSelect(index);
                                     }}
                                 >
