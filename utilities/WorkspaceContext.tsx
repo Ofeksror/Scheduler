@@ -3,29 +3,35 @@ import { ObjectId } from "mongodb";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
-export type workspaceType = {
+export type Workspace = {
     _id: ObjectId;
-    title?: string;
-    tabs: tabType[];
+    title: string;
+    tabs: Tab[];
 };
 
-export type tabType = {
-    _id: ObjectId | null;
-    title: string;
+export type Tab = {
     url: string;
-    pinned: boolean;
-    browserTabId: number;
+    id: number;
+    title: string;
     faviconUrl: string;
 };
 
+type RawWorkspace = {
+    _id: ObjectId;
+    title: string;
+    tabsUrls: string[];
+}
+
 type ContextType = {
-    selectedWorkspace: workspaceType | null;
-    setSelectedWorkspace: (newWorkspace: workspaceType | null) => void;
+    selectedWorkspace: Workspace | null;
+    setSelectedWorkspace: (newWorkspace: Workspace | null) => void;
+    switchWorkspace: (workspace: RawWorkspace) => void;
 };
 
 const SelectedWorkspaceContext = createContext<ContextType>({
     selectedWorkspace: null,
     setSelectedWorkspace: () => {},
+    switchWorkspace: () => {},
 });
 
 type ProviderProps = {
@@ -36,17 +42,26 @@ export const SelectedWorkspaceProvider: React.FC<ProviderProps> = ({
     children,
 }) => {
     const [selectedWorkspace, setSelectedWorkspace] =
-        useState<workspaceType | null>(null);
+        useState<Workspace | null>(null);
 
-    const [ cookies, setCookie ] = useCookies(["WorkspaceSelected"]);
+    // const [ cookies, setCookie ] = useCookies(["WorkspaceSelected"]);
 
-    useEffect(() => {
-        // window.postMessage({ type: "MY_STATE_UPDATE", value: selectedWorkspace?._id }, "*");
-    }, [selectedWorkspace]);
+    const switchWorkspace = async (workspace: RawWorkspace) => {
+        setSelectedWorkspace({
+            _id: workspace._id,
+            title: workspace.title,
+            tabs: []
+        })
+
+        window.postMessage({
+            event: "WEB_WORKSPACE_CHANGED",
+            tabsUrls: workspace.tabsUrls,
+        });
+    }
 
     return (
         <SelectedWorkspaceContext.Provider
-            value={{ selectedWorkspace, setSelectedWorkspace }}
+            value={{ selectedWorkspace, setSelectedWorkspace, switchWorkspace }}
         >
             {children}
         </SelectedWorkspaceContext.Provider>

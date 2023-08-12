@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { tabType, useSelectedWorkspace } from "@/utilities/WorkspaceContext";
+import { Tab, Workspace, useSelectedWorkspace } from "@/utilities/WorkspaceContext";
 
 import NewTab from "@/components/NewTab";
 
@@ -52,12 +52,11 @@ const TabsContainer = (props: Props) => {
         setSelectedTabs([]);
     }, [selectedWorkspace]);
 
-    const openTab = (tab: tabType) => {
+    const openTab = (tab: Tab) => {
         window.postMessage({
             event: "WEB_TAB_ACTIVATE",
             tab: tab
         });
-        // window.open(url, "_blank");
     };
 
     const copyLink = (url: string) => {
@@ -84,8 +83,8 @@ const TabsContainer = (props: Props) => {
 
     const handleDeleteTabs = async () => {
         // Separates closed tabs and remaining tabs 
-        const closedTabs = selectedWorkspace.tabs.filter((tab, index) => selectedTabs.includes(index));
-        const remainingTabs = selectedWorkspace.tabs.filter((tab, index) => !selectedTabs.includes(index));
+        const closedTabs: Tab[] = selectedWorkspace.tabs.filter((tab, index) => selectedTabs.includes(index));
+        const remainingTabs: Tab[] = selectedWorkspace.tabs.filter((tab, index) => !selectedTabs.includes(index));
 
         const updatedWorkspace = {
             _id: selectedWorkspace._id,

@@ -10,7 +10,7 @@ import { signOut, useSession } from "next-auth/react";
 
 import {
     useSelectedWorkspace,
-    workspaceType,
+    Workspace,
 } from "@/utilities/WorkspaceContext";
 import { useDatabase } from "@/utilities/databaseContext";
 
@@ -51,7 +51,7 @@ const Sidebar = (props: Props) => {
         setSavedWorkspaces,
     } = useDatabase();
 
-    const { selectedWorkspace, setSelectedWorkspace } = useSelectedWorkspace();
+    const { selectedWorkspace, switchWorkspace } = useSelectedWorkspace();
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -66,8 +66,8 @@ const Sidebar = (props: Props) => {
 
     const session = useSession();
 
-    const handleSelectWorkspace = (data: workspaceType) => {
-        setSelectedWorkspace(data);
+    const handleSelectWorkspace = (data: any) => {
+        switchWorkspace(data);
     };
 
     return (
@@ -161,9 +161,9 @@ const Sidebar = (props: Props) => {
 };
 
 type WorkspaceProps = {
-    data: workspaceType;
+    data: Workspace;
     isSelected: boolean;
-    onClickHandler: (data: workspaceType) => void;
+    onClickHandler: (data: Workspace) => void;
 };
 
 const Workspace = ({ data, isSelected, onClickHandler }: WorkspaceProps) => {
@@ -176,7 +176,7 @@ const Workspace = ({ data, isSelected, onClickHandler }: WorkspaceProps) => {
             onClick={(e) => onClickHandler(data)}
         >
             <span className="">
-                {data.title ? data.title : "Unsaved Workspace"}
+                {data.title ? data.title : "Untitled Workspace"}
             </span>
         </li>
     );

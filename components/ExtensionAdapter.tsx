@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 import {
-    tabType,
+    Tab,
     useSelectedWorkspace,
-    workspaceType,
+    Workspace,
 } from "@/utilities/WorkspaceContext";
 import { useDatabase } from "@/utilities/databaseContext";
 import { useSession } from "next-auth/react";
@@ -23,22 +23,17 @@ const ExtensionAdapter = (props: Props) => {
         selectedWorkspaceRef.current = selectedWorkspace;
     }, [selectedWorkspace]);
 
-    useEffect(() => {        
-        if (!selectedWorkspace?._id) {
-            console.log("No workspace is selected");
-            return;
-        }
+    // useEffect(() => {        
+    //     if (!selectedWorkspace?._id) {
+    //         console.log("No workspace is selected");
+    //         return;
+    //     }
 
-        window.postMessage({
-            event: "WEB_WORKSPACE_CHANGED",
-            tabs: selectedWorkspace?.tabs
-        });
-
-        setSelectedWorkspace({
-            ...selectedWorkspace,
-            tabs: []
-        });
-    }, [selectedWorkspace?._id]);
+    //     setSelectedWorkspace({
+    //         ...selectedWorkspace,
+    //         tabs: []
+    //     });
+    // }, [selectedWorkspace?._id]);
 
     const communicationHandler = async ({ data: message }: any) => {
 
@@ -48,16 +43,14 @@ const ExtensionAdapter = (props: Props) => {
 
         switch (message.event) {
             case "EXT_TAB_CREATED": {
-                const newTab: tabType = {
-                    _id: null,
-                    title: message.tab.title,
+                const newTab: Tab = {
                     url: message.tab.url,
-                    pinned: message.tab.pinned,
-                    browserTabId: message.tab.browserTabId,
+                    id: message.tab.id,
+                    title: message.tab.title,
                     faviconUrl: message.tab.faviconUrl,
-                };
+                }
 
-                const newTabsList: tabType[] = [
+                const newTabsList: Tab[] = [
                     ...selectedWorkspaceRef.current.tabs.slice(
                         0,
                         message.tab.index
@@ -68,7 +61,7 @@ const ExtensionAdapter = (props: Props) => {
                     ),
                 ];
 
-                const newWorkspace: workspaceType = {
+                const newWorkspace: Workspace = {
                     ...selectedWorkspaceRef.current,
                     tabs: newTabsList,
                 };
@@ -82,17 +75,15 @@ const ExtensionAdapter = (props: Props) => {
                 const prevTabIndex =
                     selectedWorkspaceRef.current.tabs.findIndex(
                         (iteratedTab) =>
-                            iteratedTab.browserTabId === message.tab.id
+                            iteratedTab.id === message.tab.id
                     );
 
-                const newTabsList: tabType[] = [
+                const newTabsList: Tab[] = [
                     ...selectedWorkspaceRef.current.tabs.slice(0, prevTabIndex),
                     {
-                        _id: null,
-                        title: message.tab.title,
                         url: message.tab.url,
-                        pinned: message.tab.pinned,
-                        browserTabId: message.tab.id,
+                        id: message.tab.id,
+                        title: message.tab.title,
                         faviconUrl: message.tab.faviconUrl,
                     },
                     ...selectedWorkspaceRef.current.tabs.slice(
@@ -100,7 +91,7 @@ const ExtensionAdapter = (props: Props) => {
                     ), // remove the previous version of that tab
                 ];
 
-                const newWorkspace: workspaceType = {
+                const newWorkspace: Workspace = {
                     ...selectedWorkspaceRef.current,
                     tabs: newTabsList,
                 };
@@ -111,9 +102,9 @@ const ExtensionAdapter = (props: Props) => {
                 break;
             }
             case "EXT_TAB_REMOVED": {
-                const remainingTabs = selectedWorkspaceRef.current.tabs.filter((tab) => tab.browserTabId != message.browserTabId);
+                const remainingTabs = selectedWorkspaceRef.current.tabs.filter((tab) => tab.id != message.tabId);
 
-                const newWorkspace: workspaceType = {
+                const newWorkspace: Workspace = {
                     ...selectedWorkspaceRef.current,
                     tabs: remainingTabs,
                 };
@@ -124,13 +115,30 @@ const ExtensionAdapter = (props: Props) => {
                 break;
             }
             case "EXT_TAB_MOVED": {
+
+                /*
+                const moved = [
+                    ...arr.slice(0, from),
+                    ...arr.slice(from + 1, to),
+                    arr[from],
+                    ...arr.slice(to)
+                ];
+
+                const moved = [
+                    ...arr.slice(0, to),
+                    arr[from],
+                    ...arr.slice(to, from),
+                    ...arr.slice(from + 1)
+                ];
+                */
+
                 const { fromIndex, toIndex } = message.moveInfo;
 
                 if (toIndex < fromIndex) {
-                    const movedTab: tabType =
+                    const movedTab: Tab =
                         selectedWorkspaceRef.current.tabs[fromIndex];
 
-                    const newTabsList: tabType[] = [
+                    const newTabsList: Tab[] = [
                         ...selectedWorkspaceRef.current.tabs.slice(0, toIndex),
                         movedTab,
                         ...selectedWorkspaceRef.current.tabs.slice(
@@ -144,7 +152,7 @@ const ExtensionAdapter = (props: Props) => {
 
                     console.log(newTabsList);
 
-                    const newWorkspace: workspaceType = {
+                    const newWorkspace: Workspace = {
                         ...selectedWorkspaceRef.current,
                         tabs: newTabsList,
                     };
@@ -152,10 +160,10 @@ const ExtensionAdapter = (props: Props) => {
                     setSelectedWorkspace(newWorkspace);
                     refreshWorkspace(newWorkspace);
                 } else if (fromIndex < toIndex) {
-                    const movedTab: tabType =
+                    const movedTab: Tab =
                         selectedWorkspaceRef.current.tabs[fromIndex];
 
-                    const newTabsList: tabType[] = [
+                    const newTabsList: Tab[] = [
                         ...selectedWorkspaceRef.current.tabs.slice(
                             0,
                             fromIndex
@@ -170,7 +178,7 @@ const ExtensionAdapter = (props: Props) => {
 
                     console.log(newTabsList);
 
-                    const newWorkspace: workspaceType = {
+                    const newWorkspace: Workspace = {
                         ...selectedWorkspaceRef.current,
                         tabs: newTabsList,
                     };
@@ -178,29 +186,9 @@ const ExtensionAdapter = (props: Props) => {
                     setSelectedWorkspace(newWorkspace);
                     refreshWorkspace(newWorkspace);
                 }
-
-                break;
-            }
-            case "EXT_TAB_PINNED": {
-                const newTabList = selectedWorkspaceRef.current.tabs.map(
-                    (iteratedTab) => {
-                        if (iteratedTab.browserTabId == message.browserTabId) {
-                            return {
-                                ...iteratedTab,
-                                pinned: !iteratedTab.pinned,
-                            };
-                        }
-                        return iteratedTab;
-                    }
-                );
-
-                const newWorkspace: workspaceType = {
-                    ...selectedWorkspaceRef.current,
-                    tabs: newTabList,
-                };
-
-                setSelectedWorkspace(newWorkspace);
-                refreshWorkspace(newWorkspace);
+                else {
+                    console.log("WHAT");
+                }
 
                 break;
             }
@@ -212,11 +200,18 @@ const ExtensionAdapter = (props: Props) => {
     };
 
     const syncToDatabase = async () => {
+
+        const tabsUrls = selectedWorkspace?.tabs.map((tab) => tab.id);
+
         await axios({
             url: "/api/workspaces/update/",
             method: "PUT",
             data: {
-                workspace: selectedWorkspace
+                workspace: {
+                    id: selectedWorkspace?._id,
+                    title: selectedWorkspace?.title,
+                    tabsUrls,
+                }
             }
         })
             .then((res) => {
@@ -224,9 +219,6 @@ const ExtensionAdapter = (props: Props) => {
                 if (res.status == 200) {
                     console.log("Successfully synced to database");
                 }
-                
-                setSelectedWorkspace(res.data.workspace);
-                refreshWorkspace(res.data.workspace);
             })
             .catch((error) => {
                 console.warn(error);

@@ -4,15 +4,7 @@ const Schema = mongoose.Schema;
 
 const workspaceSchema = new Schema({
     title: String,
-    tabs: [
-        {
-            url: String,
-            title: String,
-            pinned: Boolean,
-            browserTabId: Number,
-            faviconUrl: String,
-        }
-    ],
+    tabsUrls: [String],
 });
 
 const Workspace =

@@ -1,17 +1,16 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { workspaceType } from "./WorkspaceContext";
+import { Workspace } from "./WorkspaceContext";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { ObjectId } from "mongodb";
-// import { ObjectId } from "mongoose";
 
 type ContextType = {
-    unsavedWorkspaces: workspaceType[];
-    setUnsavedWorkspaces: (workspaces: workspaceType[]) => void;
-    savedWorkspaces: workspaceType[];
-    setSavedWorkspaces: (workspaces: workspaceType[]) => void;
+    unsavedWorkspaces: Workspace[];
+    setUnsavedWorkspaces: (workspaces: Workspace[]) => void;
+    savedWorkspaces: Workspace[];
+    setSavedWorkspaces: (workspaces: Workspace[]) => void;
     updateDeletedWorkspace: (deletedId: ObjectId) => void;
-    refreshWorkspace: (updatedWorkspace: workspaceType) => void;
+    refreshWorkspace: (updatedWorkspace: Workspace) => void;
     refreshWorkspaces: () => void;
 };
 
@@ -35,10 +34,10 @@ type ProviderProps = {
 export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
     const { data: session, update, status } = useSession();
 
-    const [unsavedWorkspaces, setUnsavedWorkspaces] = useState<workspaceType[]>(
+    const [unsavedWorkspaces, setUnsavedWorkspaces] = useState<Workspace[]>(
         []
     );
-    const [savedWorkspaces, setSavedWorkspaces] = useState<workspaceType[]>([]);
+    const [savedWorkspaces, setSavedWorkspaces] = useState<Workspace[]>([]);
 
     const updateDeletedWorkspace = async (deletedId: ObjectId) => {
         if (status !== "authenticated") return;
@@ -58,7 +57,7 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
         ]);
     }
 
-    const refreshWorkspace = async (updatedWorkspace: workspaceType) => {
+    const refreshWorkspace = async (updatedWorkspace: Workspace) => {
         if (status !== "authenticated") return;
 
         try {

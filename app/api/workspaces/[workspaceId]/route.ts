@@ -1,7 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
 import User from "@/models/User";
 import Workspace from "@/models/Workspace";
-import { tabType, workspaceType } from "@/utilities/WorkspaceContext";
 import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 

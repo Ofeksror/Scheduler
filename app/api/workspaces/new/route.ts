@@ -1,13 +1,12 @@
 import dbConnect from "@/lib/dbConnect";
 import Workspace from "@/models/Workspace";
-import { tabType } from "@/utilities/WorkspaceContext";
 import { NextRequest, NextResponse } from "next/server";
 
 // ======================================================================= //
 
 type newWorkspaceType = {
     title?: string;
-    tabs?: tabType[];
+    tabs?: string[];
 };
 
 /* ================================================ //
