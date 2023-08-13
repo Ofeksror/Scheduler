@@ -121,98 +121,27 @@ const ExtensionAdapter = (props: Props) => {
                 break;
             }
             case "EXT_TAB_MOVED": {
-                /*
-                const moved = [
-                    ...arr.slice(0, from),
-                    ...arr.slice(from + 1, to),
-                    arr[from],
-                    ...arr.slice(to)
-                ];
-
-                const moved = [
-                    ...arr.slice(0, to),
-                    arr[from],
-                    ...arr.slice(to, from),
-                    ...arr.slice(from + 1)
-                ];
-                */
-
-                const { fromIndex, toIndex } = message.moveInfo;
-
-                if (toIndex < fromIndex) {
-                    const movedTab: Tab =
-                        selectedWorkspaceRef.current.tabs[fromIndex];
-
-                    const newTabsList: Tab[] = [
-                        ...selectedWorkspaceRef.current.tabs.slice(0, toIndex),
-                        movedTab,
-                        ...selectedWorkspaceRef.current.tabs.slice(
-                            toIndex,
-                            fromIndex
-                        ),
-                        ...selectedWorkspaceRef.current.tabs.slice(
-                            fromIndex + 1
-                        ),
-                    ];
-
-                    console.log(newTabsList);
-
-                    const newWorkspace: Workspace = {
-                        ...selectedWorkspaceRef.current,
-                        tabs: newTabsList,
-                    };
-
-                    setSelectedWorkspace(newWorkspace);
-                    refreshWorkspace(newWorkspace);
-                } else if (fromIndex < toIndex) {
-                    const movedTab: Tab =
-                        selectedWorkspaceRef.current.tabs[fromIndex];
-
-                    const newTabsList: Tab[] = [
-                        ...selectedWorkspaceRef.current.tabs.slice(
-                            0,
-                            fromIndex
-                        ),
-                        ...selectedWorkspaceRef.current.tabs.slice(
-                            fromIndex + 1,
-                            toIndex
-                        ),
-                        movedTab,
-                        ...selectedWorkspaceRef.current.tabs.slice(toIndex),
-                    ];
-
-                    console.log(newTabsList);
-
-                    const newWorkspace: Workspace = {
-                        ...selectedWorkspaceRef.current,
-                        tabs: newTabsList,
-                    };
-
-                    setSelectedWorkspace(newWorkspace);
-                    refreshWorkspace(newWorkspace);
-                } else {
-                    console.log("WHAT");
-                }
+                setSelectedWorkspace({
+                    ...selectedWorkspaceRef.current,
+                    tabs: message.tabs
+                })
+                refreshWorkspace({
+                    ...selectedWorkspaceRef.current,
+                    tabs: message.tabs
+                })
 
                 break;
             }
-            case "EXT_TABS_REQUEST": {
-                // const tabsUrls: string[] = message.tabs.map((tab: any) => tab.url);
-                // const tabs: Tab[] = message.tabs.map((tab: any) => {
-                //     return {
-                //         url: tab.url,
-                //         id: tab.id,
-                //         title: tab.title,
-                //         faviconUrl: tab.faviconUrl
-                //     }
-                // })
+            case "EXT_TAB_PINNED": {                
+                setSelectedWorkspace({
+                    ...selectedWorkspaceRef.current,
+                    tabs: message.tabs
+                })
+                refreshWorkspace({
+                    ...selectedWorkspaceRef.current,
+                    tabs: message.tabs
+                })
 
-                // setSelectedWorkspace({
-                //     ...selectedWorkspaceRef.current,
-                //     tabs,
-                //     tabsUrls
-                // })
-                
                 break;
             }
             default: {

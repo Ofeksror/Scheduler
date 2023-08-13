@@ -120,7 +120,7 @@ chrome.tabs.onCreated.addListener(async (tab) => {
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     // Changes to ignore
-    if (tab.pinned) {
+    if (tab.pinned && !("pinned" in changeInfo)) {
         return;
     }
 
@@ -135,11 +135,13 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             },
         });
     } else if ("pinned" in changeInfo) {
+        const tabs = await chrome.tabs.query({pinned: false});
+
         await messageContentScript({
             event: "EXT_TAB_PINNED",
-            tab: tab,
-        });
-    }
+            tabs: tabs
+        })
+    };
 });
 
 chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
@@ -162,16 +164,28 @@ chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
     });
 });
 
-chrome.tabs.onMoved.addListener(async (browserTabId, moveInfo) => {
-    const initialIndex = await getInitialIndex();
+chrome.tabs.onMoved.addListener(async (tabId, moveInfo) => {
+    // // Check moved tab was pinned
+    // const movedTab = await chrome.tabs.query({id: tabId});
+    // if (movedTab.pinned)
+    //     return;
 
-    const adjustedMoveInfo = {
-        fromIndex: moveInfo.fromIndex - initialIndex,
-        toIndex: moveInfo.toIndex - initialIndex,
-    };
+    // const initialIndex = await getInitialIndex();
+
+    // const adjustedMoveInfo = {
+    //     fromIndex: moveInfo.fromIndex - initialIndex,
+    //     toIndex: moveInfo.toIndex - initialIndex,
+    // };
+
+    // await messageContentScript({
+    //     event: "EXT_TAB_MOVED",
+    //     moveInfo: adjustedMoveInfo,
+    // });
+
+    const tabs = await chrome.tabs.query({pinned: false});
 
     await messageContentScript({
         event: "EXT_TAB_MOVED",
-        moveInfo: adjustedMoveInfo,
-    });
+        tabs: tabs
+    })
 });

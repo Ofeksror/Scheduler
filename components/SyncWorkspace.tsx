@@ -2,7 +2,7 @@
 import { Tab, useSelectedWorkspace } from '@/utilities/WorkspaceContext';
 import { useDatabase } from '@/utilities/databaseContext';
 import axios from 'axios';
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 type Props = {}
 
@@ -11,8 +11,13 @@ const SyncWorkspace = (props: Props) => {
     const { selectedWorkspace, setSelectedWorkspace } = useSelectedWorkspace();
     const { refreshWorkspace } = useDatabase();
 
+    const selectedWorkspaceRef = useRef(selectedWorkspace);
+    useEffect(() => {
+        selectedWorkspaceRef.current = selectedWorkspace;
+    }, [selectedWorkspace]);
+
     const communicationHandler = async ({ data: message }: any) => {
-        if (selectedWorkspace === null) {
+        if (selectedWorkspaceRef.current === null) {
             return;
         }
 
@@ -32,8 +37,8 @@ const SyncWorkspace = (props: Props) => {
                 method: "PUT",
                 data: {
                     workspace: {
-                        _id: selectedWorkspace._id,
-                        title: selectedWorkspace.title,
+                        _id: selectedWorkspaceRef.current._id,
+                        title: selectedWorkspaceRef.current.title,
                         tabsUrls,
                     },
                 },
@@ -49,13 +54,13 @@ const SyncWorkspace = (props: Props) => {
                 });
 
             setSelectedWorkspace({
-                ...selectedWorkspace,
+                ...selectedWorkspaceRef.current,
                 tabs,
                 tabsUrls
             })
 
             refreshWorkspace({
-                ...selectedWorkspace,
+                ...selectedWorkspaceRef.current,
                 tabs,
                 tabsUrls
             })
@@ -67,9 +72,7 @@ const SyncWorkspace = (props: Props) => {
     }, []);
 
     const syncTabs = async () => {
-        // Refresh - get tabs from chrome and sync, update tabs[] in selectedWorkspace
-
-        if (selectedWorkspace == null) return;
+        if (selectedWorkspaceRef.current == null) return;
 
         window.postMessage({
             event: "WEB_TABS_REQUEST",
