@@ -1,22 +1,19 @@
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-    console.log(request);
-
     // Receives messages from content script
     console.log(request);
+
     switch (request.event) {
         case "WEB_WORKSPACE_CHANGED": {
             // Close previous tabs except pinned tabs
             const previousTabs = await chrome.tabs.query({ pinned: false });
             const previousTabsIds = previousTabs.map((tab) => tab.id);
 
-            chrome.tabs.remove(previousTabsIds);
+            await chrome.tabs.remove(previousTabsIds);
 
-            // const pinnedTabs = await chrome.tabs.query({ pinned: true })
-
-            request.tabsUrls.forEach(async (url) => {
-                // await chrome.tabs.create({index: index + pinnedTabs.length - 1, url, active: false})
+            for (const url of request.tabsUrls) {
+                await delay(100);
                 await chrome.tabs.create({ url, active: false });
-            });
+            }
 
             break;
         }
@@ -28,7 +25,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         }
         case "WEB_TAB_ACTIVATE": {
             chrome.tabs.update(request.tab.id, { active: true });
-            
+
             break;
         }
         case "WEB_TABS_REQUEST": {
@@ -42,17 +39,17 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                     url: tab.url,
                     id: tab.id,
                     title: tab.title,
-                    faviconUrl: tab.faviconUrl
-                }
-            })
+                    faviconUrl: tab.faviconUrl,
+                };
+            });
 
             const indexes = queriedTabs.map((tab) => tab.index);
             console.log(indexes);
 
             messageContentScript({
                 event: "EXT_TABS_REQUEST",
-                tabs
-            })
+                tabs,
+            });
 
             break;
         }
@@ -66,6 +63,8 @@ const messageContentScript = async (message) => {
 
     await chrome.tabs.sendMessage(managerTab.id, message);
 };
+
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 // ===
 
@@ -114,7 +113,7 @@ chrome.tabs.onCreated.addListener(async (tab) => {
             id: tab.id,
             title: tab.title,
             faviconUrl: tab.faviconUrl,
-            index: tab.index - initialIndex
+            index: tab.index - initialIndex,
         },
     });
 });

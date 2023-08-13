@@ -42,6 +42,8 @@ const ExtensionAdapter = (props: Props) => {
 
         switch (message.event) {
             case "EXT_TAB_CREATED": {
+                console.log(message);
+
                 const newTab: Tab = {
                     url: message.tab.url,
                     id: message.tab.id,
@@ -59,6 +61,8 @@ const ExtensionAdapter = (props: Props) => {
                         message.tab.index
                     ),
                 ];
+
+                console.log(newTabsList);
 
                 const newWorkspace: Workspace = {
                     ...selectedWorkspaceRef.current,
