@@ -23,7 +23,7 @@ const ExtensionAdapter = (props: Props) => {
         selectedWorkspaceRef.current = selectedWorkspace;
     }, [selectedWorkspace]);
 
-    // useEffect(() => {        
+    // useEffect(() => {
     //     if (!selectedWorkspace?._id) {
     //         console.log("No workspace is selected");
     //         return;
@@ -36,7 +36,6 @@ const ExtensionAdapter = (props: Props) => {
     // }, [selectedWorkspace?._id]);
 
     const communicationHandler = async ({ data: message }: any) => {
-
         if (selectedWorkspaceRef.current === null) {
             return;
         }
@@ -48,7 +47,7 @@ const ExtensionAdapter = (props: Props) => {
                     id: message.tab.id,
                     title: message.tab.title,
                     faviconUrl: message.tab.faviconUrl,
-                }
+                };
 
                 const newTabsList: Tab[] = [
                     ...selectedWorkspaceRef.current.tabs.slice(
@@ -74,8 +73,7 @@ const ExtensionAdapter = (props: Props) => {
             case "EXT_TAB_UPDATED": {
                 const prevTabIndex =
                     selectedWorkspaceRef.current.tabs.findIndex(
-                        (iteratedTab) =>
-                            iteratedTab.id === message.tab.id
+                        (iteratedTab) => iteratedTab.id === message.tab.id
                     );
 
                 const newTabsList: Tab[] = [
@@ -102,7 +100,9 @@ const ExtensionAdapter = (props: Props) => {
                 break;
             }
             case "EXT_TAB_REMOVED": {
-                const remainingTabs = selectedWorkspaceRef.current.tabs.filter((tab) => tab.id != message.tabId);
+                const remainingTabs = selectedWorkspaceRef.current.tabs.filter(
+                    (tab) => tab.id != message.tabId
+                );
 
                 const newWorkspace: Workspace = {
                     ...selectedWorkspaceRef.current,
@@ -115,7 +115,6 @@ const ExtensionAdapter = (props: Props) => {
                 break;
             }
             case "EXT_TAB_MOVED": {
-
                 /*
                 const moved = [
                     ...arr.slice(0, from),
@@ -185,8 +184,7 @@ const ExtensionAdapter = (props: Props) => {
 
                     setSelectedWorkspace(newWorkspace);
                     refreshWorkspace(newWorkspace);
-                }
-                else {
+                } else {
                     console.log("WHAT");
                 }
 
@@ -200,19 +198,21 @@ const ExtensionAdapter = (props: Props) => {
     };
 
     const syncToDatabase = async () => {
+        const tabsUrls = selectedWorkspace?.tabs.map((tab) => tab.url);
+        console.log(tabsUrls);
 
-        const tabsUrls = selectedWorkspace?.tabs.map((tab) => tab.id);
+        console.log(selectedWorkspace?._id);
 
         await axios({
             url: "/api/workspaces/update/",
             method: "PUT",
             data: {
                 workspace: {
-                    id: selectedWorkspace?._id,
+                    _id: selectedWorkspace?._id,
                     title: selectedWorkspace?.title,
                     tabsUrls,
-                }
-            }
+                },
+            },
         })
             .then((res) => {
                 console.log(res);
@@ -222,8 +222,8 @@ const ExtensionAdapter = (props: Props) => {
             })
             .catch((error) => {
                 console.warn(error);
-            })
-    }
+            });
+    };
 
     useEffect(() => {
         window.addEventListener("message", communicationHandler);

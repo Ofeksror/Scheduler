@@ -52,7 +52,8 @@ export const SelectedWorkspaceProvider: React.FC<ProviderProps> = ({
             title: workspace.title,
             tabs: []
         })
-
+        
+        console.log(workspace.tabsUrls);
         window.postMessage({
             event: "WEB_WORKSPACE_CHANGED",
             tabsUrls: workspace.tabsUrls,

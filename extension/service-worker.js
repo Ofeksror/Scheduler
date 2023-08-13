@@ -13,7 +13,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
             // const pinnedTabs = await chrome.tabs.query({ pinned: true })
 
-            request.tabsUrls.forEach(async (tabUrl, index) => {
+            request.tabsUrls.forEach(async (url, index) => {
                 // await chrome.tabs.create({index: index + pinnedTabs.length - 1, url, active: false})
                 await chrome.tabs.create({ url, active: false });
             });
@@ -91,7 +91,13 @@ chrome.tabs.onCreated.addListener(async (tab) => {
 });
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+    // Changes to ignore
+    if (tab.pinned) {
+        return;
+    }
+
     const initialIndex = await getInitialIndex();
+
     if (changeInfo.status && changeInfo.status == "complete") {
         await messageContentScript({
             event: "EXT_TAB_UPDATED",

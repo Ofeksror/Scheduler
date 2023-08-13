@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 type newWorkspaceType = {
     title?: string;
-    tabs?: string[];
+    tabsUrls?: string[];
 };
 
 /* ================================================ //
@@ -19,17 +19,22 @@ type newWorkspaceType = {
 export async function POST(req: NextRequest) {
     await dbConnect();
 
-    const { title, tabs } = await req.json().then((data: newWorkspaceType) => {
+    const { title, tabsUrls } = await req.json().then((data: newWorkspaceType) => {
         const title = data.title;
-        const tabs = data.tabs;
+        const tabsUrls = data.tabsUrls;
 
-        return { title, tabs };
+        return { title, tabsUrls };
     });
+
+    console.log(title);
+    console.log(tabsUrls);
 
     const newWorkspace = await Workspace.create({
         title: title || "New Workspace",
-        tabs: tabs || [],
+        tabsUrls: tabsUrls || [],
     });
+
+    console.log(newWorkspace);
 
     return NextResponse.json({ workspace: newWorkspace }, { status: 200 });
 }

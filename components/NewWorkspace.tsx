@@ -24,7 +24,7 @@ type Props = {};
 const NewWorkspace = (props: Props) => {
     const session = useSession();
     const { refreshWorkspace } = useDatabase();
-    const { setSelectedWorkspace } = useSelectedWorkspace();
+    const { switchWorkspace } = useSelectedWorkspace();
 
     const [title, setTitle] = useState<string>("");
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -40,7 +40,7 @@ const NewWorkspace = (props: Props) => {
             url: `/api/workspaces/new/`,
             data: {
                 title: title || "Untitled workspace",
-                tabs: []
+                tabsUrls: []
             },
         })
             .then((res) => {
@@ -77,8 +77,7 @@ const NewWorkspace = (props: Props) => {
         
 
         // Update client-side
-        refreshWorkspace(workspace);
-        setSelectedWorkspace(workspace);
+        switchWorkspace(workspace)
 
         // Reset data
         setDialogOpen(false);
