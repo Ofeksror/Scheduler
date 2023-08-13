@@ -7,6 +7,7 @@ import DeleteWorkspace from "@/components/DeleteWorkspace"
 import { DragDropContext } from "react-beautiful-dnd";
 import axios from "axios";
 import { useDatabase } from "@/utilities/databaseContext";
+import SyncWorkspace from "@/components/SyncWorkspace";
 
 type Props = {};
 
@@ -96,6 +97,7 @@ const Workspace = (props: Props) => {
             </div>
 
             <div className="float-right">
+                <SyncWorkspace />
                 <DeleteWorkspace />
             </div>
             

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { ObjectId } from "mongodb";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
@@ -14,14 +14,14 @@ export type Tab = {
     url: string;
     id: number;
     title: string;
-    faviconUrl: string;
+    favIconUrl: string;
 };
 
 type RawWorkspace = {
     _id: ObjectId;
     title: string;
     tabsUrls: string[];
-}
+};
 
 type ContextType = {
     selectedWorkspace: Workspace | null;
@@ -52,16 +52,16 @@ export const SelectedWorkspaceProvider: React.FC<ProviderProps> = ({
             _id: workspace._id,
             title: workspace.title,
             tabsUrls: workspace.tabsUrls,
-            tabs: []
-        })
+            tabs: [],
+        });
 
         console.log(workspace.tabsUrls);
-        
+
         window.postMessage({
             event: "WEB_WORKSPACE_CHANGED",
             tabsUrls: workspace.tabsUrls,
         });
-    }
+    };
 
     return (
         <SelectedWorkspaceContext.Provider

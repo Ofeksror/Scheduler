@@ -17,9 +17,7 @@ import {
     GoGrabber,
     GoX,
 } from "react-icons/go";
-import axios from "axios";
 import { useDatabase } from "@/utilities/databaseContext";
-import SyncWorkspace from "./SyncWorkspace";
 
 type Props = {};
 
@@ -123,7 +121,6 @@ const TabsContainer = (props: Props) => {
                         <span className={styles.buttonsContainer}>
                             <span>
                                 <GoKebabHorizontal />
-                                <SyncWorkspace />
                             </span>
                         </span>
                     </>
@@ -185,7 +182,10 @@ const TabsContainer = (props: Props) => {
                                             : handleTabSelect(index);
                                     }}
                                 >
-                                    {tab.title}
+                                    <span className="h-full align-middle">
+                                        <img src={tab.favIconUrl} className="h-5 inline mr-3" />
+                                        {tab.title}
+                                    </span>
                                 </span>
                             </span>
 

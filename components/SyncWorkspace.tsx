@@ -1,13 +1,12 @@
-"use client"
-import { Tab, useSelectedWorkspace } from '@/utilities/WorkspaceContext';
-import { useDatabase } from '@/utilities/databaseContext';
-import axios from 'axios';
-import React, { useEffect, useRef } from 'react'
+"use client";
+import { Tab, useSelectedWorkspace } from "@/utilities/WorkspaceContext";
+import { useDatabase } from "@/utilities/databaseContext";
+import axios from "axios";
+import React, { useEffect, useRef } from "react";
 
-type Props = {}
+type Props = {};
 
 const SyncWorkspace = (props: Props) => {
-
     const { selectedWorkspace, setSelectedWorkspace } = useSelectedWorkspace();
     const { refreshWorkspace } = useDatabase();
 
@@ -28,7 +27,7 @@ const SyncWorkspace = (props: Props) => {
                     url: tab.url,
                     id: tab.id,
                     title: tab.title,
-                    faviconUrl: tab.faviconUrl,
+                    favIconUrl: tab.favIconUrl,
                 };
             });
 
@@ -56,16 +55,16 @@ const SyncWorkspace = (props: Props) => {
             setSelectedWorkspace({
                 ...selectedWorkspaceRef.current,
                 tabs,
-                tabsUrls
-            })
+                tabsUrls,
+            });
 
             refreshWorkspace({
                 ...selectedWorkspaceRef.current,
                 tabs,
-                tabsUrls
-            })
+                tabsUrls,
+            });
         }
-    }
+    };
 
     useEffect(() => {
         window.addEventListener("message", communicationHandler);
@@ -79,9 +78,7 @@ const SyncWorkspace = (props: Props) => {
         });
     };
 
-  return (
-    <button onClick={syncTabs}>Sync</button>
-  )
-}
+    return <button onClick={syncTabs}>Sync</button>;
+};
 
-export default SyncWorkspace
+export default SyncWorkspace;

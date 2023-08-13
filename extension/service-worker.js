@@ -39,7 +39,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                     url: tab.url,
                     id: tab.id,
                     title: tab.title,
-                    faviconUrl: tab.faviconUrl,
+                    favIconUrl: tab.favIconUrl,
                 };
             });
 
@@ -112,7 +112,7 @@ chrome.tabs.onCreated.addListener(async (tab) => {
             url: tab.url,
             id: tab.id,
             title: tab.title,
-            faviconUrl: tab.faviconUrl,
+            favIconUrl: tab.favIconUrl,
             index: tab.index - initialIndex,
         },
     });
@@ -135,13 +135,13 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             },
         });
     } else if ("pinned" in changeInfo) {
-        const tabs = await chrome.tabs.query({pinned: false});
+        const tabs = await chrome.tabs.query({ pinned: false });
 
         await messageContentScript({
             event: "EXT_TAB_PINNED",
-            tabs: tabs
-        })
-    };
+            tabs: tabs,
+        });
+    }
 });
 
 chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
@@ -182,10 +182,10 @@ chrome.tabs.onMoved.addListener(async (tabId, moveInfo) => {
     //     moveInfo: adjustedMoveInfo,
     // });
 
-    const tabs = await chrome.tabs.query({pinned: false});
+    const tabs = await chrome.tabs.query({ pinned: false });
 
     await messageContentScript({
         event: "EXT_TAB_MOVED",
-        tabs: tabs
-    })
+        tabs: tabs,
+    });
 });

@@ -48,7 +48,7 @@ const ExtensionAdapter = (props: Props) => {
                     url: message.tab.url,
                     id: message.tab.id,
                     title: message.tab.title,
-                    faviconUrl: message.tab.faviconUrl,
+                    favIconUrl: message.tab.favIconUrl,
                 };
 
                 const newTabsList: Tab[] = [
@@ -88,7 +88,7 @@ const ExtensionAdapter = (props: Props) => {
                         url: message.tab.url,
                         id: message.tab.id,
                         title: message.tab.title,
-                        faviconUrl: message.tab.faviconUrl,
+                        favIconUrl: message.tab.favIconUrl,
                     },
                     ...selectedWorkspaceRef.current.tabs.slice(
                         prevTabIndex + 1
@@ -123,24 +123,24 @@ const ExtensionAdapter = (props: Props) => {
             case "EXT_TAB_MOVED": {
                 setSelectedWorkspace({
                     ...selectedWorkspaceRef.current,
-                    tabs: message.tabs
-                })
+                    tabs: message.tabs,
+                });
                 refreshWorkspace({
                     ...selectedWorkspaceRef.current,
-                    tabs: message.tabs
-                })
+                    tabs: message.tabs,
+                });
 
                 break;
             }
-            case "EXT_TAB_PINNED": {                
+            case "EXT_TAB_PINNED": {
                 setSelectedWorkspace({
                     ...selectedWorkspaceRef.current,
-                    tabs: message.tabs
-                })
+                    tabs: message.tabs,
+                });
                 refreshWorkspace({
                     ...selectedWorkspaceRef.current,
-                    tabs: message.tabs
-                })
+                    tabs: message.tabs,
+                });
 
                 break;
             }
