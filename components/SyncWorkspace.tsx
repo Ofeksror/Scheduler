@@ -3,6 +3,8 @@ import { Tab, useSelectedWorkspace } from "@/utilities/WorkspaceContext";
 import { useDatabase } from "@/utilities/databaseContext";
 import axios from "axios";
 import React, { useEffect, useRef } from "react";
+import { RefreshCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 type Props = {};
 
@@ -78,7 +80,11 @@ const SyncWorkspace = (props: Props) => {
         });
     };
 
-    return <button onClick={syncTabs}>Sync</button>;
+    return (
+        <Button onClick={syncTabs} className="aspect-square w-9 h-9 p-2 bg-gray-100 hover:bg-gray-200 text-gray-800 group">
+            <RefreshCcw className="transition duration-300 ease-in-out group-hover:rotate-[-180deg]" />
+        </Button>
+    );
 };
 
 export default SyncWorkspace;

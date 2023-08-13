@@ -13,8 +13,8 @@ type Props = {};
 
 const styles = {
     container: "px-14 py-10 flex-1 overflow-auto w-full h-full relative",
-    headContainer: "text-2xl",
-    title: "bg-transparent border-transparent outline-transparent",
+    headContainer: "text-2xl flex justify-between max-w-4xl",
+    title: "bg-transparent border-none outline-none",
 };
 
 const onDragEnd = (result: any) => {
@@ -94,11 +94,12 @@ const Workspace = (props: Props) => {
                     }}
                     onKeyDown={handleKeyDown}
                 ></input>
-            </div>
 
-            <div className="float-right">
-                <SyncWorkspace />
-                <DeleteWorkspace />
+                
+                <div className="inline-flex gap-2">
+                    <SyncWorkspace />
+                    <DeleteWorkspace />
+                </div>
             </div>
             
             <div>                
