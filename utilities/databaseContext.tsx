@@ -7,16 +7,15 @@ import { ObjectId } from "mongodb";
 type ContextType = {
     unsavedWorkspaces: Workspace[];
     setUnsavedWorkspaces: (workspaces: Workspace[]) => void;
-    savedWorkspaces: Workspace[];
+    savedWorkspaces: Workspace[] | null;
     setSavedWorkspaces: (workspaces: Workspace[]) => void;
     updateDeletedWorkspace: (deletedId: ObjectId) => void;
     refreshWorkspace: (updatedWorkspace: Workspace) => void;
     refreshWorkspaces: () => void;
 };
 
-
 // The problem to fix: the function executes whatever it is that is set here, and somehow for some reason doesnt replace these values with the values defined in the component.
-// IDK 
+// IDK
 const DatabaseContext = createContext<ContextType>({
     unsavedWorkspaces: [],
     setUnsavedWorkspaces: () => {},
@@ -34,17 +33,21 @@ type ProviderProps = {
 export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
     const { data: session, update, status } = useSession();
 
-    const [unsavedWorkspaces, setUnsavedWorkspaces] = useState<Workspace[]>(
-        []
+    const [unsavedWorkspaces, setUnsavedWorkspaces] = useState<Workspace[]>([]);
+    const [savedWorkspaces, setSavedWorkspaces] = useState<Workspace[] | null>(
+        null
     );
-    const [savedWorkspaces, setSavedWorkspaces] = useState<Workspace[]>([]);
+
+    useEffect(() => {
+        console.log(savedWorkspaces);
+    }, [savedWorkspaces]);
 
     const updateDeletedWorkspace = async (deletedId: ObjectId) => {
-        if (status !== "authenticated") return;
+        if (status !== "authenticated" || savedWorkspaces == null) return;
 
         const prevIndex = savedWorkspaces.findIndex(
             (iter) => iter._id === deletedId
-        )
+        );
 
         if (prevIndex == -1) {
             console.warn("Something went wrong...");
@@ -53,28 +56,28 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
 
         setSavedWorkspaces([
             ...savedWorkspaces.slice(0, prevIndex),
-            ...savedWorkspaces.slice(prevIndex + 1)
+            ...savedWorkspaces.slice(prevIndex + 1),
         ]);
-    }
+    };
 
     const refreshWorkspace = async (updatedWorkspace: Workspace) => {
-        if (status !== "authenticated") return;
+        if (status !== "authenticated" || savedWorkspaces == null) return;
 
         try {
             const prevWorkspaceIndex = savedWorkspaces.findIndex(
                 (iter) => iter._id === updatedWorkspace._id
             );
 
-            if (prevWorkspaceIndex !== -1) {
+            if (prevWorkspaceIndex == -1) {
+                // Add new workspace to savedWorkspaces
+                setSavedWorkspaces([...savedWorkspaces, updatedWorkspace]);
+            } else {
                 // Replace existing workspace with updated one
                 setSavedWorkspaces([
                     ...savedWorkspaces.slice(0, prevWorkspaceIndex),
                     updatedWorkspace,
                     ...savedWorkspaces.slice(prevWorkspaceIndex + 1),
                 ]);
-            } else {
-                // Add new workspace to savedWorkspaces
-                setSavedWorkspaces([...savedWorkspaces, updatedWorkspace]);
             }
         } catch (err) {
             console.warn("Failed to fetch workspace. Error: " + err);
@@ -83,11 +86,11 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
 
     const refreshWorkspaces = async () => {
         if (status === "unauthenticated") {
-            return
-        };
-        
+            return;
+        }
+
         const userId = session?.user?._id;
-        
+
         if (!userId) {
             return;
         }
@@ -95,7 +98,7 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
         // Get workspace IDs attached to user
         const workspaceIds = await axios({
             method: "get",
-            url: `/api/users/${userId}/workspaces`
+            url: `/api/users/${userId}/workspaces`,
         })
             .then((res) => {
                 return res.data.workspaces;
@@ -105,40 +108,45 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
             });
 
         if (!workspaceIds) {
+            setSavedWorkspaces([]);
             return;
         }
-        
+
+        const workspacesPromises = workspaceIds.map(async (_id: string) => {
+            const workspace = await axios({
+                method: "get",
+                url: `/api/workspaces/${_id}`,
+            })
+                .then((res) => res.data.workspace)
+                .catch(async (error) => {
+                    // Workspace doesn't exist in database and is falsely attached to user
+                    // Delete all references to workspace from all users
+                    console.warn(error);
+                    await axios.delete(`/api/workspaces/${_id}/`);
+                    return null;
+                });
+
+            console.log(workspace);
+            return workspace;
+        });
+
+        const workspacesList = await Promise.all(workspacesPromises);
+        const filteredWorkspaces = workspacesList.filter(
+            (workspace: any) => workspace != null
+        );
+
+        console.log(filteredWorkspaces);
+
+        setSavedWorkspaces(filteredWorkspaces);
+
         // Update session workspace IDs
         await update({
             ...session,
             user: {
                 ...session.user,
-                workspaces: [
-                    ...workspaceIds
-                ]
-            }
-        })
-
-        const promises = workspaceIds.map(async (_id: string) => {
-            try {
-                const response = await axios.get(`/api/workspaces/${_id}`);                
-                // return response.data.workspace;
-                return response;
-            } catch (error) {
-                // Workspace doesn't exist in database and is falsely attached to user
-                // Delete all references to workspace from all users
-                await axios.delete(`/api/workspaces/${_id}`);
-                return null;
-            }
+                workspaces: [...workspaceIds],
+            },
         });
-
-        const resolves = await Promise.all(promises);
-        const results = resolves.map((resolve) => {
-            if (resolve !== null)
-                return resolve.data.workspace;
-        });
-
-        setSavedWorkspaces(results);
     };
 
     return (

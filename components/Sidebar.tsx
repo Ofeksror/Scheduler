@@ -53,16 +53,15 @@ const Sidebar = (props: Props) => {
 
     const { selectedWorkspace, switchWorkspace } = useSelectedWorkspace();
 
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    // const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    useEffect(() => {
-        if (savedWorkspaces.length == 0) {
-            setIsLoading(true);
-            setTimeout(() => {
-                setIsLoading(false);
-            }, 2500);
-        }
-    }, [savedWorkspaces]);
+    // useEffect(() => {
+    //     setIsLoading(true);
+
+    //     if (savedWorkspaces != null) {
+    //         setIsLoading(false);
+    //     }
+    // }, [savedWorkspaces]);
 
     const session = useSession();
 
@@ -79,7 +78,7 @@ const Sidebar = (props: Props) => {
                 <h2>Saved Workspaces</h2>
 
                 <ul className={styles.workspaces}>
-                    {isLoading ? (
+                    {(savedWorkspaces == null) ? (
                         <>
                             <li>
                                 <Skeleton

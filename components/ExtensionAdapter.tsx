@@ -199,9 +199,6 @@ const ExtensionAdapter = (props: Props) => {
 
     const syncToDatabase = async () => {
         const tabsUrls = selectedWorkspace?.tabs.map((tab) => tab.url);
-        console.log(tabsUrls);
-
-        console.log(selectedWorkspace?._id);
 
         await axios({
             url: "/api/workspaces/update/",
