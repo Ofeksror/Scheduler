@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Tab, Workspace, useSelectedWorkspace } from "@/utilities/WorkspaceContext";
+import {
+    Tab,
+    Workspace,
+    useSelectedWorkspace,
+} from "@/utilities/WorkspaceContext";
 
 import NewTab from "@/components/NewTab";
 
@@ -15,6 +19,7 @@ import {
 } from "react-icons/go";
 import axios from "axios";
 import { useDatabase } from "@/utilities/databaseContext";
+import SyncWorkspace from "./SyncWorkspace";
 
 type Props = {};
 
@@ -55,7 +60,7 @@ const TabsContainer = (props: Props) => {
     const openTab = (tab: Tab) => {
         window.postMessage({
             event: "WEB_TAB_ACTIVATE",
-            tab: tab
+            tab: tab,
         });
     };
 
@@ -82,13 +87,16 @@ const TabsContainer = (props: Props) => {
     };
 
     const handleDeleteTabs = async () => {
-        // Separates closed tabs and remaining tabs 
-        const closedTabs: Tab[] = selectedWorkspace.tabs.filter((tab, index) => selectedTabs.includes(index));
-        const remainingTabs: Tab[] = selectedWorkspace.tabs.filter((tab, index) => !selectedTabs.includes(index));
+        // Separates closed tabs and remaining tabs
+        const closedTabs: Tab[] = selectedWorkspace.tabs.filter((tab, index) =>
+            selectedTabs.includes(index)
+        );
+        const remainingTabs: Tab[] = selectedWorkspace.tabs.filter(
+            (tab, index) => !selectedTabs.includes(index)
+        );
 
         const updatedWorkspace = {
-            _id: selectedWorkspace._id,
-            title: selectedWorkspace.title,
+            ...selectedWorkspace,
             tabs: remainingTabs,
         };
 
@@ -115,6 +123,7 @@ const TabsContainer = (props: Props) => {
                         <span className={styles.buttonsContainer}>
                             <span>
                                 <GoKebabHorizontal />
+                                <SyncWorkspace />
                             </span>
                         </span>
                     </>

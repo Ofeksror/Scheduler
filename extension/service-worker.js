@@ -13,7 +13,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
             // const pinnedTabs = await chrome.tabs.query({ pinned: true })
 
-            request.tabsUrls.forEach(async (url, index) => {
+            request.tabsUrls.forEach(async (url) => {
                 // await chrome.tabs.create({index: index + pinnedTabs.length - 1, url, active: false})
                 await chrome.tabs.create({ url, active: false });
             });
@@ -28,6 +28,33 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         }
         case "WEB_TAB_ACTIVATE": {
             chrome.tabs.update(request.tab.id, { active: true });
+            
+            break;
+        }
+        case "WEB_TABS_REQUEST": {
+            const queriedTabs = await chrome.tabs.query({ pinned: false });
+            console.log(queriedTabs);
+
+            const initialIndex = await getInitialIndex();
+
+            const tabs = queriedTabs.map((tab) => {
+                return {
+                    url: tab.url,
+                    id: tab.id,
+                    title: tab.title,
+                    faviconUrl: tab.faviconUrl
+                }
+            })
+
+            const indexes = queriedTabs.map((tab) => tab.index);
+            console.log(indexes);
+
+            messageContentScript({
+                event: "EXT_TABS_REQUEST",
+                tabs
+            })
+
+            break;
         }
         default:
             break;
@@ -78,6 +105,8 @@ const getInitialIndex = async () => {
 chrome.tabs.onCreated.addListener(async (tab) => {
     if (tab.pinned) return;
 
+    const initialIndex = await getInitialIndex();
+
     await messageContentScript({
         event: "EXT_TAB_CREATED",
         tab: {
@@ -85,7 +114,7 @@ chrome.tabs.onCreated.addListener(async (tab) => {
             id: tab.id,
             title: tab.title,
             faviconUrl: tab.faviconUrl,
-            index: tab.index,
+            index: tab.index - initialIndex
         },
     });
 });

@@ -76,6 +76,8 @@ const ExtensionAdapter = (props: Props) => {
                         (iteratedTab) => iteratedTab.id === message.tab.id
                     );
 
+                if (prevTabIndex == -1) return;
+
                 const newTabsList: Tab[] = [
                     ...selectedWorkspaceRef.current.tabs.slice(0, prevTabIndex),
                     {
@@ -190,6 +192,25 @@ const ExtensionAdapter = (props: Props) => {
 
                 break;
             }
+            case "EXT_TABS_REQUEST": {
+                // const tabsUrls: string[] = message.tabs.map((tab: any) => tab.url);
+                // const tabs: Tab[] = message.tabs.map((tab: any) => {
+                //     return {
+                //         url: tab.url,
+                //         id: tab.id,
+                //         title: tab.title,
+                //         faviconUrl: tab.faviconUrl
+                //     }
+                // })
+
+                // setSelectedWorkspace({
+                //     ...selectedWorkspaceRef.current,
+                //     tabs,
+                //     tabsUrls
+                // })
+                
+                break;
+            }
             default: {
                 console.log(`No handling for this event ${message.event} yet.`);
                 break;
@@ -197,58 +218,11 @@ const ExtensionAdapter = (props: Props) => {
         }
     };
 
-    const syncToDatabase = async () => {
-
-        if (selectedWorkspace == null) {
-            return;
-        }
-
-        let tabsUrls = selectedWorkspace?.tabs.map((tab) => tab.url);
-
-        if (tabsUrls == undefined) {
-            tabsUrls = [];
-        }
-
-        await axios({
-            url: "/api/workspaces/update/",
-            method: "PUT",
-            data: {
-                workspace: {
-                    _id: selectedWorkspace?._id,
-                    title: selectedWorkspace?.title,
-                    tabsUrls,
-                },
-            },
-        })
-            .then((res) => {
-                console.log(res);
-                if (res.status == 200) {
-                    console.log("Successfully synced to database");
-                }
-            })
-            .catch((error) => {
-                console.warn(error);
-            });
-
-        setSelectedWorkspace({
-            ...selectedWorkspace,
-            tabsUrls
-        });
-        refreshWorkspace({
-            ...selectedWorkspace,
-            tabsUrls
-        });
-    };
-
     useEffect(() => {
         window.addEventListener("message", communicationHandler);
     }, []);
 
-    return (
-        <div>
-            <button onClick={syncToDatabase}>Sync to DB</button>
-        </div>
-    );
+    return;
 };
 
 export default ExtensionAdapter;
