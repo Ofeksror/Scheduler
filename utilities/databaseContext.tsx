@@ -65,7 +65,7 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
 
         try {
             const prevWorkspaceIndex = savedWorkspaces.findIndex(
-                (iter) => iter._id === updatedWorkspace._id
+                (iteratedWorkspace) => iteratedWorkspace._id === updatedWorkspace._id
             );
 
             if (prevWorkspaceIndex == -1) {

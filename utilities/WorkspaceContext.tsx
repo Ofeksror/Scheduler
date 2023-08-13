@@ -7,6 +7,7 @@ export type Workspace = {
     _id: ObjectId;
     title: string;
     tabs: Tab[];
+    tabsUrls: string[];
 };
 
 export type Tab = {
@@ -50,10 +51,12 @@ export const SelectedWorkspaceProvider: React.FC<ProviderProps> = ({
         setSelectedWorkspace({
             _id: workspace._id,
             title: workspace.title,
+            tabsUrls: workspace.tabsUrls,
             tabs: []
         })
-        
+
         console.log(workspace.tabsUrls);
+        
         window.postMessage({
             event: "WEB_WORKSPACE_CHANGED",
             tabsUrls: workspace.tabsUrls,

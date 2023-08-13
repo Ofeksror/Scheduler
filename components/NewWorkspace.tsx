@@ -74,10 +74,10 @@ const NewWorkspace = (props: Props) => {
             })
 
         // TODO: Update Session
-        
 
         // Update client-side
-        switchWorkspace(workspace)
+        switchWorkspace(workspace);
+        refreshWorkspace(workspace);
 
         // Reset data
         setDialogOpen(false);

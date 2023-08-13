@@ -198,7 +198,16 @@ const ExtensionAdapter = (props: Props) => {
     };
 
     const syncToDatabase = async () => {
-        const tabsUrls = selectedWorkspace?.tabs.map((tab) => tab.url);
+
+        if (selectedWorkspace == null) {
+            return;
+        }
+
+        let tabsUrls = selectedWorkspace?.tabs.map((tab) => tab.url);
+
+        if (tabsUrls == undefined) {
+            tabsUrls = [];
+        }
 
         await axios({
             url: "/api/workspaces/update/",
@@ -220,6 +229,15 @@ const ExtensionAdapter = (props: Props) => {
             .catch((error) => {
                 console.warn(error);
             });
+
+        setSelectedWorkspace({
+            ...selectedWorkspace,
+            tabsUrls
+        });
+        refreshWorkspace({
+            ...selectedWorkspace,
+            tabsUrls
+        });
     };
 
     useEffect(() => {
