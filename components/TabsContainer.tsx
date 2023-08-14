@@ -155,7 +155,7 @@ const TabsContainer = (props: Props) => {
                             }
                             key={index}
                         >
-                            <span className="inline-flex items-center gap-1 w-full">
+                            <span className="flex items-center gap-1 w-full">
                                 <span
                                     className={
                                         "invisible w-3 text-xl " +
@@ -169,22 +169,22 @@ const TabsContainer = (props: Props) => {
 
                                 <input
                                     type="checkbox"
-                                    className="inline-block w-3.5 h-3.5 aspect-square cursor-pointer bg-red-500 border-0 rounded"
+                                    className="inline-block w-3.5 h-3.5 aspect-square cursor-pointer"
                                     checked={isSelected}
                                     onChange={() => handleTabSelect(index)}
                                 ></input>
 
                                 <span
-                                    className="ml-4 mr-10 w-full whitespace-nowrap overflow-hidden text-ellipsis "
+                                    className="ml-4 mr-10 w-full"
                                     onClick={() => {
                                         selectedTabs.length == 0
                                             ? openTab(tab)
                                             : handleTabSelect(index);
                                     }}
                                 >
-                                    <span className="h-full align-middle">
-                                        <img src={tab.favIconUrl} className="h-5 inline mr-3" />
-                                        {tab.title}
+                                    <span className="h-full w-9g/12 flex items-center ">
+                                        <img src={tab.favIconUrl} className="inline h-4 w-4 mr-3 aspect-square" />
+                                        <span className="align-middle whitespace-nowrap overflow-hidden text-ellipsis">{tab.title}</span>
                                     </span>
                                 </span>
                             </span>
@@ -192,7 +192,7 @@ const TabsContainer = (props: Props) => {
                             <span
                                 className={
                                     // "invisible inline-flex gap-3 mr-3 z-10 justify-self-end " +
-                                    "opacity-0 transition inline-flex gap-3 pl-8 mr-3 z-10 justify-self-end absolute top-auto right-3 bg-gradient-to-r from-transparent to-gray-200 to-20% " +
+                                    "opacity-0 transition inline-flex gap-3 pl-9 mr-3 z-10 justify-self-end absolute top-auto right-3 bg-gradient-to-r from-transparent to-gray-200 to-20% " +
                                     (selectedTabs.length == 0
                                         ? "group-hover:opacity-100"
                                         : "")
