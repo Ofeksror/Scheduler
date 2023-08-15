@@ -1,21 +1,20 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import Head from 'next/head'
 
 import { useEffect, useRef } from "react";
 
 import Sidebar from "@/components/Sidebar";
 import Workspace from "@/components/Workspace";
 
-import {
-    SelectedWorkspaceProvider,
-    workspaceType,
-} from "@/utilities/WorkspaceContext";
-import { DatabaseProvider, useDatabase } from "@/utilities/databaseContext";
-import { ObjectId } from "mongodb";
-import NewWorkspace from "@/components/NewWorkspace";
+import { useDatabase } from "@/utilities/databaseContext";
 import { Toaster } from "@/components/ui/toaster";
 import ExtensionAdapter from "@/components/ExtensionAdapter";
+
+export const metadata = {
+    title: 'Tab Manager',
+}
 
 const styles = {
     rootContainer: "h-screen w-screen",
@@ -33,6 +32,7 @@ export default function Home() {
         if (session.status === "unauthenticated") return redirect("/login");
 
         if (session.status === "authenticated" && !hasRun.current) {
+            // Initially refresh workspaces only once
             refreshWorkspaces();
             hasRun.current = true;
         }
@@ -41,14 +41,17 @@ export default function Home() {
 
     return (
         <div className={styles.rootContainer}>
+
             <div className={styles.outerContainer}>
                 <Sidebar />
                 <div className={styles.mainContent}>
                     <Workspace />
                 </div>
             </div>
-            <Toaster />
+
             <ExtensionAdapter />
+
+            <Toaster />
         </div>
     );
 }

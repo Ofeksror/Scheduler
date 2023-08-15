@@ -90,9 +90,7 @@ const DeleteWorkspace = (props: Props) => {
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger>
-                <Button className="aspect-square w-9 h-9 p-2 bg-gray-100 hover:bg-gray-200 text-gray-800 transition duration-300">
-                    <Trash className="" />
-                </Button>
+                <Trash className="aspect-square rounded-md w-9 h-9 p-2 bg-gray-100 hover:bg-gray-200 text-gray-800 transition duration-300" />
             </DialogTrigger>
 
             <DialogContent>

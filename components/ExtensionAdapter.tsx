@@ -253,7 +253,7 @@ const ExtensionAdapter = (props: Props) => {
         window.addEventListener("message", communicationHandler);
     }, []);
 
-    return;
+    return (<></>);
 };
 
 export default ExtensionAdapter;
