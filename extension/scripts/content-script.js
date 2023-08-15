@@ -25,6 +25,10 @@ window.addEventListener("message", ({ data: message }) => {
             chrome.runtime.sendMessage(message);
             break;
         }
+        case "WEB_TAB_CLOSE": {
+            chrome.runtime.sendMessage(message);
+            break;
+        }
         default: break
     }
 });

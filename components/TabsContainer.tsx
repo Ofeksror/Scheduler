@@ -4,6 +4,9 @@ import {
     Workspace,
     useSelectedWorkspace,
 } from "@/utilities/WorkspaceContext";
+import { useDatabase } from "@/utilities/databaseContext";
+
+import { toast } from "@/components/ui/use-toast";
 
 import NewTab from "@/components/NewTab";
 
@@ -17,7 +20,6 @@ import {
     GoGrabber,
     GoX,
 } from "react-icons/go";
-import { useDatabase } from "@/utilities/databaseContext";
 
 type Props = {};
 
@@ -64,7 +66,20 @@ const TabsContainer = (props: Props) => {
 
     const copyLink = (url: string) => {
         navigator.clipboard.writeText(url);
+        // TODO: Toast
+                // Notify User
+        toast({
+            description: `Link copied to clipboard!`,
+            duration: 2000
+        })
     };
+
+    const closeTab = (tabId: number) => {
+        window.postMessage({
+            event: "WEB_TAB_CLOSE",
+            tabId
+        })
+    }
 
     const handleTabSelect = (tabIndexKey: number) => {
         const indexInSelectedTabs = selectedTabs.indexOf(tabIndexKey);
@@ -222,6 +237,9 @@ const TabsContainer = (props: Props) => {
                                 <span
                                     title="Close"
                                     className={styles.hoverButton}
+                                    onClick={() => {
+                                        closeTab(tab.id);
+                                    }}
                                 >
                                     <GoX />
                                 </span>
