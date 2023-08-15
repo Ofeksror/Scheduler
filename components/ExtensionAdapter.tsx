@@ -15,13 +15,17 @@ type Props = {};
 
 const ExtensionAdapter = (props: Props) => {
     const session = useSession();
-    const { selectedWorkspace, setSelectedWorkspace } = useSelectedWorkspace();
+    const { selectedWorkspace, setSelectedWorkspace, switchWorkspace } = useSelectedWorkspace();
     const { refreshWorkspace, refreshWorkspaces } = useDatabase();
 
     const selectedWorkspaceRef = useRef(selectedWorkspace);
     useEffect(() => {
         selectedWorkspaceRef.current = selectedWorkspace;
     }, [selectedWorkspace]);
+    const sessionRef = useRef(session);
+    useEffect(() => {
+        sessionRef.current = session;
+    }, [session])
 
     // useEffect(() => {
     //     if (!selectedWorkspace?._id) {
@@ -37,13 +41,60 @@ const ExtensionAdapter = (props: Props) => {
 
     const communicationHandler = async ({ data: message }: any) => {
         if (selectedWorkspaceRef.current === null) {
+            if (message.event == "EXT_WORKSPACE_NEW") {
+                const userId = sessionRef.current.data?.user?._id;
+                const tabsUrls: string[] = message.tabs.map((tab: any) => tab.url);
+
+                const workspace = await axios({
+                    method: "post",
+                    url: `/api/workspaces/new/`,
+                    data: {
+                        title: message.workspaceTitle,
+                        tabsUrls
+                    }
+                })
+                    .then((res) => {
+                        return res.data.workspace
+                    })
+                    .catch((error) => {
+                        console.warn(error);
+                    });
+
+                await axios({
+                    method: "put",
+                    url: "/api/users/user/workspace/",
+                    data: {
+                        userId,
+                        workspaceId: workspace._id
+                    }
+                })
+                    .then((res) => {
+                        if (res.status === 201) {
+                            // Nothing changed.
+                            console.log("Nothing changed");
+                            return;
+                        }
+                        console.log("✅ :: New workspace successfully attached to user >>")
+                    })
+                    .catch((error) => {
+                        console.warn(error);
+                    })
+                
+                // Update client-side
+                refreshWorkspace(workspace);
+                setSelectedWorkspace({
+                    _id: workspace._id,
+                    title: workspace.title,
+                    tabs: message.tabs,
+                    tabsUrls: tabsUrls
+                });
+            }
+
             return;
         }
 
         switch (message.event) {
             case "EXT_TAB_CREATED": {
-                console.log(message);
-
                 const newTab: Tab = {
                     url: message.tab.url,
                     id: message.tab.id,
@@ -61,8 +112,6 @@ const ExtensionAdapter = (props: Props) => {
                         message.tab.index
                     ),
                 ];
-
-                console.log(newTabsList);
 
                 const newWorkspace: Workspace = {
                     ...selectedWorkspaceRef.current,
@@ -171,8 +220,6 @@ const ExtensionAdapter = (props: Props) => {
                     tabs,
                     tabsUrls
                 }
-
-                console.log(newWorkspaceObject);
 
                 refreshWorkspace(newWorkspaceObject)
 

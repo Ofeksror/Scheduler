@@ -41,9 +41,6 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
     useEffect(() => {
         savedWorkspacesRef.current = savedWorkspaces;
         if (savedWorkspaces == null) return;
-
-        console.log("savedWorkspaces");
-        console.log(savedWorkspaces);
     }, [savedWorkspaces]);
 
     const updateDeletedWorkspace = async (deletedId: ObjectId) => {
@@ -65,14 +62,8 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
     };
 
     const refreshWorkspace = async (updatedWorkspace: Workspace) => {
-        // if (status !== "authenticated" || savedWorkspaces == null) return;
-        console.log("updatedWorkspace");
-        console.log(updatedWorkspace);
-
-        console.log(savedWorkspaces);
-
+        // if (status !== "authenticated" || savedWorkspacesRef.current == null) return;
         if (savedWorkspacesRef.current == null) {
-            console.log("Bye");
             return
         };
 

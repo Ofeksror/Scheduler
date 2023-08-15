@@ -40,8 +40,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                 };
             });
 
-            const indexes = queriedTabs.map((tab) => tab.index);
-
             messageContentScript({
                 event: "EXT_TABS_REQUEST",
                 workspaceId: request.workspaceId,
@@ -51,6 +49,24 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             });
 
             break;
+        }
+        case "WEB_WORKSPACE_NEW": {
+            const queriedTabs = await chrome.tabs.query({ pinned: false });
+            console.log(queriedTabs);
+            const tabs = queriedTabs.map((tab) => {
+                return {
+                    url: tab.url,
+                    id: tab.id,
+                    title: tab.title,
+                    favIconUrl: tab.favIconUrl,
+                };
+            });
+
+            messageContentScript({
+                event: "EXT_WORKSPACE_NEW",
+                workspaceTitle: request.workspaceTitle,
+                tabs,
+            });
         }
         default:
             break;

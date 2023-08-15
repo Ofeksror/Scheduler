@@ -74,10 +74,6 @@ export const SelectedWorkspaceProvider: React.FC<ProviderProps> = ({
                 console.warn("Could not find workspace.");
                 return;
             }
-            
-            console.log("Found workspace tabs:")
-            console.log(workspace.tabsUrls);
-            console.log("====")
 
             // Switch workspace
             setSelectedWorkspace({

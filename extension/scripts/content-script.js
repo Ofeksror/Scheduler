@@ -21,6 +21,10 @@ window.addEventListener("message", ({ data: message }) => {
             chrome.runtime.sendMessage(message);
             break;
         }
+        case "WEB_WORKSPACE_NEW": {
+            chrome.runtime.sendMessage(message);
+            break;
+        }
         default: break
     }
 });
