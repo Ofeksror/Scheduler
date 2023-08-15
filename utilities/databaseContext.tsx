@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { Workspace } from "./WorkspaceContext";
 import { useSession } from "next-auth/react";
 import axios from "axios";
@@ -14,8 +14,6 @@ type ContextType = {
     refreshWorkspaces: () => void;
 };
 
-// The problem to fix: the function executes whatever it is that is set here, and somehow for some reason doesnt replace these values with the values defined in the component.
-// IDK
 const DatabaseContext = createContext<ContextType>({
     unsavedWorkspaces: [],
     setUnsavedWorkspaces: () => {},
@@ -38,7 +36,13 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
         null
     );
 
+    const savedWorkspacesRef = useRef(savedWorkspaces);
+
     useEffect(() => {
+        savedWorkspacesRef.current = savedWorkspaces;
+        if (savedWorkspaces == null) return;
+
+        console.log("savedWorkspaces");
         console.log(savedWorkspaces);
     }, [savedWorkspaces]);
 
@@ -61,22 +65,32 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
     };
 
     const refreshWorkspace = async (updatedWorkspace: Workspace) => {
-        if (status !== "authenticated" || savedWorkspaces == null) return;
+        // if (status !== "authenticated" || savedWorkspaces == null) return;
+        console.log("updatedWorkspace");
+        console.log(updatedWorkspace);
+
+        console.log(savedWorkspaces);
+
+        if (savedWorkspacesRef.current == null) {
+            console.log("Bye");
+            return
+        };
+
 
         try {
-            const prevWorkspaceIndex = savedWorkspaces.findIndex(
+            const prevWorkspaceIndex = savedWorkspacesRef.current.findIndex(
                 (iteratedWorkspace) => iteratedWorkspace._id === updatedWorkspace._id
             );
 
             if (prevWorkspaceIndex == -1) {
                 // Add new workspace to savedWorkspaces
-                setSavedWorkspaces([...savedWorkspaces, updatedWorkspace]);
+                setSavedWorkspaces([...savedWorkspacesRef.current, updatedWorkspace]);
             } else {
                 // Replace existing workspace with updated one
                 setSavedWorkspaces([
-                    ...savedWorkspaces.slice(0, prevWorkspaceIndex),
+                    ...savedWorkspacesRef.current.slice(0, prevWorkspaceIndex),
                     updatedWorkspace,
-                    ...savedWorkspaces.slice(prevWorkspaceIndex + 1),
+                    ...savedWorkspacesRef.current.slice(prevWorkspaceIndex + 1),
                 ]);
             }
         } catch (err) {
@@ -127,7 +141,10 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
                 });
 
             console.log(workspace);
-            return workspace;
+            return {
+                ...workspace,
+                tabs: []
+            };
         });
 
         const workspacesList = await Promise.all(workspacesPromises);

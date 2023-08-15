@@ -30,9 +30,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         }
         case "WEB_TABS_REQUEST": {
             const queriedTabs = await chrome.tabs.query({ pinned: false });
-            console.log(queriedTabs);
-
-            const initialIndex = await getInitialIndex();
 
             const tabs = queriedTabs.map((tab) => {
                 return {
@@ -44,10 +41,12 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             });
 
             const indexes = queriedTabs.map((tab) => tab.index);
-            console.log(indexes);
 
             messageContentScript({
                 event: "EXT_TABS_REQUEST",
+                workspaceId: request.workspaceId,
+                workspaceTitle: request.workspaceTitle,
+                switchingWorkspace: request.switchingWorkspace,
                 tabs,
             });
 

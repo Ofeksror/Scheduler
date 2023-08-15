@@ -26,6 +26,7 @@ import NewWorkspace from "./NewWorkspace";
 
 import { Settings, Plus } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ObjectId } from "mongodb";
 
 type Props = {};
 
@@ -65,8 +66,10 @@ const Sidebar = (props: Props) => {
 
     const session = useSession();
 
-    const handleSelectWorkspace = (data: any) => {
-        switchWorkspace(data);
+    const handleSelectWorkspace = async (workspaceId: ObjectId) => {
+        // Switch workspace
+        switchWorkspace(workspaceId);
+
     };
 
     return (
@@ -162,7 +165,7 @@ const Sidebar = (props: Props) => {
 type WorkspaceProps = {
     data: Workspace;
     isSelected: boolean;
-    onClickHandler: (data: Workspace) => void;
+    onClickHandler: (workspaceId: ObjectId) => void;
 };
 
 const Workspace = ({ data, isSelected, onClickHandler }: WorkspaceProps) => {
@@ -172,7 +175,7 @@ const Workspace = ({ data, isSelected, onClickHandler }: WorkspaceProps) => {
                 isSelected ? styles.selectedWorkspaceItem : styles.workspaceItem
             }
             id={data._id.toString()}
-            onClick={(e) => onClickHandler(data)}
+            onClick={(e) => onClickHandler(data._id)}
         >
             <span className="">
                 {data.title ? data.title : "Untitled Workspace"}

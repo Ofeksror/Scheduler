@@ -26,8 +26,12 @@ export async function PUT(req: NextRequest) {
         return NextResponse.json({error: "Invalid Workspace ID! Could not find workspace in database"}, {status: 400})
 
     // Update values in DB
-    workspace.title = newWorkspace.title;
-    workspace.tabsUrls = newWorkspace.tabsUrls
+    if (newWorkspace.hasOwnProperty("title")) {
+        workspace.title = newWorkspace.title;
+    }
+    if (newWorkspace.hasOwnProperty("tabsUrls")) {
+        workspace.tabsUrls = newWorkspace.tabsUrls
+    }
 
     // Save workspace model
     workspace.save();

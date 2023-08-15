@@ -144,6 +144,56 @@ const ExtensionAdapter = (props: Props) => {
 
                 break;
             }
+            case "EXT_TABS_REQUEST": {
+                const tabsUrls: string[] = message.tabs.map((tab: any) => tab.url);
+                const tabs: Tab[] = message.tabs.map((tab: any) => {
+                    return {
+                        url: tab.url,
+                        id: tab.id,
+                        title: tab.title,
+                        favIconUrl: tab.favIconUrl,
+                    };
+                });
+                
+
+                // Update client
+                if (!message.switchingWorkspace) {
+                    setSelectedWorkspace({
+                        ...selectedWorkspaceRef.current,
+                        tabs,
+                        tabsUrls
+                    })
+                }
+
+                const newWorkspaceObject: Workspace = {
+                    _id: message.workspaceId,
+                    title: message.workspaceTitle,
+                    tabs,
+                    tabsUrls
+                }
+
+                console.log(newWorkspaceObject);
+
+                refreshWorkspace(newWorkspaceObject)
+
+                // Update database
+                await axios({
+                    url: "/api/workspaces/update/",
+                    method: "PUT",
+                    data: {
+                        workspace: {
+                            _id: message.workspaceId,
+                            title: message.workspaceTitle,
+                            tabsUrls
+                        }
+                    }
+                })
+                    .catch((error) => {
+                        console.warn("ERROR trying to sync workspace to database: ", error);
+                    })
+
+                break;
+            }
             default: {
                 console.log(`No handling for this event ${message.event} yet.`);
                 break;
