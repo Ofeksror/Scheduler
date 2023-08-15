@@ -69,7 +69,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             });
         }
         case "WEB_TAB_CLOSE": {
-            await chrome.tabs.remove(request.tabId);
+            await chrome.tabs.remove(request.tabsIds);
             break;
         }
         default:

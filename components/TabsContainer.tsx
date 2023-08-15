@@ -6,7 +6,20 @@ import {
 } from "@/utilities/WorkspaceContext";
 import { useDatabase } from "@/utilities/databaseContext";
 
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+  } from "@/components/ui/popover"
 import { toast } from "@/components/ui/use-toast";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+  } from "@/components/ui/select"
+
 
 import NewTab from "@/components/NewTab";
 
@@ -20,6 +33,8 @@ import {
     GoGrabber,
     GoX,
 } from "react-icons/go";
+import { Button } from "./ui/button";
+import { ObjectId } from "mongodb";
 
 type Props = {};
 
@@ -34,14 +49,14 @@ const styles = {
     selectedTabWrapper:
         "bg-gray-200 hover:bg-gray-300 h-9 py-auto px-1 text-sm transition flex justify-between items-center group cursor-pointer rounded-md relative",
 
-    buttonsContainer: "inline-flex gap-3 z-10",
+    buttonsContainer: "inline-flex gap-3 z-10 items-center",
 
     hoverButton: "hover:bg-gray-100 transition rounded-full p-1",
 };
 
 const TabsContainer = (props: Props) => {
     const { selectedWorkspace, setSelectedWorkspace } = useSelectedWorkspace();
-    const { refreshWorkspace } = useDatabase();
+    const { savedWorkspaces, refreshWorkspace, updateWorkspaceTabs } = useDatabase();
 
     // order = [ids of tabs (stores in database)]
 
@@ -57,10 +72,38 @@ const TabsContainer = (props: Props) => {
         setSelectedTabs([]);
     }, [selectedWorkspace]);
 
+    // Move tabs to a different workspace
+    const [popoverOpen, setPopoverOpen] = useState<boolean>(false);
+    const [moveToWorkspace, setMoveToWorkspace] = useState<string | undefined>(undefined);
+    const moveTabs = () => {
+        if (!moveToWorkspace) {
+            setPopoverOpen(false);
+            return;    
+        }
+
+        // Get tabs selected
+        const tabs: Tab[] = selectedWorkspace.tabs.filter((tab, index) => selectedTabs.includes(index));
+        const tabsIds: number[] = tabs.map((tab) => tab.id);
+        const tabsUrls: string[] = tabs.map((tab) => tab.url);
+
+        // Copy tabs to the other workspace
+        updateWorkspaceTabs(moveToWorkspace, tabsUrls);
+
+        // Close tabs from this workspace
+        window.postMessage({
+            event: "WEB_TAB_CLOSE",
+            tabsIds
+        })
+
+        setSelectedTabs([]);
+        setMoveToWorkspace(undefined);
+        setPopoverOpen(false);
+    }
+
     const openTab = (tab: Tab) => {
         window.postMessage({
             event: "WEB_TAB_ACTIVATE",
-            tab: tab,
+            tab: tab
         });
     };
 
@@ -77,7 +120,7 @@ const TabsContainer = (props: Props) => {
     const closeTab = (tabId: number) => {
         window.postMessage({
             event: "WEB_TAB_CLOSE",
-            tabId
+            tabsIds: [tabId]
         })
     }
 
@@ -144,9 +187,35 @@ const TabsContainer = (props: Props) => {
                         <span>{selectedTabs.length} Tabs Selected</span>
 
                         <span className={styles.buttonsContainer}>
-                            <span title="Move">
-                                <GoMoveToEnd />
-                            </span>
+                            <Popover open={popoverOpen} onOpenChange={(isOpen: boolean) => {
+                                setPopoverOpen(isOpen)
+                                setMoveToWorkspace(undefined)
+                            }}>
+                                <PopoverTrigger className="none">
+                                    <span title="Move">
+                                        <GoMoveToEnd />
+                                    </span>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                    <p className="mb-3">Move to another workspace</p>
+
+                                    <Select value={moveToWorkspace} onValueChange={(value: string) => setMoveToWorkspace(value)}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select Workspace" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {
+                                                savedWorkspaces?.map((workspace) => {
+                                                    return (<SelectItem value={workspace._id.toString()}>{workspace.title}</SelectItem>);
+                                                })
+                                            }
+                                        </SelectContent>
+                                    </Select>
+
+                                    <Button className="mt-3" onClick={moveTabs}>Move</Button>
+                                </PopoverContent>
+                            </Popover>
                             <span title="Save as Resource">
                                 <GoBookmark />
                             </span>
@@ -213,12 +282,6 @@ const TabsContainer = (props: Props) => {
                                         : "")
                                 }
                             >
-                                <span
-                                    title="Move"
-                                    className={styles.hoverButton}
-                                >
-                                    <GoMoveToEnd />
-                                </span>
                                 <span
                                     title="Copy Link"
                                     className={styles.hoverButton}

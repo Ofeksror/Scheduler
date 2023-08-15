@@ -13,14 +13,10 @@ import { NextRequest, NextResponse } from "next/server";
 export async function PUT(req: NextRequest) {
     const newWorkspace = await req.json().then((data) => data.workspace);
 
-    console.log(newWorkspace);
-
     await dbConnect();
 
     // Find workspace in DB
     const workspace = await Workspace.findOne({ _id: newWorkspace._id });
-
-    console.log(workspace);
 
     if (!workspace)
         return NextResponse.json({error: "Invalid Workspace ID! Could not find workspace in database"}, {status: 400})

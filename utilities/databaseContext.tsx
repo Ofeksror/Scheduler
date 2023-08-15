@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { Workspace } from "./WorkspaceContext";
+import { Tab, Workspace } from "./WorkspaceContext";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { ObjectId } from "mongodb";
@@ -10,6 +10,7 @@ type ContextType = {
     savedWorkspaces: Workspace[] | null;
     setSavedWorkspaces: (workspaces: Workspace[]) => void;
     updateDeletedWorkspace: (deletedId: ObjectId) => void;
+    updateWorkspaceTabs: (workspaceId: string, tabsUrls: string[]) => void,
     refreshWorkspace: (updatedWorkspace: Workspace) => void;
     refreshWorkspaces: () => void;
 };
@@ -20,6 +21,7 @@ const DatabaseContext = createContext<ContextType>({
     savedWorkspaces: [],
     setSavedWorkspaces: () => {},
     updateDeletedWorkspace: () => {},
+    updateWorkspaceTabs: () => {},
     refreshWorkspace: () => {},
     refreshWorkspaces: () => {},
 });
@@ -40,13 +42,12 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
 
     useEffect(() => {
         savedWorkspacesRef.current = savedWorkspaces;
-        if (savedWorkspaces == null) return;
     }, [savedWorkspaces]);
 
     const updateDeletedWorkspace = async (deletedId: ObjectId) => {
-        if (status !== "authenticated" || savedWorkspaces == null) return;
+        if (status !== "authenticated" || savedWorkspacesRef.current == null) return;
 
-        const prevIndex = savedWorkspaces.findIndex(
+        const prevIndex = savedWorkspacesRef.current.findIndex(
             (iter) => iter._id === deletedId
         );
 
@@ -56,17 +57,53 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
         }
 
         setSavedWorkspaces([
-            ...savedWorkspaces.slice(0, prevIndex),
-            ...savedWorkspaces.slice(prevIndex + 1),
+            ...savedWorkspacesRef.current.slice(0, prevIndex),
+            ...savedWorkspacesRef.current.slice(prevIndex + 1),
         ]);
     };
+
+    const updateWorkspaceTabs = async (workspaceId: string, tabsUrls: string[]) => {
+        if (savedWorkspacesRef.current == null) return;
+
+        const workspaceIndex = savedWorkspacesRef.current.findIndex((iter) => iter._id.toString() == workspaceId);
+
+        if (workspaceIndex == -1) {
+            console.warn("Workspace Not Found.")
+            return;
+        }
+
+        const updatedWorkspace = {
+            _id: savedWorkspacesRef.current[workspaceIndex]._id,
+            title: savedWorkspacesRef.current[workspaceIndex].title,
+            tabsUrls: [...savedWorkspacesRef.current[workspaceIndex].tabsUrls, ...tabsUrls],
+            tabs: savedWorkspacesRef.current[workspaceIndex].tabs,
+        }
+
+        setSavedWorkspaces([
+            ...savedWorkspacesRef.current.slice(0, workspaceIndex),
+            updatedWorkspace,
+            ...savedWorkspacesRef.current.slice(workspaceIndex + 1)
+        ])
+
+        await axios({
+            method: "put",
+            url: "/api/workspaces/update/",
+            data: {
+                workspace: updatedWorkspace
+            }
+        })
+            .catch((error) => {
+                console.warn(error);
+            });
+
+        return updatedWorkspace;
+    }
 
     const refreshWorkspace = async (updatedWorkspace: Workspace) => {
         // if (status !== "authenticated" || savedWorkspacesRef.current == null) return;
         if (savedWorkspacesRef.current == null) {
             return
         };
-
 
         try {
             const prevWorkspaceIndex = savedWorkspacesRef.current.findIndex(
@@ -165,6 +202,7 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
                 savedWorkspaces,
                 setSavedWorkspaces,
                 updateDeletedWorkspace,
+                updateWorkspaceTabs,
                 refreshWorkspace,
                 refreshWorkspaces,
             }}
