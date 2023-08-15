@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     Tab,
     useSelectedWorkspace,
@@ -27,17 +27,14 @@ const ExtensionAdapter = (props: Props) => {
         sessionRef.current = session;
     }, [session])
 
-    // useEffect(() => {
-    //     if (!selectedWorkspace?._id) {
-    //         console.log("No workspace is selected");
-    //         return;
-    //     }
+    const [requestsCounter, setRequestsCounter] = useState<number>(0);
 
-    //     setSelectedWorkspace({
-    //         ...selectedWorkspace,
-    //         tabs: []
-    //     });
-    // }, [selectedWorkspace?._id]);
+    // useEffect(() => {
+    //     if (requestsCounter <= 10 && selectedWorkspaceRef.current != null) {
+    //         refreshWorkspace(selectedWorkspaceRef.current);
+    //         setRequestsCounter(0);
+    //     }
+    // }, [requestsCounter])
 
     const communicationHandler = async ({ data: message }: any) => {
         if (selectedWorkspaceRef.current === null) {
@@ -119,7 +116,8 @@ const ExtensionAdapter = (props: Props) => {
                 };
 
                 setSelectedWorkspace(newWorkspace);
-                refreshWorkspace(newWorkspace);
+                // refreshWorkspace(newWorkspace);
+                // setRequestsCounter(requestsCounter + 1);
 
                 break;
             }
@@ -150,7 +148,8 @@ const ExtensionAdapter = (props: Props) => {
                 };
 
                 setSelectedWorkspace(newWorkspace);
-                refreshWorkspace(newWorkspace);
+                // refreshWorkspace(newWorkspace);
+                // setRequestsCounter(requestsCounter + 1);
 
                 break;
             }
@@ -165,7 +164,8 @@ const ExtensionAdapter = (props: Props) => {
                 };
 
                 setSelectedWorkspace(newWorkspace);
-                refreshWorkspace(newWorkspace);
+                // refreshWorkspace(newWorkspace);
+                // setRequestsCounter(requestsCounter + 1);
 
                 break;
             }
@@ -174,10 +174,11 @@ const ExtensionAdapter = (props: Props) => {
                     ...selectedWorkspaceRef.current,
                     tabs: message.tabs,
                 });
-                refreshWorkspace({
-                    ...selectedWorkspaceRef.current,
-                    tabs: message.tabs,
-                });
+                // refreshWorkspace({
+                //     ...selectedWorkspaceRef.current,
+                //     tabs: message.tabs,
+                // });
+                // setRequestsCounter(requestsCounter + 1);
 
                 break;
             }
@@ -186,10 +187,10 @@ const ExtensionAdapter = (props: Props) => {
                     ...selectedWorkspaceRef.current,
                     tabs: message.tabs,
                 });
-                refreshWorkspace({
-                    ...selectedWorkspaceRef.current,
-                    tabs: message.tabs,
-                });
+                // refreshWorkspace({
+                //     ...selectedWorkspaceRef.current,
+                //     tabs: message.tabs,
+                // });
 
                 break;
             }

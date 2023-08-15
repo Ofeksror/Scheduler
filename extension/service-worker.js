@@ -145,15 +145,16 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
     const initialIndex = await getInitialIndex();
 
-    if (changeInfo.status && changeInfo.status == "complete") {
+    if (changeInfo.hasOwnProperty("favIconUrl") || changeInfo.hasOwnProperty("title") || changeInfo.hasOwnProperty("url")) {
         await messageContentScript({
             event: "EXT_TAB_UPDATED",
             tab: {
                 ...tab,
-                index: tab.index - initialIndex,
-            },
-        });
-    } else if ("pinned" in changeInfo) {
+                index: tab.index - initialIndex
+            }
+        })
+    }
+    else if ("pinned" in changeInfo) {
         const tabs = await chrome.tabs.query({ pinned: false });
 
         await messageContentScript({
