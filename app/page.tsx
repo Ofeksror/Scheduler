@@ -12,10 +12,6 @@ import { useDatabase } from "@/utilities/databaseContext";
 import { Toaster } from "@/components/ui/toaster";
 import ExtensionAdapter from "@/components/ExtensionAdapter";
 
-export const metadata = {
-    title: 'Tab Manager',
-}
-
 const styles = {
     rootContainer: "h-screen w-screen",
     outerContainer: "w-full h-full flex",
