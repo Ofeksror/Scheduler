@@ -60,22 +60,17 @@ const TabsContainer = (props: Props) => {
 
     // order = [ids of tabs (stores in database)]
 
-    if (selectedWorkspace === null) {
-        return;
-    }
-
     // Stores the indexes of the tabs selected
     const [selectedTabs, setSelectedTabs] = useState<number[]>([]);
-
-    // Reset tab selection when switching workspaces
-    useEffect(() => {
-        setSelectedTabs([]);
-    }, [selectedWorkspace]);
 
     // Move tabs to a different workspace
     const [popoverOpen, setPopoverOpen] = useState<boolean>(false);
     const [moveToWorkspace, setMoveToWorkspace] = useState<string | undefined>(undefined);
     const moveTabs = () => {
+        if (selectedWorkspace == null) {
+            return;
+        }
+
         if (!moveToWorkspace) {
             setPopoverOpen(false);
             return;    
@@ -109,8 +104,7 @@ const TabsContainer = (props: Props) => {
 
     const copyLink = (url: string) => {
         navigator.clipboard.writeText(url);
-        // TODO: Toast
-                // Notify User
+
         toast({
             description: `Link copied to clipboard!`,
             duration: 2000
@@ -143,6 +137,10 @@ const TabsContainer = (props: Props) => {
     };
 
     const handleDeleteTabs = async () => {
+        if (selectedWorkspace == null) {
+            return;
+        }
+
         // Separates closed tabs and remaining tabs
         const closedTabs: Tab[] = selectedWorkspace.tabs.filter((tab, index) =>
             selectedTabs.includes(index)
@@ -168,6 +166,11 @@ const TabsContainer = (props: Props) => {
             tabs: closedTabs,
         });
     };
+
+    // Reset tab selection when switching workspaces
+    useEffect(() => {
+        setSelectedTabs([]);
+    }, [selectedWorkspace]);
 
     return (
         <div className={styles.tabsContainer}>
@@ -207,7 +210,7 @@ const TabsContainer = (props: Props) => {
                                         <SelectContent>
                                             {
                                                 savedWorkspaces?.map((workspace) => {
-                                                    return (<SelectItem value={workspace._id.toString()}>{workspace.title}</SelectItem>);
+                                                    return (<SelectItem value={workspace._id.toString()} key={workspace._id.toString()}>{workspace.title}</SelectItem>);
                                                 })
                                             }
                                         </SelectContent>
@@ -227,7 +230,7 @@ const TabsContainer = (props: Props) => {
                 )}
             </div>
             <ul className={styles.tabsListContainer}>
-                {selectedWorkspace.tabs.map((tab, index) => {
+                {selectedWorkspace?.tabs.map((tab, index) => {
                     const isSelected = selectedTabs.includes(index);
 
                     return (
