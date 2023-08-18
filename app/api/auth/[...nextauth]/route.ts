@@ -7,8 +7,6 @@ import User from "@/models/User";
 import md5 from "md5";
 import dbConnect from "@/lib/dbConnect";
 import { ObjectId } from "mongoose";
-import { workspaceType } from "@/utilities/WorkspaceContext";
-import Workspace from "@/models/Workspace";
 
 /* Resource for adding properties to the Session object
 // https://reacthustle.com/blog/extend-user-session-nextauth-typescript */
