@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import NewWorkspace from "./NewWorkspace";
 
-import { Settings, Minus } from "lucide-react";
+import { Settings, X } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ObjectId } from "mongodb";
 
@@ -78,7 +78,7 @@ const Sidebar = (props: Props) => {
             console.log("User trying to reopen the same workspace");
             return;
         }
-        
+
         // Switch workspace
         switchWorkspace(workspaceId);
 
@@ -196,16 +196,16 @@ const Workspace = ({ data, isSelected, onClickHandler }: WorkspaceProps) => {
             key={data._id.toString()}
             id={data._id.toString()}
         >
-            <span className="flex justify-between w-full">
-                <span onClick={(e) => {onClickHandler(data._id)}}>
+            <span className="flex justify-between w-full h-full items-center group">
+                <span onClick={(e) => {onClickHandler(data._id)}} className="align-middle" >
                     {data.title ? data.title : "Untitled Workspace"}
                 </span>
 
                 {
                     isSelected ?
                         (<>
-                            <span onClick={unselectWorkspace}>
-                                <Minus />
+                            <span onClick={unselectWorkspace} className="opacity-0 group-hover:opacity-100 transition text-gray-500 hover:bg-gray-200 rounded-full p-[1px]">
+                                <X className="h-4 w-4" />
                             </span>
                         </>)    
                     : (<></>)

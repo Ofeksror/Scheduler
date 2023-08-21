@@ -14,7 +14,7 @@ type Props = {};
 
 const styles = {
     container: "px-14 py-10 flex-1 overflow-auto w-full h-full relative",
-    headContainer: "text-2xl flex justify-between max-w-4xl",
+    headContainer: "text-3xl flex justify-between max-w-4xl align-middle",
     title: "bg-transparent border-none outline-none",
 };
 

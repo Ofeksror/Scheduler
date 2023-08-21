@@ -2,23 +2,15 @@
 import React, { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { redirect } from "next/navigation";
-import axios from "axios";
+import { useToast } from "@/components/ui/use-toast"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 type Props = {};
 
-const styles = {
-    container: "w-screen h-screen bg-slate-300",
-    header: "",
-    switcherContainer: "",
-    providersContainer: "",
-};
-
 const LoginPage = (props: Props) => {
     const session = useSession();
-
-    useEffect(() => {
-        if (session.status === "authenticated") return redirect("/");
-    }, [session]);
+    const { toast } = useToast()
 
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
@@ -32,20 +24,28 @@ const LoginPage = (props: Props) => {
         setAuthTypeLogin(!authTypeLogin);
     };
 
-    const [formMessage, setFormMessage] = useState<string>("");
+    useEffect(() => {
+        if (session.status === "authenticated") return redirect("/");
+    }, [session]);
 
     const loginUser = async (e: any) => {
         // Validate form
         // Ignore validating the form again if the user has just registered
         if (authTypeLogin) {
             if (!email || !password) {
-                setFormMessage(
-                    "Missing credentials! Please fill the entire form"
-                );
+                toast({
+                    variant: "destructive",
+                    title: "Invalid Values",
+                    description: "Missing credentials! Please fill the entire form"
+                });
                 return;
             }
             if (!email.match(/^\S+@\S+\.\S+$/)) {
-                setFormMessage("Invalid email address!");
+                toast({
+                    variant: "destructive",
+                    title: "Invalid Values",
+                    description: "Invalid Email Address!"
+                });
                 return;
             }
         }
@@ -54,12 +54,7 @@ const LoginPage = (props: Props) => {
             email: email,
             password: password,
             redirect: false,
-        }).then((result) => {
-            if (result) {
-                console.log(`results: ${result}`);
-                if (result.error) setFormMessage(result.error);
-            }
-        });
+        })
     };
 
     const registerUser = async (e: any) => {
@@ -71,15 +66,27 @@ const LoginPage = (props: Props) => {
             !password ||
             !repeatedPassword
         ) {
-            setFormMessage("Missing credentials! Please fill the entire form");
+            toast({
+                variant: "destructive",
+                title: "Invalid Values",
+                description: "Missing credentials! Please fill the entire form"
+            });
             return;
         }
         if (!email.match(/^\S+@\S+\.\S+$/)) {
-            setFormMessage("Invalid email address!");
+            toast({
+                variant: "destructive",
+                title: "Invalid Values",
+                description: "Invalid Email Address!"
+            });
             return;
         }
         if (repeatedPassword !== password) {
-            setFormMessage("Passwords don't match!");
+            toast({
+                variant: "destructive",
+                title: "Invalid Values",
+                description: "Passwords don't match!"
+            });
             return;
         }
 
@@ -97,20 +104,26 @@ const LoginPage = (props: Props) => {
             });
             if (response.status == 200) {
                 // Successful, continue to login
-                setFormMessage("");
-                console.log("Successful");
             } else if (response.status == 400) {
                 // Email already exists
-                setFormMessage(
-                    "Email already exists! Please use a different one or login."
-                );
-                console.log("Email exists");
+                toast({
+                    variant: "destructive",
+                    title: "Invalid Values",
+                    description: "Email already exists! Please use a different one or login."
+                });
             } else {
-                setFormMessage("I have no idea.");
-                console.log("What?");
+                toast({
+                    variant: "destructive",
+                    title: "Error",
+                    description: "Something Went Wrong."
+                });
             }
         } catch (err) {
-            console.log(err);
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: "Something Went Wrong. " + err
+            });
         }
 
         // Login User
@@ -118,90 +131,82 @@ const LoginPage = (props: Props) => {
     };
 
     return (
-        <div className={styles.container}>
-            <div className="bg-red-600 flex gap-4">
-                <button onClick={() => console.log(session)}>
-                    Log Session
-                </button>
-                <button
-                    onClick={() => {
-                        signIn("credentials", {
-                            email: "test@test.test",
-                            password: "test",
-                            redirect: false,
-                        });
-                    }}
-                >
-                    Quick sign in [Demo Only]
-                </button>
-            </div>
-            <div className={styles.header}>
-                <h1>{authTypeLogin ? "Log in🤗" : "Register👋"}</h1>
-            </div>
-            <div className={styles.switcherContainer}>
-                <span>
-                    {authTypeLogin ? "New here?" : "Already registered?"}
-                    <span onClick={switchAuthType}>
-                        {authTypeLogin ? "Register" : "Log in"}
+        <div className="bg-gray-200 w-screen h-screen flex items-center justify-center">
+            <div className="bg-gray-100 w-full max-w-lg rounded-md shadow-lg py-12 px-8 text-center">
+                <h1 className="text-2xl font-bold">{authTypeLogin ? "Log in" : "Register"}</h1>
+                <div className="text-sm font-light mt-1">
+                    <span>
+                        {authTypeLogin ? "New here? " : "Already registered? "}
+                        <span onClick={switchAuthType} className="text-blue-400">
+                            {authTypeLogin ? "Register" : "Log in"}
+                        </span>
                     </span>
-                </span>
+                </div>
+
+                {authTypeLogin ? (
+                    <form className="w-full max-w-sm mx-auto mt-6 flex flex-col gap-2">
+                        <Input
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            type="email"
+                            className="bg-gray-100"
+                        />
+                        <Input
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            type="password"
+                            className="bg-gray-100"
+                        />
+                    </form>
+                ) : (
+                    <form className="w-full max-w-sm mx-auto mt-6 flex flex-col gap-2">
+                        <Input
+                            placeholder="First name"
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                            className="bg-gray-100"
+                        />
+                        <Input
+                            placeholder="Last name"
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                            className="bg-gray-100"
+                        />
+                        <Input
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            type="email"
+                            className="bg-gray-100"
+                        />
+                        <Input
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            type="password"
+                            className="bg-gray-100"
+                        />
+                        <Input
+                            placeholder="Repeat Password"
+                            value={repeatedPassword}
+                            onChange={(e) =>
+                                setRepeatedPassword(e.target.value)
+                            }
+                            type="password"
+                            className="bg-gray-100"
+                        />
+                    </form>
+                )}
+
+                <Button
+                    onClick={authTypeLogin ? loginUser : registerUser}
+                    className="mt-7"
+                >
+                    {authTypeLogin ? "Login" : "Register"}
+                </Button>
             </div>
-
-            <div>
-                <h2>{formMessage}</h2>
-            </div>
-
-            {authTypeLogin ? (
-                <form>
-                    <input
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        type="email"
-                    ></input>
-                    <input
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        type="password"
-                    ></input>
-                </form>
-            ) : (
-                <form>
-                    <input
-                        placeholder="First name"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                    ></input>
-                    <input
-                        placeholder="Last name"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                    ></input>
-                    <input
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        type="email"
-                    ></input>
-                    <input
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        type="password"
-                    ></input>
-                    <input
-                        placeholder="Repeat Password"
-                        value={repeatedPassword}
-                        onChange={(e) => setRepeatedPassword(e.target.value)}
-                        type="password"
-                    ></input>
-                </form>
-            )}
-
-            <button onClick={authTypeLogin ? loginUser : registerUser}>
-                {authTypeLogin ? "Login" : "Register"}
-            </button>
         </div>
     );
 };
