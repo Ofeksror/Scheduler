@@ -29,7 +29,12 @@ window.addEventListener("message", ({ data: message }) => {
             chrome.runtime.sendMessage(message);
             break;
         }
-        default: break
+        case "WEB_RESOURCE_OPEN": {
+            chrome.runtime.sendMessage(message);
+            break;
+        }
+        default:
+            break;
     }
 });
 

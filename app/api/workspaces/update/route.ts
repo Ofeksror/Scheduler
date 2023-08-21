@@ -1,6 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
 import Workspace from "@/models/Workspace";
-import { Tab } from "@/utilities/WorkspaceContext";
+import { Resource, Tab } from "@/utilities/WorkspaceContext";
 import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -29,7 +29,15 @@ export async function PUT(req: NextRequest) {
         workspace.tabsUrls = newWorkspace.tabsUrls
     }
     if (newWorkspace.hasOwnProperty("resources")) {
-        workspace.resources = newWorkspace.resources
+        const newResources = newWorkspace.resources.map((resource: Resource) => {
+            if (resource.hasOwnProperty("_id")) return resource;
+            return {
+                ...resource,
+                _id: new ObjectId()
+            }
+        })
+
+        workspace.resources = newResources;
     }
     
     // Save workspace model

@@ -36,6 +36,7 @@ import {
 } from "react-icons/go";
 import { Button } from "./ui/button";
 import { ObjectId } from "mongodb";
+import mongoose from "mongoose";
 
 type Props = {};
 
@@ -115,14 +116,11 @@ const TabsContainer = (props: Props) => {
     const saveResource = (tab: Tab) => {
         if (!selectedWorkspace) return;
 
-        const newObjectId = new ObjectId();
-
         setSelectedWorkspace({
             ...selectedWorkspace,
             resources: [
                 ...selectedWorkspace.resources,
                 {
-                    _id: newObjectId,
                     url: tab.url,
                     title: tab.title,
                     favIconUrl: tab.favIconUrl

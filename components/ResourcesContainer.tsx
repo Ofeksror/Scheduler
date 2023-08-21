@@ -43,7 +43,7 @@ const ResourcesContainer = (props: Props) => {
     const removeResource = (resource: Resource) => {
         if (!selectedWorkspace) return;
 
-        const newResourcesList = selectedWorkspace.resources.filter((iter) => iter._id != resource._id);
+        const newResourcesList = selectedWorkspace.resources.filter((iter) => iter != resource);
         
         setSelectedWorkspace({
             ...selectedWorkspace,
