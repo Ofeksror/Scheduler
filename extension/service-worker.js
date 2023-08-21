@@ -44,6 +44,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                 event: "EXT_TABS_REQUEST",
                 workspaceId: request.workspaceId,
                 workspaceTitle: request.workspaceTitle,
+                workspaceResources: request.workspaceResources,
                 switchingWorkspace: request.switchingWorkspace,
                 tabs,
             });
@@ -71,22 +72,15 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             if (request.tabsIds) {
                 await chrome.tabs.remove(request.tabsIds);
             }
-            
+
             break;
         }
-        case "EXT_BUTTON_PRESS": {
-            const tabs = await chrome.tabs.query({ pinned: false });
-            
-            const adjustedTabs = tabs.map((tab) => {
-                return {
-                    index: tab.index,
-                    group: tab.groupId,
-                    windowId: tab.windowId
-                }
-            })
-            
-            console.log(adjustedTabs);
-            
+        case "WEB_RESOURCE_OPEN": {
+            await chrome.tabs.create({
+                url: request.resourceUrl,
+                active: true
+            });
+
             break;
         }
         default:

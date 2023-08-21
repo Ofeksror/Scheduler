@@ -115,11 +115,14 @@ const TabsContainer = (props: Props) => {
     const saveResource = (tab: Tab) => {
         if (!selectedWorkspace) return;
 
+        const newObjectId = new ObjectId();
+
         setSelectedWorkspace({
             ...selectedWorkspace,
             resources: [
                 ...selectedWorkspace.resources,
                 {
+                    _id: newObjectId,
                     url: tab.url,
                     title: tab.title,
                     favIconUrl: tab.favIconUrl
@@ -287,7 +290,7 @@ const TabsContainer = (props: Props) => {
                                             : handleTabSelect(index);
                                     }}
                                 >
-                                    <span className="h-full w-9g/12 flex items-center ">
+                                    <span className="h-full w-9/12 flex items-center ">
                                         <img src={tab.favIconUrl} className="inline h-4 w-4 mr-3 aspect-square" />
                                         <span className="align-middle whitespace-nowrap overflow-hidden text-ellipsis">{tab.title}</span>
                                     </span>

@@ -23,6 +23,7 @@ export type Tab = {
 };
 
 export type Resource =  {
+    _id: ObjectId;
     url: string,
     title: string,
     favIconUrl: string,
