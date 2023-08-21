@@ -10,6 +10,7 @@ export type Workspace = {
     title: string;
     tabs: Tab[];
     tabsUrls: string[];
+    resources: Resource[];
 };
 
 export type Tab = {
@@ -17,12 +18,21 @@ export type Tab = {
     id: number;
     title: string;
     favIconUrl: string;
+    
+    // groupId?: number;
 };
+
+export type Resource =  {
+    url: string,
+    title: string,
+    favIconUrl: string,
+}
 
 type RawWorkspace = {
     _id: ObjectId;
     title: string;
     tabsUrls: string[];
+    resources: Resource[];
 };
 
 type ContextType = {
@@ -62,6 +72,7 @@ export const SelectedWorkspaceProvider: React.FC<ProviderProps> = ({
                 event: "WEB_TABS_REQUEST",
                 workspaceId: selectedWorkspaceRef.current._id,
                 workspaceTitle: selectedWorkspaceRef.current.title, 
+                workspaceResources: selectedWorkspaceRef.current.resources,
                 switchingWorkspace: true,
             });
         };
@@ -81,6 +92,7 @@ export const SelectedWorkspaceProvider: React.FC<ProviderProps> = ({
                 title: workspace.title,
                 tabs: [],
                 tabsUrls: workspace.tabsUrls,
+                resources: workspace.resources,
             });
 
             setTimeout(() => {
@@ -92,63 +104,6 @@ export const SelectedWorkspaceProvider: React.FC<ProviderProps> = ({
         }, 500)
 
     };
-
-
-
-    // const messageHandler = async ({data: message}: any) => {
-    //     if (selectedWorkspaceRef.current === null) {
-    //         return;
-    //     }
-
-    //     if (message.event == "EXT_TABS_REQUEST") {
-    //         const tabsUrls: string[] = message.tabs.map((tab: any) => tab.url);
-    //         const tabs: Tab[] = message.tabs.map((tab: any) => {
-    //             return {
-    //                 url: tab.url,
-    //                 id: tab.id,
-    //                 title: tab.title,
-    //                 favIconUrl: tab.favIconUrl,
-    //             };
-    //         });
-
-    //         await axios({
-    //             url: "/api/workspaces/update",
-    //             method: "PUT",
-    //             data: {
-    //                 workspace: {
-    //                     _id: selectedWorkspaceRef.current._id,
-    //                     title: selectedWorkspaceRef.current.title,
-    //                     tabsUrls,
-    //                 },
-    //             },
-    //         })
-    //             .then((res) => {
-    //                 if (res.status == 200) {
-    //                     return;
-    //                 }
-    //             })
-    //             .catch((error) => {
-    //                 console.warn("Error syncing workspace to DB:");
-    //                 console.warn(error);
-    //             });
-
-    //         setSelectedWorkspace({
-    //             ...selectedWorkspaceRef.current,
-    //             tabs,
-    //             tabsUrls,
-    //         });
-
-    //         refreshWorkspace({
-    //             ...selectedWorkspaceRef.current,
-    //             tabs,
-    //             tabsUrls,
-    //         });
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     window.addEventListener("message", messageHandler);
-    // }, [])
 
     return (
         <SelectedWorkspaceContext.Provider

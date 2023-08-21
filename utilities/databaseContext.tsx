@@ -77,6 +77,7 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
             title: savedWorkspacesRef.current[workspaceIndex].title,
             tabsUrls: [...savedWorkspacesRef.current[workspaceIndex].tabsUrls, ...tabsUrls],
             tabs: savedWorkspacesRef.current[workspaceIndex].tabs,
+            resources: savedWorkspacesRef.current[workspaceIndex].resources
         }
 
         setSavedWorkspaces([

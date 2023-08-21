@@ -1,5 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
 import Workspace from "@/models/Workspace";
+import { Resource } from "@/utilities/WorkspaceContext";
 import { NextRequest, NextResponse } from "next/server";
 
 // ======================================================================= //
@@ -7,6 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 type newWorkspaceType = {
     title?: string;
     tabsUrls?: string[];
+    resources?: Resource[];
 };
 
 /* ================================================ //
@@ -19,19 +21,21 @@ type newWorkspaceType = {
 export async function POST(req: NextRequest) {
     await dbConnect();
 
-    const { title, tabsUrls } = await req.json().then((data: newWorkspaceType) => {
+    const { title, tabsUrls, resources } = await req.json().then((data: newWorkspaceType) => {
         const title = data.title;
         const tabsUrls = data.tabsUrls;
+        const resources = data.resources;
 
-        return { title, tabsUrls };
+        return { title, tabsUrls, resources };
     });
 
-    console.log(title);
-    console.log(tabsUrls);
+
+    console.log(resources);
 
     const newWorkspace = await Workspace.create({
         title: title || "New Workspace",
         tabsUrls: tabsUrls || [],
+        resources: resources || [],
     });
 
     console.log(newWorkspace);

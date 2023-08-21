@@ -27,14 +27,6 @@ const ExtensionAdapter = (props: Props) => {
         sessionRef.current = session;
     }, [session])
 
-    const [requestsCounter, setRequestsCounter] = useState<number>(0);
-
-    // useEffect(() => {
-    //     if (requestsCounter <= 10 && selectedWorkspaceRef.current != null) {
-    //         refreshWorkspace(selectedWorkspaceRef.current);
-    //         setRequestsCounter(0);
-    //     }
-    // }, [requestsCounter])
 
     const communicationHandler = async ({ data: message }: any) => {
         if (selectedWorkspaceRef.current === null) {
@@ -47,7 +39,8 @@ const ExtensionAdapter = (props: Props) => {
                     url: `/api/workspaces/new/`,
                     data: {
                         title: message.workspaceTitle,
-                        tabsUrls
+                        tabsUrls,
+                        resources: [],
                     }
                 })
                     .then((res) => {
@@ -83,7 +76,8 @@ const ExtensionAdapter = (props: Props) => {
                     _id: workspace._id,
                     title: workspace.title,
                     tabs: message.tabs,
-                    tabsUrls: tabsUrls
+                    tabsUrls: tabsUrls,
+                    resources: workspace.resources
                 });
             }
 
@@ -219,7 +213,8 @@ const ExtensionAdapter = (props: Props) => {
                     _id: message.workspaceId,
                     title: message.workspaceTitle,
                     tabs,
-                    tabsUrls
+                    tabsUrls,
+                    resources: message.workspaceResources
                 }
 
                 refreshWorkspace(newWorkspaceObject)
@@ -232,7 +227,8 @@ const ExtensionAdapter = (props: Props) => {
                         workspace: {
                             _id: message.workspaceId,
                             title: message.workspaceTitle,
-                            tabsUrls
+                            tabsUrls,
+                            resources: message.workspaceResources
                         }
                     }
                 })
@@ -240,6 +236,10 @@ const ExtensionAdapter = (props: Props) => {
                         console.warn("ERROR trying to sync workspace to database: ", error);
                     })
 
+                break;
+            }
+            case "EXT_WORKSPACE_NEW": {
+                console.log("Unhandled 1");
                 break;
             }
             default: {

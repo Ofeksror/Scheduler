@@ -28,11 +28,12 @@ export async function PUT(req: NextRequest) {
     if (newWorkspace.hasOwnProperty("tabsUrls")) {
         workspace.tabsUrls = newWorkspace.tabsUrls
     }
-
+    if (newWorkspace.hasOwnProperty("resources")) {
+        workspace.resources = newWorkspace.resources
+    }
+    
     // Save workspace model
     workspace.save();
-
-    console.log(workspace);
 
     // Return the workspace
     return NextResponse.json({ workspace: workspace }, { status: 200 });

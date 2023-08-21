@@ -52,7 +52,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         }
         case "WEB_WORKSPACE_NEW": {
             const queriedTabs = await chrome.tabs.query({ pinned: false });
-            console.log(queriedTabs);
             const tabs = queriedTabs.map((tab) => {
                 return {
                     url: tab.url,
@@ -69,7 +68,25 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             });
         }
         case "WEB_TAB_CLOSE": {
-            await chrome.tabs.remove(request.tabsIds);
+            if (request.tabsIds) {
+                await chrome.tabs.remove(request.tabsIds);
+            }
+            
+            break;
+        }
+        case "EXT_BUTTON_PRESS": {
+            const tabs = await chrome.tabs.query({ pinned: false });
+            
+            const adjustedTabs = tabs.map((tab) => {
+                return {
+                    index: tab.index,
+                    group: tab.groupId,
+                    windowId: tab.windowId
+                }
+            })
+            
+            console.log(adjustedTabs);
+            
             break;
         }
         default:
@@ -133,6 +150,7 @@ chrome.tabs.onCreated.addListener(async (tab) => {
             title: tab.title,
             favIconUrl: tab.favIconUrl,
             index: tab.index - initialIndex,
+            // groupId: tab.groupId
         },
     });
 });

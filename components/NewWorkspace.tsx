@@ -60,6 +60,7 @@ const NewWorkspace = (props: Props) => {
             data: {
                 title: title || "Untitled workspace",
                 tabsUrls: [],
+                resources: []
             },
         })
             .then((res) => {

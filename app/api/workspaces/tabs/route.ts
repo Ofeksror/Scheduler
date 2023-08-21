@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Update workspace tabs
-    workspace.tabs.push(newTab);
+    workspace.tabsUrls.push(newTab);
     workspace.save();
     
     // Return updated workspace object with OK status

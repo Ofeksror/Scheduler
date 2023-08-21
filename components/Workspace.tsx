@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { useSelectedWorkspace } from "@/utilities/WorkspaceContext";
 
 import TabsContainer from "@/components/TabsContainer";
+import ResourcesContainer from "@/components/ResourcesContainer";
 import DeleteWorkspace from "@/components/DeleteWorkspace"
 import { DragDropContext } from "react-beautiful-dnd";
 import axios from "axios";
@@ -105,6 +106,8 @@ const Workspace = (props: Props) => {
             <div>                
                 {/* <DragDropContext onDragEnd={onDragEnd}> */}
                 <TabsContainer />
+
+                <ResourcesContainer />
                 {/* </DragDropContext> */}
             </div>
         </div>

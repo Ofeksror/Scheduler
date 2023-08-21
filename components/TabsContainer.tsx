@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+    Resource,
     Tab,
     Workspace,
     useSelectedWorkspace,
@@ -111,12 +112,29 @@ const TabsContainer = (props: Props) => {
         })
     };
 
+    const saveResource = (tab: Tab) => {
+        if (!selectedWorkspace) return;
+
+        setSelectedWorkspace({
+            ...selectedWorkspace,
+            resources: [
+                ...selectedWorkspace.resources,
+                {
+                    url: tab.url,
+                    title: tab.title,
+                    favIconUrl: tab.favIconUrl
+                }
+            ]
+        })
+    }
+
     const closeTab = (tabId: number) => {
         window.postMessage({
             event: "WEB_TAB_CLOSE",
             tabsIds: [tabId]
         })
     }
+
 
     const handleTabSelect = (tabIndexKey: number) => {
         const indexInSelectedTabs = selectedTabs.indexOf(tabIndexKey);
@@ -297,6 +315,9 @@ const TabsContainer = (props: Props) => {
                                 <span
                                     title="Save as Resource"
                                     className={styles.hoverButton}
+                                    onClick={() => {
+                                        saveResource(tab)
+                                    }}
                                 >
                                     <GoBookmark />
                                 </span>
