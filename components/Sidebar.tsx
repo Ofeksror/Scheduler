@@ -3,6 +3,7 @@ import React, {
     SetStateAction,
     useContext,
     useEffect,
+    useRef,
     useState,
 } from "react";
 
@@ -24,7 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import NewWorkspace from "./NewWorkspace";
 
-import { Settings, Plus } from "lucide-react";
+import { Settings, Minus } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ObjectId } from "mongodb";
 
@@ -53,6 +54,12 @@ const Sidebar = (props: Props) => {
     } = useDatabase();
 
     const { selectedWorkspace, switchWorkspace } = useSelectedWorkspace();
+    const selectedWorkspaceRef = useRef(selectedWorkspace);
+    useEffect(() => {
+        selectedWorkspaceRef.current = selectedWorkspace;
+    }, [selectedWorkspace])
+
+
 
     // const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -67,6 +74,11 @@ const Sidebar = (props: Props) => {
     const session = useSession();
 
     const handleSelectWorkspace = async (workspaceId: ObjectId) => {
+        if (selectedWorkspaceRef.current?._id == workspaceId) {
+            console.log("User trying to reopen the same workspace");
+            return;
+        }
+        
         // Switch workspace
         switchWorkspace(workspaceId);
 
@@ -169,16 +181,35 @@ type WorkspaceProps = {
 };
 
 const Workspace = ({ data, isSelected, onClickHandler }: WorkspaceProps) => {
+    
+    const unselectWorkspace = async () => {
+        window.postMessage({
+            event: "WEB_WORKSPACE_CLOSE",
+        })
+    }
+    
     return (
         <li
             className={
                 isSelected ? styles.selectedWorkspaceItem : styles.workspaceItem
             }
+            key={data._id.toString()}
             id={data._id.toString()}
-            onClick={(e) => onClickHandler(data._id)}
         >
-            <span className="">
-                {data.title ? data.title : "Untitled Workspace"}
+            <span className="flex justify-between w-full">
+                <span onClick={(e) => {onClickHandler(data._id)}}>
+                    {data.title ? data.title : "Untitled Workspace"}
+                </span>
+
+                {
+                    isSelected ?
+                        (<>
+                            <span onClick={unselectWorkspace}>
+                                <Minus />
+                            </span>
+                        </>)    
+                    : (<></>)
+                }
             </span>
         </li>
     );

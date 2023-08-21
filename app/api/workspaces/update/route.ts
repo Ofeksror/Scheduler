@@ -29,15 +29,7 @@ export async function PUT(req: NextRequest) {
         workspace.tabsUrls = newWorkspace.tabsUrls
     }
     if (newWorkspace.hasOwnProperty("resources")) {
-        // const newResources = newWorkspace.resources.map((resource: Resource) => {
-        //     if (resource.hasOwnProperty("_id")) return resource;
-        //     return {
-        //         ...resource,
-        //         _id: new ObjectId()
-        //     }
-        // })
-
-        workspace.resources = newResources;
+        workspace.resources = newWorkspace.resources;
     }
     
     // Save workspace model

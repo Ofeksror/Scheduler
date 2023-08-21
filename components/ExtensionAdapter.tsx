@@ -238,8 +238,36 @@ const ExtensionAdapter = (props: Props) => {
 
                 break;
             }
-            case "EXT_WORKSPACE_NEW": {
-                console.log("Unhandled 1");
+            case "EXT_WORKSPACE_CLOSE": {  
+                
+                const tabsUrls = message.tabs.map((tab: any) => tab.url);
+
+                const newWorkspaceObject = {
+                    _id: selectedWorkspaceRef.current._id,
+                    title: selectedWorkspaceRef.current.title,
+                    tabsUrls,
+                    resources: selectedWorkspaceRef.current.resources
+                }
+                
+                setSelectedWorkspace(null);
+
+                refreshWorkspace({
+                    ...newWorkspaceObject,
+                    tabs: message.tabs
+                });
+
+                // Update database
+                await axios({
+                    url: "/api/workspaces/update/",
+                    method: "PUT",
+                    data: {
+                        workspace: newWorkspaceObject
+                    }
+                })
+                    .catch((error) => {
+                        console.warn("ERROR trying to sync workspace to database: ", error);
+                    })
+                
                 break;
             }
             default: {

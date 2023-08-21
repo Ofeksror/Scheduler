@@ -261,7 +261,7 @@ const TabsContainer = (props: Props) => {
                             }
                             key={index}
                         >
-                            <span className="flex items-center gap-1 w-full">
+                            <span className="flex items-center gap-1 w-full h-full">
                                 <span
                                     className={
                                         "invisible w-3 text-xl " +
@@ -270,7 +270,7 @@ const TabsContainer = (props: Props) => {
                                             : "")
                                     }
                                 >
-                                    <GoGrabber />
+                                    {/* <GoGrabber /> */}
                                 </span>
 
                                 <input
@@ -281,7 +281,7 @@ const TabsContainer = (props: Props) => {
                                 ></input>
 
                                 <span
-                                    className="ml-4 mr-10 w-full"
+                                    className="ml-4 mr-10 w-full h-full"
                                     onClick={() => {
                                         selectedTabs.length == 0
                                             ? openTab(tab)
@@ -336,8 +336,6 @@ const TabsContainer = (props: Props) => {
                     );
                 })}
             </ul>
-
-            <NewTab />
         </div>
     );
 };

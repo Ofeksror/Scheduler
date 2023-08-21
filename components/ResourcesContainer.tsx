@@ -1,28 +1,24 @@
 "use client";
 import { Resource, useSelectedWorkspace } from "@/utilities/WorkspaceContext";
-import React from "react";
+import React, { useState } from "react";
 import {
+    GoPencil,
     GoPaste,
     GoBookmarkSlash
 } from "react-icons/go"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 import { toast } from "@/components/ui/use-toast";
 
-type Props = {};
-
-const ResourcesContainer = (props: Props) => {
+const ResourcesContainer = () => {
     const { selectedWorkspace, setSelectedWorkspace } = useSelectedWorkspace();
-
-    /* 
-   
-                <ul>
-                { {
-                    selectedWorkspace?.resources?.map((resource, index) => 
-                        <li key={index}>{resource.url} | {resource.title} | {resource.favIconUrl}</li>
-                    )
-                } }
-                </ul>
-    */
-
 
     const openResource = (resourceUrl: string) => {
         window.postMessage({
@@ -57,14 +53,14 @@ const ResourcesContainer = (props: Props) => {
                 <h1>Resources</h1>
             </div>
 
-            <ul>
+            <ul className="flex flex-col gap-1">
                 {selectedWorkspace?.resources?.map((resource, index) => {
                     return (
                         <li
                             className="bg-gray-100 hover:bg-gray-200 h-9 py-auto px-1 text-sm transition flex justify-between items-center group cursor-pointer rounded-md relative"
                             key={index}
                         >
-                            <span className="ml-4 overflow-hidden w-full"
+                            <span className="ml-4 overflow-hidden w-full h-full"
                                 onClick={() => {
                                     openResource(resource.url);
                                 }}

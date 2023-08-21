@@ -83,6 +83,26 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
             break;
         }
+        case "WEB_WORKSPACE_CLOSE": {
+            const queriedTabs = await chrome.tabs.query({ pinned: false });
+            const tabsToClose = queriedTabs.map((tab) => tab.id);
+            const tabs = queriedTabs.map((tab) => {
+                return {
+                    url: tab.url,
+                    id: tab.id,
+                    title: tab.title,
+                    favIconUrl: tab.favIconUrl,
+                };
+            });
+
+            // Close tabs
+            await chrome.tabs.remove(tabsToClose);
+
+            messageContentScript({
+                event: "EXT_WORKSPACE_CLOSE",
+                tabs
+            });
+        }
         default:
             break;
     }
@@ -125,11 +145,6 @@ const getInitialIndex = async () => {
     return pinnedTabs.length;
 };
 
-// P P P n n n
-// 0 1 2 3 4 5
-// 3
-
-// ===
 
 chrome.tabs.onCreated.addListener(async (tab) => {
     if (tab.pinned) return;
@@ -144,12 +159,13 @@ chrome.tabs.onCreated.addListener(async (tab) => {
             title: tab.title,
             favIconUrl: tab.favIconUrl,
             index: tab.index - initialIndex,
-            // groupId: tab.groupId
         },
     });
 });
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+    console.log(tab);
+
     // Changes to ignore
     if (tab.pinned && !("pinned" in changeInfo)) {
         return;
