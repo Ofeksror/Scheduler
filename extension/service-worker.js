@@ -1,7 +1,5 @@
+// Receives messages from content script (the web-app)
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-    // Receives messages from content script
-    console.log(request);
-
     switch (request.event) {
         case "WEB_WORKSPACE_CHANGED": {
             // Close previous tabs except pinned tabs
@@ -109,35 +107,57 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 });
 
 const messageContentScript = async (message) => {
-    const managerTab = await getManager();
+    const managerTabId = await getManager();
 
-    await chrome.tabs.sendMessage(managerTab.id, message);
+    try {
+        await chrome.tabs.sendMessage(managerTabId, message);
+    }
+    catch (error) {
+        await injectContentScript(managerTabId)
+        await chrome.tabs.sendMessage(managerTabId, message);
+    }
 };
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 // ===
 
+const injectContentScript = async (managerTabId) => {
+    chrome.scripting.executeScript(
+        {
+            files: ["scripts/content-script.js"],
+            injectImmediately: true,
+            target: {
+                tabId: managerTabId
+            }
+        },
+        (results) => {
+            console.log(results);
+        }
+    )
+}
+
 const getManager = async () => {
     const tabsQueried = await chrome.tabs.query({
         url: "http://localhost:3000/",
     });
 
-    if (tabsQueried.length != 0) {
-        return tabsQueried[0];
+    if (tabsQueried.length == 0) {
+        const managerTabId = await chrome.tabs.create(
+            {
+                index: 0,
+                active: false,
+                pinned: true,
+                url: "http://localhost:3000/",
+            },
+            (tab) => tab.id
+        );
+
+        return managerTabId;
     }
 
-    const managerTab = await chrome.tabs.create(
-        {
-            index: 0,
-            active: false,
-            pinned: true,
-            url: "http://localhost:3000/",
-        },
-        (tab) => tab
-    );
+    return tabsQueried[0].id;
 
-    return managerTab;
 };
 
 const getInitialIndex = async () => {

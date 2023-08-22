@@ -50,7 +50,7 @@ const ResourcesContainer = () => {
     return (
         <div className="w-full max-w-4xl mt-6">
             <div className="text-xl w-full mb-2">
-                <h1>Resources</h1>
+                {selectedWorkspace?.resources.length != 0 ? <h1>Resources</h1> : <></>}
             </div>
 
             <ul className="flex flex-col gap-1">
