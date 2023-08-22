@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Toaster } from "@/components/ui/toaster";
 
 type Props = {};
 
@@ -207,6 +208,7 @@ const LoginPage = (props: Props) => {
                     {authTypeLogin ? "Login" : "Register"}
                 </Button>
             </div>
+            <Toaster />
         </div>
     );
 };
