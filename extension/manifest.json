@@ -12,12 +12,12 @@
         "type": "module"
     },
     "externally_connectable": {
-        "matches": ["http://localhost:3000/*", "https://tab-manager.ofeksror.com/*"]
+        "matches": ["https://tab-manager.ofeksror.com/*"]
     },
-    "host_permissions": ["http://localhost:3000/*", "https://tab-manager.ofeksror.com/*"],
+    "host_permissions": ["https://tab-manager.ofeksror.com/*"],
     "content_scripts": [
         {
-            "matches": ["http://localhost:3000/*", "https://tab-manager.ofeksror.com/*"],
+            "matches": ["https://tab-manager.ofeksror.com/*"],
             "js": ["scripts/content-script.js"]
         }
     ]

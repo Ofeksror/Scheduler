@@ -139,7 +139,7 @@ const injectContentScript = async (managerTabId) => {
 
 const getManager = async () => {
     const tabsQueried = await chrome.tabs.query({
-        url: "http://localhost:3000/",
+        url: "https://tab-manager.ofeksror.com/",
     });
 
     if (tabsQueried.length == 0) {
@@ -148,7 +148,7 @@ const getManager = async () => {
                 index: 0,
                 active: false,
                 pinned: true,
-                url: "http://localhost:3000/",
+                url: "https://tab-manager.ofeksror.com/",
             },
             (tab) => tab.id
         );

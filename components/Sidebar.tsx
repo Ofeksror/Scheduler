@@ -197,7 +197,7 @@ const Workspace = ({ data, isSelected, onClickHandler }: WorkspaceProps) => {
             id={data._id.toString()}
         >
             <span className="flex justify-between w-full h-full items-center group">
-                <span onClick={(e) => {onClickHandler(data._id)}} className="align-middle" >
+                <span onClick={(e) => {onClickHandler(data._id)}} className="h-full w-full flex items-center align-middle" >
                     {data.title ? data.title : "Untitled Workspace"}
                 </span>
 
