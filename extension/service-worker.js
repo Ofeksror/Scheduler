@@ -146,7 +146,7 @@ const injectContentScript = async (managerTabId) => {
 
 const getManager = async () => {
     const tabsQueried = await chrome.tabs.query({
-        url: "https://tab-manager.ofeksror.com/",
+        url: "https://tab-manager.ofeksror.com/*",
     });
 
     if (tabsQueried.length == 0) {
