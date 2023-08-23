@@ -95,8 +95,6 @@ const handler = NextAuth({
                     throw new Error("Invalid password");
                 }
 
-                console.log(`the user found: ${userFound}`);
-
                 // Authorize user
                 return userFound;
             },

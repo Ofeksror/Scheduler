@@ -51,18 +51,23 @@ const LoginPage = (props: Props) => {
             }
         }
 
-        signIn("credentials", {
+        await signIn("credentials", {
             email: email,
             password: password,
             redirect: false,
         })
-        .catch((error) => {
-            console.log(error);
-            toast({
-                variant: "destructive",
-                title: "Failed to Log In",
-                description: error
-            });
+        .then((res) => {
+            console.log(res);
+            if (res?.hasOwnProperty("error") && res.error !== null) {
+                toast({
+                    variant: "destructive",
+                    title: "Failed to Log In",
+                    description: res?.error
+                });
+            }
+            else {
+                redirect("/");
+            }
         })
     };
 
