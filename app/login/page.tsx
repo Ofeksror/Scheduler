@@ -56,6 +56,14 @@ const LoginPage = (props: Props) => {
             password: password,
             redirect: false,
         })
+        .catch((error) => {
+            console.log(error);
+            toast({
+                variant: "destructive",
+                title: "Failed to Log In",
+                description: error
+            });
+        })
     };
 
     const registerUser = async (e: any) => {
