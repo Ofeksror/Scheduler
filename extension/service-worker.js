@@ -13,6 +13,13 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                 await chrome.tabs.create({ url, active: false });
             }
 
+            await delay(3000)
+            const openedTabs = await chrome.tabs.query({ pinned: false });
+            messageContentScript({
+                event: "EXT_TABS_OPENED",
+                openedTabs
+            });
+
             break;
         }
         case "WEB_TABS_DELETED": {

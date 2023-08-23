@@ -270,6 +270,26 @@ const ExtensionAdapter = (props: Props) => {
                 
                 break;
             }
+            case "EXT_TABS_OPENED": {
+                const tabsUrls = message.openedTabs.map((tab: any) => tab.url);
+                const tabs = message.openedTabs.map((tab: any) => {return {
+                    url: tab.url,
+                    id: tab.id,
+                    title: tab.title,
+                    favIconUrl: tab.favIconUrl,
+                }});
+
+                const newWorkspaceObject = {
+                    ...selectedWorkspaceRef.current,
+                    tabs,
+                    tabsUrls
+                }
+                
+                setSelectedWorkspace(newWorkspaceObject)
+                refreshWorkspace(newWorkspaceObject);
+
+                break;
+            }
             default: {
                 console.log(`No handling for this event ${message.event} yet.`);
                 break;
