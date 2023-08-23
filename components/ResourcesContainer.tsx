@@ -16,6 +16,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "@/components/ui/use-toast";
+import { Separator } from "@/components/ui/separator";
 
 const ResourcesContainer = () => {
     const { selectedWorkspace, setSelectedWorkspace } = useSelectedWorkspace();
@@ -50,7 +51,12 @@ const ResourcesContainer = () => {
     return (
         <div className="w-full max-w-4xl mt-6">
             <div className="text-xl w-full mb-2">
-                {selectedWorkspace?.resources.length != 0 ? <h1>Resources</h1> : <></>}
+                {selectedWorkspace?.resources.length != 0 ? (
+                    <>
+                        <h1 className="font-medium text-gray-700">Resources</h1>
+                        <Separator className="mb-2" />
+                    </>
+                ) : <></>}
             </div>
 
             <ul className="flex flex-col gap-1">
@@ -70,7 +76,7 @@ const ResourcesContainer = () => {
                                         src={resource.favIconUrl}
                                         className="inline h-4 w-4 mr-3 aspect-square"
                                     />
-                                    <span className="align-middle whitespace-nowrap overflow-hidden text-ellipsis">
+                                    <span className="align-middle whitespace-nowrap overflow-hidden text-ellipsis text-gray-700">
                                         {resource.title}
                                     </span>
                                 </span>

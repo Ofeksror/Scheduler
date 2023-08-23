@@ -17,7 +17,7 @@ import { useSession } from "next-auth/react";
 import { useDatabase } from "@/utilities/databaseContext";
 import { useSelectedWorkspace } from "@/utilities/WorkspaceContext";
 
-import { Plus } from "lucide-react";
+import { GoPlus } from "react-icons/go";
 import { Checkbox } from "@/components/ui/checkbox";
 
 type Props = {};
@@ -106,8 +106,8 @@ const NewWorkspace = (props: Props) => {
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger>
-                <span className="rounded-full bg-gray-300 flex justify-center items-center p-2">
-                    <Plus size={24} color="#27272a" strokeWidth={1.5} />
+                <span className="rounded-md bg-gray-300 flex justify-center items-center p-1.5">
+                    <GoPlus size={24} color="#27272a" />
                 </span>
             </DialogTrigger>
 

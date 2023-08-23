@@ -37,8 +37,10 @@ import {
 import { Button } from "./ui/button";
 import { ObjectId } from "mongodb";
 import mongoose from "mongoose";
+import { Separator } from "@/components/ui/separator"
 
 type Props = {};
+
 
 const styles = {
     tabsContainer: "w-full max-w-4xl mt-6",
@@ -196,7 +198,7 @@ const TabsContainer = (props: Props) => {
             <div className={styles.tabContainerHeader}>
                 {selectedTabs.length == 0 ? (
                     <>
-                        <h1>Tabs</h1>
+                        <h1 className="font-medium text-gray-700">Tabs</h1>
 
                         <span className={styles.buttonsContainer}>
                             <span>
@@ -247,8 +249,19 @@ const TabsContainer = (props: Props) => {
                         </span>
                     </>
                 )}
+                
             </div>
+            
+            <Separator className="mb-2" />
+
             <ul className={styles.tabsListContainer}>
+                {
+                    selectedWorkspace?.tabs.length == 0 ? (
+                        <span className="text-sm text-gray-500">
+                            Empty
+                        </span>
+                    ) : (<></>)
+                }
                 {selectedWorkspace?.tabs.map((tab, index) => {
                     const isSelected = selectedTabs.includes(index);
 
@@ -290,7 +303,7 @@ const TabsContainer = (props: Props) => {
                                 >
                                     <span className="h-full w-9/12 flex items-center ">
                                         <img src={tab.favIconUrl} className="inline h-4 w-4 mr-3 aspect-square" />
-                                        <span className="align-middle whitespace-nowrap overflow-hidden text-ellipsis">{tab.title}</span>
+                                        <span className="align-middle whitespace-nowrap overflow-hidden text-ellipsis text-gray-700">{tab.title}</span>
                                     </span>
                                 </span>
                             </span>
