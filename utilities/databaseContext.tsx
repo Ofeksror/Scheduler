@@ -160,7 +160,10 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
                 method: "get",
                 url: `/api/workspaces/${_id}`,
             })
-                .then((res) => res.data.workspace)
+                .then((res) => {
+                    console.log(res);
+                    return res.data.workspace
+                })
                 .catch(async (error) => {
                     // Workspace doesn't exist in database and is falsely attached to user
                     // Delete all references to workspace from all users
@@ -169,7 +172,6 @@ export const DatabaseProvider: React.FC<ProviderProps> = ({ children }) => {
                     return null;
                 });
 
-            console.log(workspace);
             return {
                 ...workspace,
                 tabs: []

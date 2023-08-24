@@ -65,9 +65,6 @@ const LoginPage = (props: Props) => {
                     description: res?.error
                 });
             }
-            else {
-                redirect("/");
-            }
         })
     };
 

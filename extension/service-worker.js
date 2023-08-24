@@ -226,13 +226,6 @@ chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
         return;
     }
 
-    // Check if the tab closed is the tab manager
-    if (removeInfo.url == "http://localhost:300/") {
-        console.log("User tried to close tab manager.");
-        getManager();
-        return;
-    }
-
     await messageContentScript({
         event: "EXT_TAB_REMOVED",
         tabId: tabId,
